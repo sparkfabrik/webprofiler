@@ -472,4 +472,19 @@ class EntityManagerWrapper extends DefaultPluginManager implements EntityManager
   public function setContainer(ContainerInterface $container = NULL) {
     $this->entityManager->setContainer($container = NULL);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearDisplayModeInfo() {
+    return $this->entityManager->clearDisplayModeInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFieldMap(array $field_map) {
+    return $this->entityManager->setFieldMap($field_map);
+  }
+
 }
