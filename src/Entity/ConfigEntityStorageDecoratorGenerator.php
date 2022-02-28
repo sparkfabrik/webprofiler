@@ -155,7 +155,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       && $node->extends !== NULL &&
       $node->implements !== NULL &&
       $node->extends->parts[0] == 'ConfigEntityStorage' &&
-      (isset ($node->implements[0]) ?? $node->implements[0]->parts[0] != '')
+      isset ($node->implements[0]) ?? $node->implements[0]->parts[0] != ''
     ) {
       return TRUE;
     }

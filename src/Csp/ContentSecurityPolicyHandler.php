@@ -80,7 +80,8 @@ class ContentSecurityPolicyHandler {
   /**
    * Cleanup temporary headers and updates Content-Security-Policy headers.
    *
-   * @return array Nonces used by the bundle in Content-Security-Policy header
+   * @return array
+   *   Nonces used by the bundle in Content-Security-Policy header
    */
   public function updateResponseHeaders(Request $request, Response $response): array {
     if ($this->cspDisabled) {
@@ -96,11 +97,27 @@ class ContentSecurityPolicyHandler {
     return $nonces;
   }
 
+  /**
+   * Clean headers.
+   *
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The Response object.
+   *
+   * @return void
+   */
   private function cleanHeaders(Response $response) {
     $response->headers->remove('X-SymfonyProfiler-Script-Nonce');
     $response->headers->remove('X-SymfonyProfiler-Style-Nonce');
   }
 
+  /**
+   * Remove CSP headers.
+   *
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The Response object.
+   *
+   * @return void
+   */
   private function removeCspHeaders(Response $response) {
     $response->headers->remove('X-Content-Security-Policy');
     $response->headers->remove('Content-Security-Policy');
