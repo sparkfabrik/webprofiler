@@ -6,5 +6,3 @@ core_version_requirement: ^10
 configure: webprofiler.settings
 tags:
  - developer
-dependencies:
- - devel:devel
