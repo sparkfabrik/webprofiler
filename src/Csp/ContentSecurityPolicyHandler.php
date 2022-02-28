@@ -254,10 +254,10 @@ class ContentSecurityPolicyHandler {
    */
   private function getDirectiveFallback(array $directiveSet, string $type) {
     if (\in_array($type, [
-        'script-src-elem',
-        'style-src-elem',
-      ], TRUE) || !isset($directiveSet['default-src'])) {
-      // Let the browser fallback on it's own
+      'script-src-elem',
+      'style-src-elem',
+    ], TRUE) || !isset($directiveSet['default-src'])) {
+      // Let the browser fallback on it's own.
       return NULL;
     }
 
