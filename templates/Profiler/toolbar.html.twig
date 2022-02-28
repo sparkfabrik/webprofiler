@@ -10,9 +10,9 @@
   {% for name, template in templates %}
     {% if block('toolbar', template) is defined %}
       {% with {
-        collector: profile.getcollector(name),
+        collector: profile ? profile.getcollector(name) : null,
         profiler_url: profiler_url,
-        token: profile.token,
+        token: token ?? (profile ? profile.token : null),
         name: name,
         csp_script_nonce: csp_script_nonce,
         csp_style_nonce: csp_style_nonce
@@ -22,8 +22,8 @@
     {% endif %}
   {% endfor %}
 
-  <a class="hide-button" id="sfToolbarHideButton-{{ token }}" title="Close Toolbar" tabindex="-1" accesskey="D">
+  <button class="hide-button" type="button" id="sfToolbarHideButton-{{ token }}" title="Close Toolbar" accesskey="D" aria-expanded="true" aria-controls="sfToolbarMainContent-{{ token }}">
     {{ include('@webprofiler/Icon/close.svg') }}
-  </a>
+  </button>
 </div>
 <!-- END of Symfony Web Debug Toolbar -->
