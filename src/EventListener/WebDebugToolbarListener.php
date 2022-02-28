@@ -38,6 +38,8 @@ class WebDebugToolbarListener implements EventSubscriberInterface {
    *   The url generator service.
    * @param \Drupal\webprofiler\Csp\ContentSecurityPolicyHandler $cspHandler
    *   The Content-Security-Policy handler service.
+   * @param \Symfony\Component\HttpKernel\DataCollector\DumpDataCollector $dumpDataCollector
+   *   The dump data collector.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
    */
@@ -145,8 +147,8 @@ class WebDebugToolbarListener implements EventSubscriberInterface {
         '#theme' => 'webprofiler_toolbar_js',
         '#token' => $response->headers->get('X-Debug-Token'),
         '#request' => $request,
-        '#csp_script_nonce' => $nonces['csp_script_nonce'] ?? null,
-        '#csp_style_nonce' => $nonces['csp_style_nonce'] ?? null,
+        '#csp_script_nonce' => $nonces['csp_script_nonce'] ?? NULL,
+        '#csp_style_nonce' => $nonces['csp_style_nonce'] ?? NULL,
       ];
 
       $toolbar = "\n" . str_replace("\n", '', $this->renderer->renderRoot($toolbarJs)) . "\n";

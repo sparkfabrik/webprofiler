@@ -23,7 +23,7 @@ trait DataCollectorTrait {
    * @return \Drupal\webprofiler\MethodData|null
    *   Array of information about a method of a class.
    */
-  public function getMethodData(mixed $class, string $method): ?MethodData {
+  public function getMethodData($class, string $method): ?MethodData {
     $class = is_object($class) ? get_class($class) : $class;
     $data = NULL;
 

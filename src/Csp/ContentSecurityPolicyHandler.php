@@ -31,15 +31,16 @@ class ContentSecurityPolicyHandler {
   }
 
   /**
-   * Returns an array of nonces to be used in Twig templates and
-   * Content-Security-Policy headers.
+   * Returns an array of nonces.
+   *
+   * To be used in Twig templates and Content-Security-Policy headers.
    *
    * Nonce can be provided by;
    *  - The request - In case HTML content is fetched via AJAX and inserted in
-   * DOM, it must use the same nonce as origin
-   *  - The response -  A call to getNonces() has already been done previously.
-   * Same nonce are returned
-   *  - They are otherwise randomly generated
+   * DOM, it must use the same nonce as origin.
+   *  - The response - A call to getNonces() has already been done previously.
+   * Same nonce are returned.
+   *  - They are otherwise randomly generated.
    */
   public function getNonces(Request $request, Response $response): array {
     if ($request->headers->has('X-SymfonyProfiler-Script-Nonce') && $request->headers->has('X-SymfonyProfiler-Style-Nonce')) {
@@ -217,7 +218,7 @@ class ContentSecurityPolicyHandler {
       if (!str_ends_with($directive, '\'')) {
         continue;
       }
-      if ('\'nonce-' === substr($directive, 0, 7)) {
+      if (str_starts_with($directive, '\'nonce-')) {
         return TRUE;
       }
       if (\in_array(substr($directive, 0, 8), [

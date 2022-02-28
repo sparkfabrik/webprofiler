@@ -37,7 +37,9 @@ class ProfilerPass implements CompilerPassInterface {
         if (!$idForTemplate) {
           throw new InvalidArgumentException(sprintf('Data collector service "%s" must have an id attribute in order to specify a template.', $id));
         }
-        $template = [$idForTemplate, $attributes[0]['template'] ?? $collectorClass::getTemplate()];
+        $template =
+          [$idForTemplate, $attributes[0]['template'] ??
+            $collectorClass::getTemplate()];
       }
 
       $collectors->insert([$id, $template], [$priority, --$order]);

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * DataCollector for Drupal blocks.
+ * Collects blocks data.
  */
 class BlocksDataCollector extends DataCollector implements DrupalDataCollectorInterface {
 
@@ -37,7 +37,7 @@ class BlocksDataCollector extends DataCollector implements DrupalDataCollectorIn
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = null) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     $storage = $this->entityManager->getStorage('block');
 
     $loaded = $this->entityManager->getLoaded('config', 'block');
@@ -92,8 +92,10 @@ class BlocksDataCollector extends DataCollector implements DrupalDataCollectorIn
     return count($this->getLoadedBlocks());
   }
 
+  /**
+   * Reset the collected data.
+   */
   public function reset() {
-
   }
 
   /**

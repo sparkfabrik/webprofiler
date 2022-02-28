@@ -7,8 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
+/**
+ * Collects config data.
+ */
 class ConfigDataCollector extends DataCollector implements LateDataCollectorInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     $this->data = [
       'token' => $response->headers->get('X-Debug-Token'),
@@ -29,14 +35,23 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return 'config';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function lateCollect() {
     $this->data = $this->cloneVar($this->data);
   }
 
+  /**
+   * Reset the collected data.
+   */
   public function reset() {
     $this->data = [];
   }
@@ -69,10 +84,16 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
     return $this->data['php_version_extra'] ?? NULL;
   }
 
+  /**
+   * Gets the PHP architecture.
+   */
   public function getPhpArchitecture(): int {
     return $this->data['php_architecture'];
   }
 
+  /**
+   * Gets the PHP timezone.
+   */
   public function getPhpTimezone(): string {
     return $this->data['php_timezone'];
   }
@@ -80,7 +101,7 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
   /**
    * Returns true if the XDebug is enabled.
    */
-  public function hasXDebug(): bool {
+  public function hasXdebug(): bool {
     return $this->data['xdebug_enabled'];
   }
 

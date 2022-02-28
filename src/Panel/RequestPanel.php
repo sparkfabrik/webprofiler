@@ -56,18 +56,18 @@ class RequestPanel extends PanelBase implements PanelInterface {
    * @param string $content
    *   The content of a POST request.
    * @param string $label
-   *   The section label.
+   *   The section's label.
    *
    * @return array
    *   The render array of the content.
    */
-  private function renderContent($content, $label): array {
+  private function renderContent(string $content, string $label): array {
     return [
       $label => [
         '#type' => 'inline_template',
         '#template' => '<h3>{{ title }}</h3> {{ data|raw }}',
         '#context' => [
-          'title' => $this->t($label),
+          'title' => $label,
           'data' => $content,
         ],
       ],
@@ -117,7 +117,7 @@ class RequestPanel extends PanelBase implements PanelInterface {
     return [
       $label => [
         '#theme' => 'webprofiler_dashboard_table',
-        '#title' => $this->t($label),
+        '#title' => $label,
         '#data' => [
           '#type' => 'table',
           '#header' => [$this->t('Name'), $this->t('Value')],

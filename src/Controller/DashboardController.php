@@ -77,6 +77,4 @@ class DashboardController extends ControllerBase {
       ],
     ];
   }
-
-
 }

@@ -81,7 +81,7 @@ class PanelBase {
    */
   protected function renderTable(
     array $data,
-    $label,
+    string $label,
     callable $element_converter = NULL
   ): array {
     if (count($data) == 0) {
@@ -115,7 +115,7 @@ class PanelBase {
     return [
       $label => [
         '#theme' => 'webprofiler_dashboard_table',
-        '#title' => $this->t($label),
+        '#title' => $label,
         '#data' => [
           '#type' => 'table',
           '#header' => [$this->t('Name'), $this->t('Value')],

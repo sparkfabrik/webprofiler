@@ -3,9 +3,9 @@
     "description": "Drupal Web Profiler.",
     "type": "drupal-module",
     "support": {
-        "issues": "xxx",
-        "slack": "xxx",
-        "source": "xxx"
+        "issues": "https://www.drupal.org/project/issues/webprofiler",
+        "slack": "https://app.slack.com/client/T06GX3JTS/C034XBTCHV0",
+        "source": "https://git.drupalcode.org/project/webprofiler"
     },
     "license": "GPL-2.0-or-later",
     "authors": [

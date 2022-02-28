@@ -115,7 +115,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    * @return ConfigEntityStorageDecorator|null
    *   Loaded entities.
    */
-  public function getLoaded(string $entity_kind, string $entity_type): ConfigEntityStorageDecorator|null {
+  public function getLoaded(string $entity_kind, string $entity_type): ConfigEntityStorageDecorator|NULL {
     return $this->loaded[$entity_kind][$entity_type] ?? NULL;
   }
 
@@ -128,7 +128,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    * @return EntityViewBuilderDecorator|null
    *   Rendered entities.
    */
-  public function getRendered(string $entity_type): EntityViewBuilderDecorator|null {
+  public function getRendered(string $entity_type): EntityViewBuilderDecorator|NULL {
     return $this->rendered[$entity_type] ?? NULL;
   }
 

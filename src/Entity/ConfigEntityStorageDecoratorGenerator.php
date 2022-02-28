@@ -94,10 +94,12 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
             'decoratorClass' => '\\Drupal\\webprofiler\\Entity\\' . $node->name->name . 'Decorator',
           ];
         }
-      } catch (Error $error) {
+      }
+      catch (Error $error) {
         echo "Parse error: {$error->getMessage()}\n";
         return [];
-      } catch (\ReflectionException $error) {
+      }
+      catch (\ReflectionException $error) {
         echo "Reflection error: {$error->getMessage()}\n";
         return [];
       }
@@ -209,7 +211,8 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
         'interface' => $class['interface'],
         'methods' => $methods,
       ]);
-    } catch (TwigError $e) {
+    }
+    catch (TwigError $e) {
       throw new \Exception('Unable to create a decorator. ' . $e->getMessage());
     }
   }
