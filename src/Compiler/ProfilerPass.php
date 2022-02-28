@@ -40,7 +40,7 @@ class ProfilerPass implements CompilerPassInterface {
         $template =
           [
             $idForTemplate,
-            $attributes[0]['template'] ?? $collectorClass::getTemplate()
+            $attributes[0]['template'] ?? $collectorClass::getTemplate(),
           ];
       }
 

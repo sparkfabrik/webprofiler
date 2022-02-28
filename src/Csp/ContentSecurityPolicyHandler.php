@@ -102,8 +102,6 @@ class ContentSecurityPolicyHandler {
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The Response object.
-   *
-   * @return void
    */
   private function cleanHeaders(Response $response) {
     $response->headers->remove('X-SymfonyProfiler-Script-Nonce');
@@ -115,8 +113,6 @@ class ContentSecurityPolicyHandler {
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The Response object.
-   *
-   * @return void
    */
   private function removeCspHeaders(Response $response) {
     $response->headers->remove('X-Content-Security-Policy');
@@ -156,7 +152,8 @@ class ContentSecurityPolicyHandler {
 
           if (['\'none\''] === $fallback) {
             // Fallback came from "default-src: 'none'"
-            // 'none' is invalid if it's not the only expression in the source list, so we leave it out
+            // 'none' is invalid if it's not the only expression in the source
+            // list, so we leave it out.
             $fallback = [];
           }
 
@@ -216,8 +213,7 @@ class ContentSecurityPolicyHandler {
   }
 
   /**
-   * Detects if the 'unsafe-inline' is prevented for a directive within the
-   * directive set.
+   * Detects if the 'unsafe-inline' is prevented for a directive.
    */
   private function authorizesInline(array $directivesSet, string $type): bool {
     if (isset($directivesSet[$type])) {
@@ -230,6 +226,9 @@ class ContentSecurityPolicyHandler {
     return \in_array('\'unsafe-inline\'', $directives, TRUE) && !$this->hasHashOrNonce($directives);
   }
 
+  /**
+   * Check if a directive set contains a hash or a nonce.
+   */
   private function hasHashOrNonce(array $directives): bool {
     foreach ($directives as $directive) {
       if (!str_ends_with($directive, '\'')) {
@@ -250,6 +249,9 @@ class ContentSecurityPolicyHandler {
     return FALSE;
   }
 
+  /**
+   * Gets the fallback directive for a given directive set.
+   */
   private function getDirectiveFallback(array $directiveSet, string $type) {
     if (\in_array($type, [
         'script-src-elem',
@@ -263,8 +265,10 @@ class ContentSecurityPolicyHandler {
   }
 
   /**
-   * Retrieves the Content-Security-Policy headers (either
-   * X-Content-Security-Policy or Content-Security-Policy) from a response.
+   * Retrieves the Content-Security-Policy headers.
+   *
+   * Either X-Content-Security-Policy or Content-Security-Policy) from a
+   * response.
    */
   private function getCspHeaders(Response $response): array {
     $headers = [];
