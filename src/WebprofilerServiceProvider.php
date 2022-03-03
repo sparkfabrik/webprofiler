@@ -29,6 +29,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
         ->addTag('data_collector', [
           'template' => '@webprofiler/Collector/blocks.html.twig',
           'id' => 'blocks',
+          'label' => 'Blocks',
           'priority' => -260,
         ]);
     }

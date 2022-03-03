@@ -28,10 +28,10 @@ webprofiler.dashboard:
 #  requirements:
 #    _permission: 'access webprofiler'
 #
-#webprofiler.settings:
-#  path: '/admin/config/development/devel/webprofiler'
-#  defaults:
-#    _form: 'Drupal\webprofiler\Form\SettingsForm'
-#    _title: 'Webprofiler settings'
-#  requirements:
-#    _permission: 'access webprofiler'
+webprofiler.settings:
+  path: '/admin/config/development/devel/webprofiler'
+  defaults:
+    _form: 'Drupal\webprofiler\Form\SettingsForm'
+    _title: 'Webprofiler settings'
+  requirements:
+    _permission: 'access webprofiler'

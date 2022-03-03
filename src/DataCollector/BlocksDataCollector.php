@@ -30,7 +30,7 @@ class BlocksDataCollector extends DataCollector implements DrupalDataCollectorIn
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'blocks';
   }
 
