@@ -133,7 +133,10 @@ class SettingsForm extends ConfigFormBase {
     $form['database']['query_sort'] = [
       '#type' => 'radios',
       '#title' => $this->t('Sort query log'),
-      '#options' => ['source' => $this->t('by source'), 'duration' => $this->t('by duration')],
+      '#options' => [
+        'source' => $this->t('by source'),
+        'duration' => $this->t('by duration')
+      ],
       '#description' => $this->t('The query table can be sorted in the order that the queries were executed or by descending duration.'),
       '#default_value' => $config->get('query_sort'),
     ];
