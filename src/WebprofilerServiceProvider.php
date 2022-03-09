@@ -30,7 +30,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'template' => '@webprofiler/Collector/blocks.html.twig',
           'id' => 'blocks',
           'label' => 'Blocks',
-          'priority' => -260,
+          'priority' => 500,
         ]);
     }
   }

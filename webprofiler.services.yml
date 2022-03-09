@@ -57,6 +57,9 @@ services:
     tags:
       - { name: twig.extension, priority: 100 }
 
+  webprofiler.stopwatch:
+    class: Symfony\Component\Stopwatch\Stopwatch
+
   # debug services
   webprofiler.debug.entity_type.manager:
     class: Drupal\webprofiler\Entity\EntityTypeManagerWrapper
@@ -73,9 +76,25 @@ services:
     arguments: ['@controller_resolver']
     tags:
       - { name: event_subscriber }
-      - { name: data_collector, template: '@webprofiler/Collector/request.html.twig', id: 'request', label: 'Request', priority: -255 }
+      - { name: data_collector, template: '@webprofiler/Collector/request.html.twig', id: 'request', label: 'Request', priority: 1000 }
+
+  webprofiler.time:
+    class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
+    arguments: [NULL, '@webprofiler.stopwatch']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/time.html.twig', id: 'time', label: 'Time', priority: 900 }
+
+  webprofiler.memory:
+    class: Drupal\webprofiler\DataCollector\MemoryDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 800 }
+
+  webprofiler.ajax:
+    class: Drupal\webprofiler\DataCollector\AjaxDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
 
   webprofiler.config:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: -255 }
+      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 0 }

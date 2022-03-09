@@ -48,7 +48,7 @@ class CodeExtension extends AbstractExtension {
    * @return string
    *   The abbreviated form of a class name.
    */
-  public function abbrClass($class) {
+  public function abbrClass(string $class): string {
     $parts = explode('\\', $class);
     $short = array_pop($parts);
 
@@ -61,18 +61,15 @@ class CodeExtension extends AbstractExtension {
    * @param string $file
    *   An absolute file path.
    * @param int $line
-   *   The line number.
+   *   The line's number.
    *
-   * @return string|false
-   *   A link or false.
+   * @return string
+   *   A link to file.
    */
-  public function getFileLink(string $file, int $line) {
-    if ($fmt = $this->fileLinkFormat) {
-      return \is_string($fmt) ? strtr($fmt,
-        ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
-    }
+  public function getFileLink(string $file, int $line): string {
+    $fmt = $this->fileLinkFormat;
 
-    return FALSE;
+    return $fmt->format($file, $line);
   }
 
 }
