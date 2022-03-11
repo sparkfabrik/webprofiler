@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 /**
  * Collects blocks data.
  */
-class BlocksDataCollector extends DataCollector implements DrupalDataCollectorInterface {
+class BlocksDataCollector extends DataCollector implements HasPanelInterface {
 
   /**
    * BlocksDataCollector constructor.

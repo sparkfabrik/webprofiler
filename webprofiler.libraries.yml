@@ -1,0 +1,9 @@
+dashboard:
+  version: VERSION
+  js:
+    js/dashboard.js: {}
+  css:
+    component:
+      css/dashboard.css: {}
+  dependencies:
+    - core/drupal.ajax

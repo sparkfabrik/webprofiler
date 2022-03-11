@@ -90,7 +90,7 @@ services:
       - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 800 }
 
   webprofiler.ajax:
-    class: Drupal\webprofiler\DataCollector\AjaxDataCollector
+    class: Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
 

@@ -65,7 +65,7 @@ class RequestPanel extends PanelBase implements PanelInterface {
     return [
       $label => [
         '#type' => 'inline_template',
-        '#template' => '<h3>{{ title }}</h3> {{ data|raw }}',
+        '#template' => '<h3>{{ title }}</h3> {% if data %}{{ data|raw }}{% else %}<em>{{ "No data"|t }}</em>{% endif %}',
         '#context' => [
           'title' => $label,
           'data' => $content,

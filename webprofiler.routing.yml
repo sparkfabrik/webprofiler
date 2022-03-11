@@ -12,14 +12,14 @@ webprofiler.dashboard:
     _controller: '\Drupal\webprofiler\Controller\DashboardController::dashboard'
   requirements:
     _permission: 'access webprofiler'
-#
-#webprofiler.panel:
-#  path: '/admin/reports/profiler/view/{token}/panel/{name}'
-#  defaults:
-#    _controller: '\Drupal\webprofiler\Controller\DashboardController::panel'
-#  requirements:
-#    _permission: 'view webprofiler toolbar'
-#
+
+webprofiler.panel:
+  path: '/admin/reports/profiler/view/{token}/panel/{name}'
+  defaults:
+    _controller: '\Drupal\webprofiler\Controller\DashboardController::panel'
+  requirements:
+    _permission: 'view webprofiler toolbar'
+
 #webprofiler.admin_list:
 #  path: '/admin/reports/profiler/list'
 #  defaults:

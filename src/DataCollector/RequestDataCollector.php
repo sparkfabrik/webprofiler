@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector as BaseReque
 /**
  * DataCollector for HTTP Request.
  */
-class RequestDataCollector extends BaseRequestDataCollector implements DrupalDataCollectorInterface {
+class RequestDataCollector extends BaseRequestDataCollector implements HasPanelInterface {
 
   use DataCollectorTrait;
 

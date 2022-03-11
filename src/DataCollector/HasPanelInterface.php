@@ -7,7 +7,7 @@ use Drupal\webprofiler\Panel\PanelInterface;
 /**
  * Interface for DataCollector classes.
  */
-interface DrupalDataCollectorInterface {
+interface HasPanelInterface {
 
   /**
    * Return the class used to render data for this data collector.
