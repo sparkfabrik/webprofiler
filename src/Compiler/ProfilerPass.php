@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Compiler;
 
 use Drupal\Core\StreamWrapper\PublicStream;

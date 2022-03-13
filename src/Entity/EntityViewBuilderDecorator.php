@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Entity;
 
 use Drupal\Core\Entity\EntityHandlerInterface;

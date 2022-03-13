@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Twig\Extension;
 
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;

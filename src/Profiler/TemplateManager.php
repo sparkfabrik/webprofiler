@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Profiler;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
