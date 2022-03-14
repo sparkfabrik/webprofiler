@@ -36,7 +36,7 @@ trait DataCollectorTrait {
         $class,
         $method,
         $reflectedMethod->getFilename(),
-        $reflectedMethod->getStartLine()
+        $reflectedMethod->getStartLine() ?? ''
       );
     }
     catch (\ReflectionException $re) {

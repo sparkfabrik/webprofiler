@@ -24,40 +24,40 @@ class ProfilerController extends ControllerBase {
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
-  private $generator;
+  private UrlGeneratorInterface $generator;
 
   /**
    * The Profiler service.
    *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
    */
-  private $profiler;
+  private Profiler $profiler;
 
   /**
    * The Renderer service.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
-  private $renderer;
+  private RendererInterface $renderer;
 
   /**
    * The Template manager service.
    *
    * @var \Drupal\webprofiler\Profiler\TemplateManager
    */
-  private $templateManager;
+  private TemplateManager $templateManager;
 
   /**
    * The Content-Security-Policy service.
    *
    * @var \Drupal\webprofiler\Csp\ContentSecurityPolicyHandler
    */
-  private $cspHandler;
+  private ContentSecurityPolicyHandler $cspHandler;
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): ProfilerController {
     return new static(
       $container->get('url_generator'),
       $container->get('webprofiler.profiler'),
@@ -102,7 +102,7 @@ class ProfilerController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function toolbarAction(Request $request, $token) {
+  public function toolbarAction(Request $request, string $token): Response {
     if ('empty' === $token || NULL === $token) {
       return new Response('', 200, ['Content-Type' => 'text/html']);
     }
@@ -115,7 +115,7 @@ class ProfilerController extends ControllerBase {
 
     $url = NULL;
     try {
-      $url = $this->generator->generate('webprofiler.toolbar', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+      $url = $this->generator->generate('webprofiler.dashboard', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
     }
     catch (\Exception $e) {
       // The profiler is not enabled.
@@ -131,11 +131,11 @@ class ProfilerController extends ControllerBase {
       '#templates' => $this->templateManager->getNames($profile),
       '#profiler_url' => $url,
       '#token' => $token,
-      '#csp_script_nonce' => isset($nonces['csp_script_nonce']) ? $nonces['csp_script_nonce'] : NULL,
-      '#csp_style_nonce' => isset($nonces['csp_style_nonce']) ? $nonces['csp_style_nonce'] : NULL,
+      '#csp_script_nonce' => $nonces['csp_script_nonce'] ?? NULL,
+      '#csp_style_nonce' => $nonces['csp_style_nonce'] ?? NULL,
     ];
 
-    $response->setContent($this->renderer->renderRoot($toolbar));
+    $response->setContent((string)$this->renderer->renderRoot($toolbar));
 
     return $response;
   }

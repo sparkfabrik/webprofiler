@@ -33,9 +33,9 @@ class MethodData {
   /**
    * The method line in file.
    *
-   * @var string
+   * @var int
    */
-  private string $line;
+  private int $line;
 
   /**
    * MethodData constructor.
@@ -46,10 +46,10 @@ class MethodData {
    *   The method name.
    * @param string $file
    *   The method file.
-   * @param string $line
+   * @param int $line
    *   The method line in file.
    */
-  public function __construct(string $class, string $method, string $file, string $line) {
+  public function __construct(string $class, string $method, string $file, int $line) {
     $this->class = $class;
     $this->method = $method;
     $this->file = $file;
@@ -89,10 +89,10 @@ class MethodData {
   /**
    * Return the method line in file.
    *
-   * @return string
+   * @return int
    *   The method line in file.
    */
-  public function getLine(): string {
+  public function getLine(): int {
     return $this->line;
   }
 

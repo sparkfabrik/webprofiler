@@ -59,7 +59,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
     if ($controller = $this->controllerResolver->getController($request)) {
       $this->data['controller'] = $this->getMethodData(
         $controller[0], $controller[1]
-      );
+      ) ?? 'no controller';
       $this->data['access_checks'] = $this->accessChecks;
     }
   }

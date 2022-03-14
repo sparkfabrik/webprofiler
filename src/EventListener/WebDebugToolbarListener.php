@@ -79,7 +79,7 @@ class WebDebugToolbarListener implements EventSubscriberInterface {
       try {
         $response->headers->set(
           'X-Debug-Token-Link',
-          $this->urlGenerator->generate('webprofiler.toolbar', ['token' => $response->headers->get('X-Debug-Token')], UrlGeneratorInterface::ABSOLUTE_URL)
+          $this->urlGenerator->generate('webprofiler.dashboard', ['token' => $response->headers->get('X-Debug-Token')], UrlGeneratorInterface::ABSOLUTE_URL)
         );
       }
       catch (\Exception $e) {
@@ -111,7 +111,7 @@ class WebDebugToolbarListener implements EventSubscriberInterface {
         '#location' => $response->headers->get('Location'),
       ];
 
-      $response->setContent($this->renderer->renderRoot($toolbarRedirect));
+      $response->setContent((string)$this->renderer->renderRoot($toolbarRedirect));
       $response->setStatusCode(200);
       $response->headers->remove('Location');
     }
@@ -153,7 +153,7 @@ class WebDebugToolbarListener implements EventSubscriberInterface {
         '#csp_style_nonce' => $nonces['csp_style_nonce'] ?? NULL,
       ];
 
-      $toolbar = "\n" . str_replace("\n", '', $this->renderer->renderRoot($toolbarJs)) . "\n";
+      $toolbar = "\n" . str_replace("\n", '', (string)$this->renderer->renderRoot($toolbarJs)) . "\n";
       $content = substr($content, 0, $pos) . $toolbar . substr($content, $pos);
       $response->setContent($content);
     }
