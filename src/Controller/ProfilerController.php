@@ -135,7 +135,7 @@ class ProfilerController extends ControllerBase {
       '#csp_style_nonce' => $nonces['csp_style_nonce'] ?? NULL,
     ];
 
-    $response->setContent((string)$this->renderer->renderRoot($toolbar));
+    $response->setContent((string) $this->renderer->renderRoot($toolbar));
 
     return $response;
   }
