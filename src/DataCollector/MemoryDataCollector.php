@@ -16,6 +16,9 @@ class MemoryDataCollector extends DataCollector implements LateDataCollectorInte
 
   use DataCollectorTrait;
 
+  /**
+   * MemoryDataCollector constructor.
+   */
   public function __construct() {
     $this->reset();
   }
@@ -45,21 +48,27 @@ class MemoryDataCollector extends DataCollector implements LateDataCollectorInte
   }
 
   /**
+   * Return the memory used to serve the request.
+   *
    * @return int
+   *   The memory used to serve the request.
    */
   public function getMemory(): int {
     return $this->data['memory'];
   }
 
   /**
+   * Return the memory limit global value.
+   *
    * @return int|float
+   *   The memory limit global value.
    */
   public function getMemoryLimit(): int|float {
     return $this->data['memory_limit'];
   }
 
   /**
-   * @return void
+   * Save the memory used value.
    */
   public function updateMemoryUsage() {
     $this->data['memory'] = memory_get_peak_usage(TRUE);
