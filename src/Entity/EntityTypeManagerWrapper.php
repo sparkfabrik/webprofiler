@@ -7,6 +7,7 @@ namespace Drupal\webprofiler\Entity;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -121,6 +122,10 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
     return $this->loaded[$entity_kind][$entity_type] ?? NULL;
   }
 
+  public function getLoadedByKind(string $entity_kind): array {
+    return $this->loaded[$entity_kind] ?? [];
+  }
+
   /**
    * Return rendered entities.
    *
@@ -169,6 +174,25 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
       }
 
       return new ConfigEntityStorageDecorator($handler);
+    }
+
+    if ($handler instanceof ContentEntityStorageInterface) {
+      if (array_key_exists($entity_type, $decorators)) {
+        $storage->load($entity_type);
+        if (!class_exists($decorators[$entity_type])) {
+          try {
+            $decoratorGenerator->generate();
+            $storage->load($entity_type);
+          }
+          catch (\Exception $e) {
+            return $handler;
+          }
+        }
+
+        return new $decorators[$entity_type]($handler);
+      }
+
+      return new ContentEntityStorageDecorator($handler);
     }
 
     return $handler;

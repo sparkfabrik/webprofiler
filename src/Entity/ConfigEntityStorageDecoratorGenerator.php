@@ -58,6 +58,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       'user_role' => '\Drupal\webprofiler\Entity\RoleStorageDecorator',
       'shortcut_set' => '\Drupal\webprofiler\Entity\ShortcutSetStorageDecorator',
       'image_style' => '\Drupal\webprofiler\Entity\ImageStyleStorageDecorator',
+      'node' => '\Drupal\webprofiler\Entity\NodeStorageDecorator',
     ];
   }
 
@@ -156,7 +157,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
     if ($node instanceof Class_
       && $node->extends !== NULL &&
       $node->implements !== NULL &&
-      $node->extends->parts[0] == 'ConfigEntityStorage' &&
+      //$node->extends->parts[0] == 'ConfigEntityStorage' &&
       isset($node->implements[0]) ?? $node->implements[0]->parts[0] != ''
     ) {
       return TRUE;

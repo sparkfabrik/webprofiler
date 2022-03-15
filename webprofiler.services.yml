@@ -94,6 +94,12 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
 
+  webprofiler.entities:
+    class: Drupal\webprofiler\DataCollector\EntitiesDataCollector
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/entities.html.twig', id: 'entities', label: 'Entities', priority: 600 }
+
   webprofiler.config:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:

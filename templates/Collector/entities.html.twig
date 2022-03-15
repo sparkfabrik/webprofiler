@@ -1,18 +1,14 @@
 {% block toolbar %}
   {% set icon %}
     {{ include('@webprofiler/Icon/blocks.svg') }}
-    <span class="sf-toolbar-value">{{ collector.getRenderedBlocksCount }}</span>
+    <span class="sf-toolbar-value">{{ collector.getLoadedEntitiesCount }}</span>
   {% endset %}
 
   {% set text %}
     <div class="sf-toolbar-info-group">
       <div class="sf-toolbar-info-piece">
-        <b>Loaded blocks</b>
-        <span>{{ collector.getLoadedBlocksCount }}</span>
-      </div>
-      <div class="sf-toolbar-info-piece">
-        <b>Rendered blocks</b>
-        <span>{{ collector.getRenderedBlocksCount }}</span>
+        <b>Loaded entities</b>
+        <span>{{ collector.getLoadedEntitiesCount }}</span>
       </div>
     </div>
   {% endset %}

@@ -21,11 +21,11 @@ class ConfigEntityStorageDecorator extends EntityDecorator implements ConfigEnti
   /**
    * ConfigEntityStorageDecorator constructor.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $config_entity_storage
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $content_entity_storage
    *   The config entity storage to decorate.
    */
-  final public function __construct(ConfigEntityStorageInterface $config_entity_storage) {
-    parent::__construct($config_entity_storage);
+  final public function __construct(ConfigEntityStorageInterface $content_entity_storage) {
+    parent::__construct($content_entity_storage);
 
     $this->entities = [];
   }
