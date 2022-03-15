@@ -95,6 +95,6 @@ services:
       - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
 
   webprofiler.config:
-    class: Drupal\webprofiler\DataCollector\ConfigDataCollector
+    class: Drupal\webprofiler\DataCollector\DrupalDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 0 }
+      - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }

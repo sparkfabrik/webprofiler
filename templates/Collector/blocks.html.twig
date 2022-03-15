@@ -1,4 +1,5 @@
 {% block toolbar %}
+
   {% set icon %}
     {{ include('@webprofiler/Icon/blocks.svg') }}
     <span class="sf-toolbar-value">{{ collector.getRenderedBlocksCount }}</span>
@@ -19,4 +20,3 @@
 
   {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
 {% endblock %}
-

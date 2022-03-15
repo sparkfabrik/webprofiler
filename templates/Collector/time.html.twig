@@ -1,4 +1,5 @@
 {% block toolbar %}
+
   {% set has_time_events = collector.events|length > 0 %}
   {% set total_time = has_time_events ? '%.0f'|format(collector.duration) : 'n/a' %}
   {% set initialization_time = collector.events|length ? '%.0f'|format(collector.inittime) : 'n/a' %}

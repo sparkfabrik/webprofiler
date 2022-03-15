@@ -1,4 +1,5 @@
 {% block toolbar %}
+
   {% import _self as helper %}
   {% set request_handler %}
     {{ helper.set_handler(collector.controller) }}
@@ -63,10 +64,12 @@
       <div class="sf-toolbar-info-group">
         <div class="sf-toolbar-info-piece">
           <b>
-            <span class="sf-toolbar-redirection-status sf-toolbar-status-yellow">{{ collector.redirect.status_code }}</span>
+            <span
+              class="sf-toolbar-redirection-status sf-toolbar-status-yellow">{{ collector.redirect.status_code }}</span>
             Redirect from
           </b>
-          <span>{{ redirect_handler }}(<a href="{{ path('webprofiler.dashboard', { token: collector.redirect.token }) }}">{{ collector.redirect.token }}</a>)</span>
+          <span>{{ redirect_handler }}(<a
+              href="{{ path('webprofiler.dashboard', { token: collector.redirect.token }) }}">{{ collector.redirect.token }}</a>)</span>
         </div>
       </div>
     {% endif %}
@@ -75,7 +78,8 @@
       <div class="sf-toolbar-info-group">
         <div class="sf-toolbar-info-piece">
           <b>Forwarded to</b>
-          <span>{{ forward_handler }}(<a href="{{ path('webprofiler.dashboard', { token: collector.forwardtoken }) }}">{{ collector.forwardtoken }}</a>)</span>
+          <span>{{ forward_handler }}(<a
+              href="{{ path('webprofiler.dashboard', { token: collector.forwardtoken }) }}">{{ collector.forwardtoken }}</a>)</span>
         </div>
       </div>
     {% endif %}
@@ -86,7 +90,8 @@
 
 {% macro set_handler(controller, route, method) %}
   {% if controller.class is defined -%}
-    {%- if method|default(false) %}<span class="sf-toolbar-status sf-toolbar-redirection-method">{{ method }}</span>{% endif -%}
+    {%- if method|default(false) %}<span
+      class="sf-toolbar-status sf-toolbar-redirection-method">{{ method }}</span>{% endif -%}
     {%- set link = controller.file|file_link(controller.line) %}
     {%- if link %}<a href="{{ link }}" title="{{ controller.class }}">{% else %}<span title="{{ controller.class }}">{% endif %}
 

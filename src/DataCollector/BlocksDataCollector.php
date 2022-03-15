@@ -98,6 +98,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
    * Reset the collected data.
    */
   public function reset() {
+    $this->data = [];
   }
 
   /**

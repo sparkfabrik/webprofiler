@@ -10,9 +10,9 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Collects config data.
+ * Collects Drupal data.
  */
-class ConfigDataCollector extends DataCollector implements LateDataCollectorInterface {
+class DrupalDataCollector extends DataCollector implements LateDataCollectorInterface {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,6 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
       'xdebug_enabled' => \extension_loaded('xdebug'),
       'apcu_enabled' => \extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN),
       'zend_opcache_enabled' => \extension_loaded('Zend OPcache') && filter_var(ini_get('opcache.enable'), \FILTER_VALIDATE_BOOLEAN),
-      'bundles' => [],
       'sapi_name' => \PHP_SAPI,
     ];
 
@@ -41,7 +40,7 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
    * {@inheritdoc}
    */
   public function getName(): string {
-    return 'config';
+    return 'drupal';
   }
 
   /**
