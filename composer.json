@@ -1,6 +1,6 @@
 {
     "name": "drupal/webprofiler",
-    "description": "Drupal Web Profiler.",
+    "description": "Drupal Webprofiler.",
     "type": "drupal-module",
     "support": {
         "issues": "https://www.drupal.org/project/issues/webprofiler",

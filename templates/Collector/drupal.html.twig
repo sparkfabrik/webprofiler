@@ -48,6 +48,31 @@
 
     <div class="sf-toolbar-info-group">
       <div class="sf-toolbar-info-piece">
+        <b>Drupal version</b>
+        <span>{{ collector.drupalVersion }}</span>
+      </div>
+      <div class="sf-toolbar-info-piece">
+        <b>Drupal profile</b>
+        <span>{{ collector.drupalProfile }}</span>
+      </div>
+      {% if collector.getGitCommit %}
+        <div class="sf-toolbar-info-piece">
+          <b>Git commit</b>
+          <span><abbr title="{{ collector.getGitCommit }}">{{ collector.getAbbrGitCommit }}</abbr></span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="sf-toolbar-info-group">
+      <div class="sf-toolbar-info-piece">
+        <b>Webprofiler</b>
+        <span>
+          <a href="{{ collector.getWebprofilerConfigUrl }}" title="Configure Webprofiler">
+            Configure
+          </a>
+        </span>
+      </div>
+      <div class="sf-toolbar-info-piece">
         <b>Resources</b>
         <span>
           <a href="https://www.drupal.org/documentation" rel="help">

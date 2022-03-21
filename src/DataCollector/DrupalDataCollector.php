@@ -4,15 +4,37 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
+use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Exception\RuntimeException;
+use Symfony\Component\Process\Process;
 
 /**
  * Collects Drupal data.
  */
 class DrupalDataCollector extends DataCollector implements LateDataCollectorInterface {
+
+  /**
+   * The Redirect destination service.
+   *
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface
+   */
+  private RedirectDestinationInterface $redirectDestination;
+
+  /**
+   * DrupalDataCollector constructor.
+   *
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
+   *   The Redirect destination service.
+   */
+  public function __construct(RedirectDestinationInterface $redirectDestination) {
+    $this->redirectDestination = $redirectDestination;
+  }
 
   /**
    * {@inheritdoc}
@@ -21,6 +43,8 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
     $this->data = [
       'token' => $response->headers->get('X-Debug-Token'),
       'drupal_version' => \Drupal::VERSION,
+      'drupal_profile' => \Drupal::installProfile(),
+      'webprofiler_config_url' => (new Url('webprofiler.settings', [], ['query' => $this->redirectDestination->getAsArray()]))->toString(),
       'php_version' => \PHP_VERSION,
       'php_architecture' => \PHP_INT_SIZE * 8,
       'php_timezone' => date_default_timezone_get(),
@@ -29,6 +53,8 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
       'zend_opcache_enabled' => \extension_loaded('Zend OPcache') && filter_var(ini_get('opcache.enable'), \FILTER_VALIDATE_BOOLEAN),
       'sapi_name' => \PHP_SAPI,
     ];
+
+    $this->addGitInfo($this->data);
 
     if (preg_match('~^(\d+(?:\.\d+)*)(.+)?$~', $this->data['php_version'], $matches) && isset($matches[2])) {
       $this->data['php_version'] = $matches[1];
@@ -69,6 +95,34 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
    */
   public function getDrupalVersion(): string {
     return $this->data['drupal_version'];
+  }
+
+  /**
+   * Gets the Symfony version.
+   */
+  public function getDrupalProfile(): string {
+    return $this->data['drupal_profile'];
+  }
+
+  /**
+   * Gets the Webprofiler config url.
+   */
+  public function getWebprofilerConfigUrl(): string {
+    return $this->data['webprofiler_config_url'];
+  }
+
+  /**
+   * Gets the git commit info, if any.
+   */
+  public function getGitCommit() {
+    return $this->data['git_commit'];
+  }
+
+  /**
+   * Gets the git commit SHA, if any.
+   */
+  public function getAbbrGitCommit() {
+    return $this->data['abbr_git_commit'];
   }
 
   /**
@@ -125,6 +179,25 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
    */
   public function getSapiName(): string {
     return $this->data['sapi_name'];
+  }
+
+  /**
+   * @param array $data
+   */
+  private function addGitInfo(array &$data) {
+    try {
+      $process = new Process(['git', 'log', '-1', '--pretty=format:"%H - %s (%ci)"', '--abbrev-commit']);
+      $process->setTimeout(3600);
+      $process->mustRun();
+      $data['git_commit'] = $process->getOutput();
+
+      $process = new Process(['git', 'log', '-1', '--pretty=format:"%h"', '--abbrev-commit']);
+      $process->setTimeout(3600);
+      $process->mustRun();
+      $data['abbr_git_commit'] = $process->getOutput();
+    } catch (ProcessFailedException|RuntimeException $e) {
+      $data['git_commit'] = $data['git_commit_abbr'] = NULL;
+    }
   }
 
 }

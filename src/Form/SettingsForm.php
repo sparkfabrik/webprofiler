@@ -72,7 +72,7 @@ class SettingsForm extends ConfigFormBase {
     $form['intercept_redirects'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Intercept redirects'),
-      '#description' => $this->t('Let the Web Profiler toolbar intercept redirects to help debugging.'),
+      '#description' => $this->t('Let the Webprofiler toolbar intercept redirects to help debugging.'),
       '#default_value' => $config->get('intercept_redirects'),
     ];
 
