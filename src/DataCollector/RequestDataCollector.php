@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Drupal\webprofiler\Panel\PanelInterface;
-use Drupal\webprofiler\Panel\RequestPanel;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +16,7 @@ use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector as BaseReque
 class RequestDataCollector extends BaseRequestDataCollector implements HasPanelInterface {
 
   use DataCollectorTrait;
+  use PanelTrait;
 
   public const SERVICE_ID = 'service_id';
 
@@ -67,8 +66,31 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): PanelInterface {
-    return new RequestPanel();
+  public function getPanel(): array {
+    return array_merge(
+      $this->renderTable(
+        $this->getRequestQuery()->all(), 'GET parameters'),
+      $this->renderTable(
+        $this->getRequestRequest()->all(), 'POST parameters'),
+      $this->renderTable(
+        $this->getRequestAttributes()->all(), 'Request attributes'),
+      $this->renderAccessChecks(
+        $this->getAccessChecks()->all(), 'Access check'),
+      $this->renderTable(
+        $this->getRequestCookies()->all(), 'Cookies'),
+      $this->renderTable(
+        $this->getSessionMetadata(), 'Session Metadata'),
+      $this->renderTable(
+        $this->getSessionAttributes(), 'Session Attributes'),
+      $this->renderTable(
+        $this->getRequestHeaders()->all(), 'Request headers'),
+      $this->renderContent(
+        $this->getContent(), 'Raw content'),
+      $this->renderTable(
+        $this->getRequestServer()->all(), 'Server Parameters'),
+      $this->renderTable(
+        $this->getResponseHeaders()->all(), 'Response headers')
+    );
   }
 
   /**
@@ -97,6 +119,88 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    */
   public function getAccessChecks(): ParameterBag {
     return new ParameterBag($this->data['access_checks']->getValue());
+  }
+
+  /**
+   * Render the content of a POST request.
+   *
+   * @param string $content
+   *   The content of a POST request.
+   * @param string $label
+   *   The section's label.
+   *
+   * @return array
+   *   The render array of the content.
+   */
+  private function renderContent(string $content, string $label): array {
+    return [
+      $label => [
+        '#type' => 'inline_template',
+        '#template' => '<h3>{{ title }}</h3> {% if data %}{{ data|raw }}{% else %}<em>{{ "No data"|t }}</em>{% endif %}',
+        '#context' => [
+          'title' => $label,
+          'data' => $content,
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Render the list of access checks.
+   *
+   * @param array $accessChecks
+   *   The list of access checks.
+   * @param string $label
+   *   The section label.
+   *
+   * @return array
+   *   The render array of the list of access checks.
+   */
+  private function renderAccessChecks(array $accessChecks, $label): array {
+    if (count($accessChecks) == 0) {
+      return [];
+    }
+
+    $rows = [];
+    /** @var \Symfony\Component\VarDumper\Cloner\Data $el */
+    foreach ($accessChecks as $el) {
+      $service_id = $el->getValue()[RequestDataCollector::SERVICE_ID];
+      $callable = $el->getValue()[RequestDataCollector::CALLABLE];
+
+      $rows[] = [
+        [
+          'data' => $service_id->getValue(),
+          'class' => 'webprofiler__key',
+        ],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($callable),
+            ],
+          ],
+          'class' => 'webprofiler__value',
+        ],
+      ];
+    }
+
+    return [
+      $label => [
+        '#theme' => 'webprofiler_dashboard_table',
+        '#title' => $label,
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [$this->t('Name'), $this->t('Value')],
+          '#rows' => $rows,
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+        ],
+      ],
+    ];
   }
 
 }

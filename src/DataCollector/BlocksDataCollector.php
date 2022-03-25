@@ -6,9 +6,8 @@ namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\webprofiler\Entity\EntityDecorator;
-use Drupal\webprofiler\Panel\BlocksPanel;
-use Drupal\webprofiler\Panel\PanelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -17,6 +16,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  * Collects blocks data.
  */
 class BlocksDataCollector extends DataCollector implements HasPanelInterface {
+
+  use StringTranslationTrait;
 
   /**
    * BlocksDataCollector constructor.
@@ -102,6 +103,16 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getPanel(): array {
+    return array_merge(
+      $this->renderBlocks($this->getLoadedBlocks(), 'Loaded'),
+      $this->renderBlocks($this->getRenderedBlocks(), 'Rendered'),
+    );
+  }
+
+  /**
    * Return the data to store about blocks.
    *
    * @param \Drupal\webprofiler\Entity\EntityDecorator $decorator
@@ -144,10 +155,70 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Render a list of blocks.
+   *
+   * @param array $blocks
+   *   The list of blocks to render.
+   * @param string $label
+   *   The list label.
+   *
+   * @return array
+   *   The render array of the list of blocks.
    */
-  public function getPanel(): PanelInterface {
-    return new BlocksPanel();
+  private function renderBlocks(array $blocks, string $label): array {
+    if (count($blocks) == 0) {
+      return [
+        $label => [
+          '#markup' => '<p>' . $this->t('No @label blocks collected',
+              ['@label' => $label]) . '</p>',
+        ],
+      ];
+    }
+
+    $rows = [];
+    foreach ($blocks as $block) {
+      $rows[] = [
+        $block['id'],
+        $block['settings']['label'],
+        $block['region'] ?? 'No region',
+        $block['settings']['provider'],
+        $block['theme'],
+        $block['status'] ? $this->t('Enabled') : $this->t('Disabled'),
+        $block['plugin'],
+      ];
+    }
+
+    return [
+      $label => [
+        '#theme' => 'webprofiler_dashboard_table',
+        '#title' => $label,
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [
+            $this->t('ID'),
+            $this->t('Label'),
+            $this->t('Region'),
+            $this->t('Source'),
+            [
+              'data' => $this->t('Theme'),
+              'class' => [RESPONSIVE_PRIORITY_LOW],
+            ],
+            $this->t('Status'),
+            [
+              'data' => $this->t('Plugin'),
+              'class' => [RESPONSIVE_PRIORITY_LOW],
+            ],
+          ],
+          '#rows' => $rows,
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+          '#sticky' => TRUE,
+        ],
+      ],
+    ];
   }
 
 }

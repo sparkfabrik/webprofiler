@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\webprofiler\Panel;
+namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\VarDumper\Cloner\Data;
@@ -11,16 +11,9 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 /**
  * Base class for dashboard panels.
  */
-class PanelBase {
+trait PanelTrait {
 
   use StringTranslationTrait;
-
-  /**
-   * A data dumper for HTML output.
-   *
-   * @var \Twig\Profiler\Dumper\HtmlDumper
-   */
-  private $dumper;
 
   /**
    * Internal resource to store dumped data.
@@ -28,21 +21,6 @@ class PanelBase {
    * @var resource
    */
   private $output;
-
-  /**
-   * PanelBase constructor.
-   *
-   * @param \Symfony\Component\VarDumper\Dumper\HtmlDumper|null $dumper
-   *   A data dumper for HTML output.
-   */
-  public function __construct(HtmlDumper $dumper = NULL) {
-    $this->dumper = $dumper ?: new HtmlDumper();
-    $this->dumper->setOutput($this->output = fopen('php://memory', 'r+b'));
-    $this->dumper->setTheme('light');
-
-    $file_link_formatter = \Drupal::service('webprofiler.file_link_formatter');
-    $this->dumper->setDisplayOptions(['fileLinkFormat' => $file_link_formatter]);
-  }
 
   /**
    * Dump data using a dumper.
@@ -55,8 +33,15 @@ class PanelBase {
    * @return string|string[]
    *   The string representation of dumped data.
    */
-  public function dumpData(Data $data, $maxDepth = 0) {
-    $this->dumper->dump($data, NULL, [
+  public function dumpData(Data $data, int $maxDepth = 0): array|string {
+    $dumper = new HtmlDumper();
+    $dumper->setOutput($this->output = fopen('php://memory', 'r+b'));
+    $dumper->setTheme('light');
+
+    $file_link_formatter = \Drupal::service('webprofiler.file_link_formatter');
+    $dumper->setDisplayOptions(['fileLinkFormat' => $file_link_formatter]);
+
+    $dumper->dump($data, NULL, [
       'maxDepth' => $maxDepth,
     ]);
 

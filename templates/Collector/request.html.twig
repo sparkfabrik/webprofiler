@@ -1,3 +1,23 @@
+{% macro set_handler(controller, route, method) %}
+  {% if controller.class is defined -%}
+    {%- if method|default(false) %}<span
+      class="sf-toolbar-status sf-toolbar-redirection-method">{{ method }}</span>{% endif -%}
+    {%- set link = controller.file|file_link(controller.line) %}
+    {%- if link %}<a href="{{ link }}" title="{{ controller.class }}">{% else %}<span title="{{ controller.class }}">{% endif %}
+
+    {%- if route|default(false) -%}
+      @{{ route }}
+    {%- else -%}
+      {{- controller.class|abbr_class|striptags -}}
+      {{- controller.method ? ' :: ' ~ controller.method -}}
+    {%- endif -%}
+
+    {%- if link %}</a>{% else %}</span>{% endif %}
+  {%- else -%}
+    <span>{{ route|default(controller) }}</span>
+  {%- endif %}
+{% endmacro %}
+
 {% block toolbar %}
 
   {% import _self as helper %}
@@ -88,22 +108,6 @@
   {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
 {% endblock %}
 
-{% macro set_handler(controller, route, method) %}
-  {% if controller.class is defined -%}
-    {%- if method|default(false) %}<span
-      class="sf-toolbar-status sf-toolbar-redirection-method">{{ method }}</span>{% endif -%}
-    {%- set link = controller.file|file_link(controller.line) %}
-    {%- if link %}<a href="{{ link }}" title="{{ controller.class }}">{% else %}<span title="{{ controller.class }}">{% endif %}
-
-    {%- if route|default(false) -%}
-      @{{ route }}
-    {%- else -%}
-      {{- controller.class|abbr_class|striptags -}}
-      {{- controller.method ? ' :: ' ~ controller.method -}}
-    {%- endif -%}
-
-    {%- if link %}</a>{% else %}</span>{% endif %}
-  {%- else -%}
-    <span>{{ route|default(controller) }}</span>
-  {%- endif %}
-{% endmacro %}
+{% block panel %}
+  {{ collector.panel() }}
+{% endblock %}

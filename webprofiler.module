@@ -49,8 +49,9 @@ function webprofiler_theme() {
     'webprofiler_dashboard_panel' => [
       'template' => 'Profiler/dashboard_panel',
       'variables' => [
-        'title' => '',
-        'data' => [],
+        'name' => '',
+        'template' => '',
+        'profile' => NULL,
       ],
     ],
     'webprofiler_dashboard_table' => [

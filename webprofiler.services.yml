@@ -60,6 +60,11 @@ services:
   webprofiler.stopwatch:
     class: Symfony\Component\Stopwatch\Stopwatch
 
+  http_middleware.webprofiler:
+    class: Drupal\webprofiler\StackMiddleware\WebprofilerMiddleware
+    tags:
+      - { name: http_middleware, priority: 350 }
+
   # debug services
   webprofiler.debug.entity_type.manager:
     class: Drupal\webprofiler\Entity\EntityTypeManagerWrapper
@@ -94,7 +99,13 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
 
-  webprofiler.config:
+  webprofiler.database:
+    class: Drupal\webprofiler\DataCollector\DatabaseDataCollector
+    arguments: ['@database', '@config.factory']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 600 }
+
+  webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
     arguments: ['@redirect.destination']
     tags:

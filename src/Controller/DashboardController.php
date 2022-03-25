@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\webprofiler\DataCollector\HasPanelInterface;
+use Drupal\webprofiler\Profiler\TemplateManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
@@ -25,11 +26,19 @@ class DashboardController extends ControllerBase {
   private $profiler;
 
   /**
+   * The Template manager service.
+   *
+   * @var \Drupal\webprofiler\Profiler\TemplateManager
+   */
+  private TemplateManager $templateManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('webprofiler.profiler')
+      $container->get('webprofiler.profiler'),
+      $container->get('webprofiler.template_manager')
     );
   }
 
@@ -38,9 +47,15 @@ class DashboardController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profiler $profiler
    *   The Profiler service.
+   * @param \Drupal\webprofiler\Profiler\TemplateManager $templateManager
+   *   The Template manager service.
    */
-  final public function __construct(Profiler $profiler) {
+  final public function __construct(
+    Profiler $profiler,
+    TemplateManager $templateManager
+  ) {
     $this->profiler = $profiler;
+    $this->templateManager = $templateManager;
   }
 
   /**
@@ -108,14 +123,16 @@ class DashboardController extends ControllerBase {
       return new AjaxResponse('');
     }
 
-    $panel = $collector->getPanel();
-
-    $response = new AjaxResponse();
+   $response = new AjaxResponse();
     $response->addCommand(
       new HtmlCommand(
         '#js-webprofiler-panel',
-        $panel->render($token, $name)
-      )
+      [
+        '#theme' => 'webprofiler_dashboard_panel',
+        '#name' => $name,
+        '#template' => $this->templateManager->getName($profile, $name),
+        '#profile' => $profile,
+      ])
     );
 
     return $response;

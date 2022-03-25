@@ -1,0 +1,44 @@
+{% macro query(sql) %}
+  <div> {{ sql }}</div>
+{% endmacro %}
+
+{% block toolbar %}
+
+  {% set icon %}
+    {% set status = collector.querycount > 50 ? 'yellow' %}
+
+    {{ include('@webprofiler/Icon/database.svg') }}
+    <span class="sf-toolbar-value">{{ collector.querycount }}</span>
+    <span class="sf-toolbar-info-piece-additional-detail">
+      <span class="sf-toolbar-label">in</span>
+      <span class="sf-toolbar-value">{{ '%0.2f'|format(collector.time) }}</span>
+      <span class="sf-toolbar-label">ms</span>
+    </span>
+  {% endset %}
+
+  {% set text %}
+    <div class="sf-toolbar-info-piece">
+      <b>Db queries</b>
+      <span>{{ collector.querycount }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>Query time</b>
+      <span>{{ '%0.2f'|format(collector.time) }} ms</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>Default database</b>
+      <span>{{ collector.database.driver }}://{{ collector.database.host }}:{{ collector.database.port }}/{{ collector.database.database }}</span>
+    </div>
+  {% endset %}
+
+  {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url, status: status|default('') }) }}
+{% endblock %}
+
+{% block panel %}
+  <div>Filters</div>
+  <div>
+    {% for query in collector.queries %}
+      {{ _self.query(query.query) }}
+    {% endfor %}
+  </div>
+{% endblock %}

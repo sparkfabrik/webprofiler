@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
-use Drupal\webprofiler\Panel\PanelInterface;
-
 /**
  * Interface for DataCollector classes.
  */
@@ -14,9 +12,9 @@ interface HasPanelInterface {
   /**
    * Return the class used to render data for this data collector.
    *
-   * @return \Drupal\webprofiler\Panel\PanelInterface
-   *   A class that can render this data collector.
+   * @return array
+   *   A renderable array.
    */
-  public function getPanel(): PanelInterface;
+  public function getPanel(): array;
 
 }
