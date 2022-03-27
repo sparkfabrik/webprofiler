@@ -7,6 +7,8 @@ namespace Drupal\webprofiler;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use Drupal\webprofiler\Compiler\ProfilerPass;
+use Drupal\webprofiler\Compiler\ServicePass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -20,6 +22,8 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
   public function register(ContainerBuilder $container) {
     // Add a compiler pass to discover all data collector services.
     $container->addCompilerPass(new ProfilerPass());
+
+    $container->addCompilerPass(new ServicePass(), PassConfig::TYPE_AFTER_REMOVING);
 
     $modules = $container->getParameter('container.modules');
 
@@ -46,6 +50,15 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
       ->setClass('Drupal\webprofiler\Access\AccessManagerWrapper')
       ->addMethodCall('setDataCollector',
         [new Reference('webprofiler.request')]);
+
+    // Replace the regular event_dispatcher service with a traceable one.
+    $container->getDefinition('event_dispatcher')
+      ->setClass('Drupal\webprofiler\EventDispatcher\TraceableEventDispatcher')
+      ->addMethodCall('setStopwatch', [new Reference('webprofiler.stopwatch')]);
+
+    // Replace the controller resolver service with a traceable one.
+    $container->getDefinition('http_kernel.basic')
+      ->replaceArgument(1, new Reference('webprofiler.debug.controller_resolver'));
   }
 
 }

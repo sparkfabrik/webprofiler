@@ -51,6 +51,12 @@ services:
     factory: Drupal\webprofiler\FileLinkFormatterFactory::getFileLinkFormatter
     arguments: ['@request_stack', '@config.factory']
 
+  webprofiler.stopwatch:
+    class: Symfony\Component\Stopwatch\Stopwatch
+
+  webprofiler.twig_profile:
+    class: Twig\Profiler\Profile
+
   webprofiler.twig.code_extension:
     class: Drupal\webprofiler\Twig\Extension\CodeExtension
     arguments: [ '@webprofiler.file_link_formatter' ]
@@ -62,8 +68,11 @@ services:
     tags:
       - { name: twig.extension, priority: 100 }
 
-  webprofiler.stopwatch:
-    class: Symfony\Component\Stopwatch\Stopwatch
+  webprofiler.twig.profiler_extension:
+    class: Drupal\webprofiler\Twig\Extension\ProfilerExtension
+    arguments: ['@webprofiler.twig_profile', '@webprofiler.stopwatch']
+    tags:
+      - { name: twig.extension, priority: 100 }
 
   http_middleware.webprofiler:
     class: Drupal\webprofiler\StackMiddleware\WebprofilerMiddleware
@@ -80,6 +89,10 @@ services:
     properties:
       _serviceId: 'entity_type.manager'
 
+  webprofiler.debug.controller_resolver:
+    class: Symfony\Component\HttpKernel\Controller\TraceableControllerResolver
+    arguments: [ '@controller_resolver', '@webprofiler.stopwatch' ]
+
   # data collectors
   webprofiler.request:
     class: Drupal\webprofiler\DataCollector\RequestDataCollector
@@ -92,23 +105,29 @@ services:
     class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
     arguments: [NULL, '@webprofiler.stopwatch']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/time.html.twig', id: 'time', label: 'Time', priority: 900 }
+      - { name: data_collector, template: '@webprofiler/Collector/time.html.twig', id: 'time', label: 'Time', priority: 950 }
 
   webprofiler.memory:
     class: Drupal\webprofiler\DataCollector\MemoryDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 800 }
+      - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 900 }
 
   webprofiler.ajax:
     class: Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 700 }
+      - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 850 }
 
   webprofiler.database:
     class: Drupal\webprofiler\DataCollector\DatabaseDataCollector
     arguments: ['@database', '@config.factory']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 600 }
+      - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 800 }
+
+  webprofiler.services:
+    class: Drupal\webprofiler\DataCollector\ServicesDataCollector
+    arguments: ['@service_container']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/services.html.twig', id: 'services', label: 'Services', priority: 750 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

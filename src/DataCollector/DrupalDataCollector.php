@@ -195,7 +195,7 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
           'log',
           '-1',
           '--pretty=format:"%H - %s (%ci)"',
-          '--abbrev-commit'
+          '--abbrev-commit',
         ]
       );
       $process->setTimeout(3600);
@@ -208,7 +208,7 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
           'log',
           '-1',
           '--pretty=format:"%h"',
-          '--abbrev-commit'
+          '--abbrev-commit',
         ]
       );
       $process->setTimeout(3600);
