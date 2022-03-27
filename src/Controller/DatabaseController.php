@@ -8,7 +8,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
-use Drupal\webprofiler\DataCollector\DatabaseDataCollector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -20,11 +19,15 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 class DatabaseController extends ControllerBase {
 
   /**
+   * The Profiler service.
+   *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
    */
   private Profiler $profiler;
 
   /**
+   * The database connection.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   private Connection $database;
@@ -43,7 +46,9 @@ class DatabaseController extends ControllerBase {
    * Constructs a new WebprofilerController.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profiler $profiler
+   *   The Profiler service.
    * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    */
   public function __construct(Profiler $profiler, Connection $database) {
     $this->profiler = $profiler;
@@ -59,6 +64,7 @@ class DatabaseController extends ControllerBase {
    *   The query id.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
+   *   A table with the query explain results.
    */
   public function explainAction(string $token, int $qid): AjaxResponse {
     if (!$profile = $this->profiler->loadProfile($token)) {
@@ -118,7 +124,7 @@ class DatabaseController extends ControllerBase {
       throw new NotFoundHttpException((string) $this->t('Token @token does not exist.', ['@token' => $token]));
     }
 
-    /** @var DatabaseDataCollector $databaseCollector */
+    /** @var \Drupal\webprofiler\DataCollector\DatabaseDataCollector $databaseCollector */
     $databaseCollector = $profile->getCollector('database');
 
     $queries = $databaseCollector->getQueries();

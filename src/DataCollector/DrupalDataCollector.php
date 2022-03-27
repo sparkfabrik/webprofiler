@@ -182,20 +182,40 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
   }
 
   /**
+   * Add GIT information to the collected data.
+   *
    * @param array $data
+   *   The collected data.
    */
   private function addGitInfo(array &$data) {
     try {
-      $process = new Process(['git', 'log', '-1', '--pretty=format:"%H - %s (%ci)"', '--abbrev-commit']);
+      $process = new Process(
+        [
+          'git',
+          'log',
+          '-1',
+          '--pretty=format:"%H - %s (%ci)"',
+          '--abbrev-commit'
+        ]
+      );
       $process->setTimeout(3600);
       $process->mustRun();
       $data['git_commit'] = $process->getOutput();
 
-      $process = new Process(['git', 'log', '-1', '--pretty=format:"%h"', '--abbrev-commit']);
+      $process = new Process(
+        [
+          'git',
+          'log',
+          '-1',
+          '--pretty=format:"%h"',
+          '--abbrev-commit'
+        ]
+      );
       $process->setTimeout(3600);
       $process->mustRun();
       $data['abbr_git_commit'] = $process->getOutput();
-    } catch (ProcessFailedException|RuntimeException $e) {
+    }
+    catch (ProcessFailedException | RuntimeException $e) {
       $data['git_commit'] = $data['git_commit_abbr'] = NULL;
     }
   }

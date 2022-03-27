@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- *
+ * Collects database data.
  */
 class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
 
@@ -20,7 +20,9 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    * DatabaseDataCollector constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The Config factory service.
    */
   public function __construct(
     protected readonly Connection $database,
@@ -40,7 +42,8 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
         if ($database->getLogger()) {
           $connections[$key] = $database->getLogger()->get('webprofiler');
         }
-      } catch(\Exception $e) {
+      }
+      catch (\Exception $e) {
         // There was some error during database connection, maybe a stale
         // configuration in settings.php or wrong values used for a migration.
       }
@@ -99,21 +102,32 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Return the database info.
+   *
    * @return array
+   *   The database info.
    */
   public function getDatabase(): array {
     return $this->data['database'];
   }
 
   /**
+   * Return the number of execute queries.
+   *
    * @return int
+   *   The number of execute queries.
    */
   public function getQueryCount(): int {
     return count($this->data['queries']);
   }
 
   /**
+   * Return a list of execute queries.
+   *
+   * Queries are sorted by the value of query_sort config option.
+   *
    * @return array
+   *   A list of execute queries.
    */
   public function getQueries(): array {
     $querySort = \Drupal::configFactory()
@@ -137,6 +151,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    * Returns the total execution time.
    *
    * @return float
+   *   The total execution time.
    */
   public function getTime(): float {
     $time = 0;
@@ -152,6 +167,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    * Returns the configured query highlight threshold.
    *
    * @return int
+   *   The configured query highlight threshold.
    */
   public function getQueryHighlightThreshold(): int {
     // When a profile is loaded from storage this object is deserialized and
@@ -162,12 +178,13 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Order queries by time.
    *
-   * @param $a
+   * @param array $a
    *   A query data.
-   * @param $b
+   * @param array $b
    *   A query data.
    *
    * @return int
+   *   The comparison result.
    */
   private function orderQueryByTime(array $a, array $b): int {
     return $a['time'] <=> $b['time'];

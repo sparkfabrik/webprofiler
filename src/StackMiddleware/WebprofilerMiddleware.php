@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Class WebprofilerMiddleware
+ * Start the database logger.
  */
 class WebprofilerMiddleware implements HttpKernelInterface {
 
@@ -24,7 +24,7 @@ class WebprofilerMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response {
+  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE): Response {
     foreach (Database::getAllConnectionInfo() as $key => $info) {
       Database::startLog('webprofiler', $key);
     }

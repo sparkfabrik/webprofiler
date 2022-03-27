@@ -123,7 +123,7 @@ class DashboardController extends ControllerBase {
       return new AjaxResponse('');
     }
 
-   $response = new AjaxResponse();
+    $response = new AjaxResponse();
     $response->addCommand(
       new HtmlCommand(
         '#js-webprofiler-panel',

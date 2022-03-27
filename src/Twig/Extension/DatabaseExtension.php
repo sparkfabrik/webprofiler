@@ -24,9 +24,13 @@ class DatabaseExtension extends AbstractExtension {
   }
 
   /**
+   * Return the type of the query.
+   *
    * @param string $query
+   *   A SQL query.
    *
    * @return string
+   *   The type of the query.
    */
   public function queryType(string $query): string {
     $parts = explode(' ', $query);
@@ -34,9 +38,13 @@ class DatabaseExtension extends AbstractExtension {
   }
 
   /**
+   * Return the executable version of the query.
+   *
    * @param array $query
+   *   A query array.
    *
    * @return string
+   *   The executable version of the query.
    */
   public function queryExecutable(array $query): string {
     $conn = Database::getConnection();
