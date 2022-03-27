@@ -23,7 +23,7 @@ class DashboardController extends ControllerBase {
    *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
    */
-  private $profiler;
+  private Profiler $profiler;
 
   /**
    * The Template manager service.

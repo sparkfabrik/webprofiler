@@ -57,6 +57,11 @@ services:
     tags:
       - { name: twig.extension, priority: 100 }
 
+  webprofiler.twig.database_extension:
+    class: Drupal\webprofiler\Twig\Extension\DatabaseExtension
+    tags:
+      - { name: twig.extension, priority: 100 }
+
   webprofiler.stopwatch:
     class: Symfony\Component\Stopwatch\Stopwatch
 

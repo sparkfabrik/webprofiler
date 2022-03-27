@@ -66,20 +66,6 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
       }
     }
 
-    $querySort = $this
-      ->configFactory
-      ->get('webprofiler.config')
-      ->get('query_sort');
-
-    if ('duration' === $querySort) {
-      usort(
-        $data, [
-          "Drupal\\webprofiler\\DataCollector\\DatabaseDataCollector",
-          "orderQueryByTime",
-        ]
-      );
-    }
-
     $this->data['queries'] = $data;
 
     $options = $this->database->getConnectionOptions();
@@ -115,22 +101,36 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * @return array
    */
-  public function getDatabase() {
+  public function getDatabase(): array {
     return $this->data['database'];
   }
 
   /**
    * @return int
    */
-  public function getQueryCount() {
+  public function getQueryCount(): int {
     return count($this->data['queries']);
   }
 
   /**
    * @return array
    */
-  public function getQueries() {
-    return $this->data['queries'];
+  public function getQueries(): array {
+    $querySort = \Drupal::configFactory()
+      ->get('webprofiler.config')
+      ->get('query_sort') ?: '';
+
+    $queries = $this->data['queries'];
+    if ('duration' === $querySort) {
+      usort(
+        $queries, [
+          "Drupal\\webprofiler\\DataCollector\\DatabaseDataCollector",
+          "orderQueryByTime",
+        ]
+      );
+    }
+
+    return $queries;
   }
 
   /**
@@ -138,7 +138,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @return float
    */
-  public function getTime() {
+  public function getTime(): float {
     $time = 0;
 
     foreach ($this->data['queries'] as $query) {
@@ -153,26 +153,24 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @return int
    */
-  public function getQueryHighlightThreshold() {
+  public function getQueryHighlightThreshold(): int {
     // When a profile is loaded from storage this object is deserialized and
-    // no constructor is called so we cannot use dependency injection.
-    return \Drupal::config('webprofiler.config')->get('query_highlight');
+    // no constructor is called, so we cannot use dependency injection.
+    return \Drupal::config('webprofiler.settings')->get('query_highlight');
   }
 
   /**
+   * Order queries by time.
+   *
    * @param $a
+   *   A query data.
    * @param $b
+   *   A query data.
    *
    * @return int
    */
-  private function orderQueryByTime($a, $b) {
-    $at = $a['time'];
-    $bt = $b['time'];
-
-    if ($at == $bt) {
-      return 0;
-    }
-    return ($at < $bt) ? 1 : -1;
+  private function orderQueryByTime(array $a, array $b): int {
+    return $a['time'] <=> $b['time'];
   }
 
 }

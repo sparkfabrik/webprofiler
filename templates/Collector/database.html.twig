@@ -1,7 +1,3 @@
-{% macro query(sql) %}
-  <div> {{ sql }}</div>
-{% endmacro %}
-
 {% block toolbar %}
 
   {% set icon %}
@@ -36,9 +32,60 @@
 
 {% block panel %}
   <div>Filters</div>
+  <hr/>
   <div>
     {% for query in collector.queries %}
-      {{ _self.query(query.query) }}
+      {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
     {% endfor %}
   </div>
 {% endblock %}
+
+{% macro query(query, token, qid, queryHighlightThreshold) %}
+  {% set slow_query = query.time > (queryHighlightThreshold/10) %}
+  <div
+    data-webprofiler-caller="{% if query.caller.class is not null %}{{ query.caller.class|lower }}{% endif %}"
+    data-webprofiler-database="{{ query.database }}"
+    data-webprofiler-type="{{ query_type(query.query) }}"
+    data-webprofiler-slow="{% if slow_query %}1{% else %}0{% endif %}"
+    class="{% if slow_query %}slow-query{% endif %}"
+  >
+    <pre>
+      <code class="language-sql js--placeholder-query-{{ qid }}">{{ query.query }}</code>
+      {% if query.args %}<code class="language-sql js--executable-query-{{ qid }} is-hidden">{{ query_executable(query) }}</code>{% endif %}
+    </pre>
+    <div>
+      <dl>
+        <dt>Time</dt>
+        <dd>{{ query.time }} ms</dd>
+        <dt>Caller</dt>
+        <dd>{{ query.caller.class }}</dd>
+        <dt>Database</dt>
+        <dd>{{ query.database }}</dd>
+        <dt>Target</dt>
+        <dd>{{ query.target }}</dd>
+      </dl>
+    </div>
+
+    {% if query.args %}<a class="js--executable-toggle" data-webprofiler-qid="{{ qid }}">Swap placeholders</a>{% endif %}
+    {% if query.args %}<a class="js--placeholder-toggle" data-webprofiler-qid="{{ qid }}">Show placeholders</a>{% endif %}
+    <a class="js--query-copy" data-webprofiler-qid="{{ qid }}">Copy query</a>
+    {% if query_type(query.query) == 'SELECT' %}
+      <a href="{{ path('webprofiler.database.explain', {'token': token, 'qid': qid}) }}"
+        class="use-ajax">Explain
+      </a>
+    {% endif %}
+
+    <div class="js--explain-target-{{ qid }}"></div>
+
+    {% if query.args %}
+      <div class="js--placeholder-target-{{ qid }} is-hidden">
+        <dl>
+          {% for key,placeholder in query.args %}
+            <dt>{{ key }}</dt>
+            <dd>{{ placeholder }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}

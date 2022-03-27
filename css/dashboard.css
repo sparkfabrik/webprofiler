@@ -21,3 +21,11 @@
 .webprofiler__value {
   width: 80%;
 }
+
+.webprofiler__panel .is-hidden {
+  display: none;
+}
+
+.webprofiler__panel pre {
+  white-space: unset;
+}

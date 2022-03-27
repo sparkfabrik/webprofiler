@@ -1,9 +1,23 @@
 dashboard:
   version: VERSION
-  js:
-    js/dashboard.js: {}
   css:
     component:
       css/dashboard.css: {}
   dependencies:
     - core/drupal.ajax
+    - webprofiler/database
+database:
+  remote: https://github.com/highlightjs/highlight.js
+  version: 11.5.0
+  license:
+    name: BSD 3-Clause
+    url: https://github.com/highlightjs/highlight.js/blob/main/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js: { type: external, minified: true }
+    js/database.js: {}
+  css:
+    component:
+      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css: { type: external, minified: true }
+  dependencies:
+    - core/jquery

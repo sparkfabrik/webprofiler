@@ -20,6 +20,15 @@ webprofiler.panel:
   requirements:
     _permission: 'view webprofiler toolbar'
 
+# get query explain
+webprofiler.database.explain:
+  path: '/admin/reports/profiler/database_explain/{token}/{qid}'
+  defaults:
+    _controller: '\Drupal\webprofiler\Controller\DatabaseController::explainAction'
+    _title: 'Query explain'
+  requirements:
+    _permission: 'access webprofiler'
+
 #webprofiler.admin_list:
 #  path: '/admin/reports/profiler/list'
 #  defaults:
