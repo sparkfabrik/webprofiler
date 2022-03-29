@@ -4,5 +4,7 @@ description: 'Drupal Webprofiler.'
 package: Development
 core_version_requirement: ^10
 configure: webprofiler.settings
+dependencies:
+  tracer:tracer
 tags:
  - developer

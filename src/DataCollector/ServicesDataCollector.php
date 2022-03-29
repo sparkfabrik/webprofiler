@@ -3,7 +3,7 @@
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\webprofiler\DependencyInjection\TraceableContainer;
+use Drupal\tracer\DependencyInjection\TraceableContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
