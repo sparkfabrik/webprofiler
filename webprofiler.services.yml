@@ -80,10 +80,6 @@ services:
     properties:
       _serviceId: 'entity_type.manager'
 
-  webprofiler.debug.controller_resolver:
-    class: Drupal\tracer\Controller\TraceableControllerResolver
-    arguments: [ '@controller_resolver' ]
-
   # data collectors
   webprofiler.request:
     class: Drupal\webprofiler\DataCollector\RequestDataCollector

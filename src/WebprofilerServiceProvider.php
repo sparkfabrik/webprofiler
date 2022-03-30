@@ -50,10 +50,6 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
       ->setClass('Drupal\webprofiler\Access\AccessManagerWrapper')
       ->addMethodCall('setDataCollector',
         [new Reference('webprofiler.request')]);
-
-    // Replace the controller resolver service with a traceable one.
-    $container->getDefinition('http_kernel.basic')
-      ->replaceArgument(1, new Reference('webprofiler.debug.controller_resolver'));
   }
 
 }
