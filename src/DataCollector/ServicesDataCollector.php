@@ -27,6 +27,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
    * ServicesDataCollector constructor.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container.
    */
   public function __construct(ContainerInterface $container) {
     $this->container = $container;
