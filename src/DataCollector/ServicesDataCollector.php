@@ -10,19 +10,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Class ServicesDataCollector
+ * Collects data about services.
  */
 class ServicesDataCollector extends DataCollector implements HasPanelInterface {
 
   use StringTranslationTrait, DataCollectorTrait;
 
   /**
+   * The service container.
+   *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   *   $container
    */
   private ContainerInterface $container;
 
   /**
+   * ServicesDataCollector constructor.
+   *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    */
   public function __construct(ContainerInterface $container) {
@@ -54,28 +57,40 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * @param $services
+   * Set services.
+   *
+   * @param array $services
+   *   Array of services.
    */
-  public function setServices($services) {
+  public function setServices(array $services) {
     $this->data['services'] = $services;
   }
 
   /**
+   * Returns services.
+   *
    * @return array
+   *   Array of services.
    */
   public function getServices(): array {
     return $this->data['services'];
   }
 
   /**
+   * Return the number of services.
+   *
    * @return int
+   *   The number of services.
    */
   public function getServicesCount(): int {
     return count($this->getServices());
   }
 
   /**
+   * Returns array of services that are initialized.
+   *
    * @return array
+   *   Array of services that are initialized.
    */
   public function getInitializedServices(): array {
     return array_filter($this->getServices(), function ($item) {
@@ -84,14 +99,20 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Returns the number of services that are initialized.
+   *
    * @return int
+   *   The number of services that are initialized.
    */
   public function getInitializedServicesCount(): int {
     return count($this->getInitializedServices());
   }
 
   /**
+   * Return all services but the ones from Webprofiler itself.
+   *
    * @return array
+   *   All services but the ones from Webprofiler itself.
    */
   public function getInitializedServicesWithoutWebprofiler(): array {
     return array_filter($this->getInitializedServices(), function ($item) {
@@ -100,7 +121,10 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Return the number of services but the ones from Webprofiler itself.
+   *
    * @return int
+   *   The number of services but the ones from Webprofiler itself.
    */
   public function getInitializedServicesWithoutWebprofilerCount(): int {
     return count($this->getInitializedServicesWithoutWebprofiler());

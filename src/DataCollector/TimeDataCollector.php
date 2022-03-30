@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
-use Symfony\Component\Stopwatch\StopwatchEvent;
 
 /**
  * Collects data about timed events.
@@ -20,6 +19,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
    * TimeDataCollector constructor.
    *
    * @param \Drupal\tracer\TracerFactory $tracerFactory
+   *   The tracer factory.
    */
   public function __construct(protected readonly TracerFactory $tracerFactory) {
   }
@@ -60,7 +60,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
   /**
    * Set collected events to data.
    *
-   * @param StopwatchEvent[] $events
+   * @param \Symfony\Component\Stopwatch\StopwatchEvent[] $events
    *   The request events.
    */
   public function setEvents(array $events) {
@@ -74,7 +74,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
   /**
    * Retrieve collected events from data.
    *
-   * @return StopwatchEvent[]
+   * @return \Symfony\Component\Stopwatch\StopwatchEvent[]
    *   The collected events from data.
    */
   public function getEvents(): array {

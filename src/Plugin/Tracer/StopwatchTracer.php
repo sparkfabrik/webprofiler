@@ -8,6 +8,8 @@ use Drupal\tracer\TracerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
+ * Tracer that uses Symfony Stopwatch as a backend.
+ *
  * @Tracer(
  *   id = "stopwatch_tracer",
  *   label = @Translation("Stopwatch Tracer"),
@@ -16,10 +18,15 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class StopwatchTracer implements TracerInterface {
 
+  /**
+   * The Stopwatch instance.
+   *
+   * @var \Symfony\Component\Stopwatch\Stopwatch
+   */
   private Stopwatch $tracer;
 
   /**
-   *
+   * StopwatchTracer constructor.
    */
   public function __construct() {
     $this->tracer = new Stopwatch();
@@ -54,7 +61,6 @@ class StopwatchTracer implements TracerInterface {
    * {@inheritdoc}
    */
   public function stop(object $span): void {
-    //assert($span instanceof SpanInterface);
     try {
       $span->stop();
     }
