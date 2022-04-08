@@ -6,14 +6,14 @@
   {% endset %}
 
   {% set text %}
-{#    <div class="sf-toolbar-info-piece">#}
-{#      <b>Loaded blocks</b>#}
-{#      <span>{{ collector.getLoadedBlocksCount }}</span>#}
-{#    </div>#}
-{#    <div class="sf-toolbar-info-piece">#}
-{#      <b>Rendered blocks</b>#}
-{#      <span>{{ collector.getRenderedBlocksCount }}</span>#}
-{#    </div>#}
+    <div class="sf-toolbar-info-piece">
+      <b>Initialized</b>
+      <span>{{ collector.getInitializedServicesCount }} ({{ collector.getInitializedServicesWithoutWebprofilerCount }})</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>Available</b>
+      <span>{{ collector.getServicesCount }}</span>
+    </div>
   {% endset %}
 
   {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}

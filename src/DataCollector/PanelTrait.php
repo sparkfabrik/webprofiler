@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\webprofiler\MethodData;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
@@ -115,6 +116,45 @@ trait PanelTrait {
         ],
       ],
     ];
+  }
+
+  /**
+   * Render a link to a file.
+   *
+   * @param string $file
+   *   The file path.
+   * @param int $line
+   *   The file line.
+   * @param string $label
+   *   A label to display.
+   *
+   * @return array
+   *   A render array for the link.
+   */
+  protected function renderClasslink(string $file, int $line, string $label): array {
+    $flf = \Drupal::service('webprofiler.file_link_formatter');
+
+    return [
+      '#type' => 'inline_template',
+      '#template' => '<a href="{{ href }}">{{ label }}</a>',
+      '#context' => [
+        'href' => $flf->format($file ?? '', $line),
+        'label' => $label,
+      ],
+    ];
+  }
+
+  /**
+   * Render a link to a file from a MethodData object.
+   *
+   * @param mixed $method
+   *   MethodData object.
+   *
+   * @return array
+   *   A render array for the link.
+   */
+  protected function renderClassLinkFromMethodData(MethodData $method): array {
+    return $this->renderClasslink($method->getFile(), $method->getLine(), $method->getClass() . '::' . $method->getMethod());
   }
 
 }

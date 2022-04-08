@@ -61,6 +61,12 @@ function webprofiler_theme() {
         'data' => [],
       ],
     ],
+    'webprofiler_dashboard_tabs' => [
+      'template' => 'Profiler/dashboard_tabs',
+      'variables' => [
+        'tabs' => [],
+      ],
+    ],
   ];
 }
 

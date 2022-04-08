@@ -1,0 +1,18 @@
+<div>
+  <div class="sf-tabs">
+    <ul>
+      {% for id,tab in tabs %}
+        <li><a href="#sf-tab-{{ id }}">{{ tab.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="sf-tab-content">
+    {% for id,tab in tabs %}
+      <div id="sf-tab-{{ id }}">
+        <h3>{{ tab.label }}</h3>
+        <div>{{ tab.content }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

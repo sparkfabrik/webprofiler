@@ -31,13 +31,9 @@
 {% endblock %}
 
 {% block panel %}
-  <div>Filters</div>
-  <hr/>
-  <div>
-    {% for query in collector.queries %}
-      {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
-    {% endfor %}
-  </div>
+  {% for query in collector.queries %}
+    {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
+  {% endfor %}
 {% endblock %}
 
 {% macro query(query, token, qid, queryHighlightThreshold) %}
