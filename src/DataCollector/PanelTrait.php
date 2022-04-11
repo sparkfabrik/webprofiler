@@ -147,7 +147,7 @@ trait PanelTrait {
   /**
    * Render a link to a file from a MethodData object.
    *
-   * @param mixed $method
+   * @param \Drupal\webprofiler\MethodData $method
    *   MethodData object.
    *
    * @return array
