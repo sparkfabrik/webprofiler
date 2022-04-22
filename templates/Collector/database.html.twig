@@ -31,6 +31,7 @@
 {% endblock %}
 
 {% block panel %}
+  {{ attach_library('webprofiler/database')}}
   {% for query in collector.queries %}
     {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
   {% endfor %}
@@ -46,9 +47,10 @@
     class="{% if slow_query %}slow-query{% endif %}"
   >
     <pre>
-      <code class="language-sql js--placeholder-query-{{ qid }}">{{ query.query }}</code>
-      {% if query.args %}<code class="language-sql js--executable-query-{{ qid }} is-hidden">{{ query_executable(query) }}</code>{% endif %}
+      <code data-webprofiler-placeholder-query="{{ qid }}" class="language-sql">{{ query.query }}</code>
+      {% if query.args %}<code data-webprofiler-executable-query="{{ qid }}" class="language-sql is-hidden">{{ query_executable(query) }}</code>{% endif %}
     </pre>
+
     <div>
       <dl>
         <dt>Time</dt>
@@ -62,9 +64,9 @@
       </dl>
     </div>
 
-    {% if query.args %}<a class="js--executable-toggle" data-webprofiler-qid="{{ qid }}">Swap placeholders</a>{% endif %}
-    {% if query.args %}<a class="js--placeholder-toggle" data-webprofiler-qid="{{ qid }}">Show placeholders</a>{% endif %}
-    <a class="js--query-copy" data-webprofiler-qid="{{ qid }}">Copy query</a>
+    {% if query.args %}<a data-webprofiler-executable-toggle data-webprofiler-qid="{{ qid }}">Swap placeholders</a>{% endif %}
+    {% if query.args %}<a data-webprofiler-placeholder-toggle data-webprofiler-qid="{{ qid }}">Show placeholders</a>{% endif %}
+    <a data-webprofiler-copy data-webprofiler-qid="{{ qid }}">Copy query</a>
     {% if query_type(query.query) == 'SELECT' %}
       <a href="{{ path('webprofiler.database.explain', {'token': token, 'qid': qid}) }}"
         class="use-ajax">Explain
@@ -74,7 +76,7 @@
     <div class="js--explain-target-{{ qid }}"></div>
 
     {% if query.args %}
-      <div class="js--placeholder-target-{{ qid }} is-hidden">
+      <div data-webprofiler-placeholder-target="{{ qid }}" class="is-hidden">
         <dl>
           {% for key,placeholder in query.args %}
             <dt>{{ key }}</dt>
