@@ -13,8 +13,8 @@ services:
     arguments: ['%webprofiler.file_profiler_storage_dns%']
 
   webprofiler.profiler:
-    class: Symfony\Component\HttpKernel\Profiler\Profiler
-    arguments: ['@webprofiler.file_storage', '@logger.channel.webprofiler']
+    class: Drupal\webprofiler\Profiler\Profiler
+    arguments: ['@webprofiler.file_storage', '@logger.channel.webprofiler', '@config.factory']
 
   webprofiler.matcher:
     class: Drupal\webprofiler\RequestMatcher\WebprofilerRequestMatcher
