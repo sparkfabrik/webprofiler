@@ -167,12 +167,12 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   private function renderSettings(array $settings): array {
     return [
-        '#type' => 'inline_template',
-        '#template' => '{{ data|raw }}',
-        '#context' => [
-          'data' => $this->dumpData($this->cloneVar($settings['data'])),
-        ],
-      ];
+      '#type' => 'inline_template',
+      '#template' => '{{ data|raw }}',
+      '#context' => [
+        'data' => $this->dumpData($this->cloneVar($settings['data'])),
+      ],
+    ];
   }
 
   /**
