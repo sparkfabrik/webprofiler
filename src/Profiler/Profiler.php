@@ -14,7 +14,9 @@ use Symfony\Component\HttpKernel\Profiler\Profiler as SymfonyProfiler;
 class Profiler extends SymfonyProfiler {
 
   /**
-   * @var string []
+   * List of items to show in the toolbar.
+   *
+   * @var string[]
    */
   private array $activeToolbarItems;
 

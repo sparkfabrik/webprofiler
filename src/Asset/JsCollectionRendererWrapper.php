@@ -14,7 +14,9 @@ class JsCollectionRendererWrapper implements AssetCollectionRendererInterface {
    * JsCollectionRendererWrapper constructor.
    *
    * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $assetCollectionRenderer
+   *   The decorated asset collection renderer.
    * @param \Drupal\webprofiler\DataCollector\AssetsDataCollector $dataCollector
+   *   The assets data collector.
    */
   public function __construct(
     private readonly AssetCollectionRendererInterface $assetCollectionRenderer,
@@ -30,4 +32,5 @@ class JsCollectionRendererWrapper implements AssetCollectionRendererInterface {
 
     return $this->assetCollectionRenderer->render($assets);
   }
+
 }

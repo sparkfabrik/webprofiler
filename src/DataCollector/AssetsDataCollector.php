@@ -43,7 +43,10 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Add a javascript asset to collected data.
+   *
    * @param array $jsAsset
+   *   A javascript asset.
    */
   public function addJsAsset(array $jsAsset) {
     $this->data['js'] = NestedArray::mergeDeepArray([
@@ -53,7 +56,10 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Add a css asset to collected data.
+   *
    * @param array $cssAsset
+   *   A css asset.
    */
   public function addCssAsset(array $cssAsset) {
     $this->data['css'] = NestedArray::mergeDeepArray([
@@ -160,8 +166,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    *   The render array of the DrupalSettings array.
    */
   private function renderSettings(array $settings): array {
-    return
-      [
+    return [
         '#type' => 'inline_template',
         '#template' => '{{ data|raw }}',
         '#context' => [
