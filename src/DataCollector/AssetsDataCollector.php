@@ -43,6 +43,13 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Reset the collected data.
+   */
+  public function reset() {
+    $this->data = [];
+  }
+
+  /**
    * Add a javascript asset to collected data.
    *
    * @param array $jsAsset
@@ -86,13 +93,6 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   public function getJsCount(): int {
     return count($this->data['js']) - 1;
-  }
-
-  /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
   }
 
   /**

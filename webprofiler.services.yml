@@ -96,6 +96,14 @@ services:
     properties:
       _serviceId: 'asset.js.collection_renderer'
 
+  webprofiler.debug.cache_factory:
+    class: Drupal\webprofiler\Cache\CacheFactoryWrapper
+    public: false
+    decorates: cache_factory
+    arguments: ['@webprofiler.debug.cache_factory.inner', '@webprofiler.cache']
+    properties:
+      _serviceId: 'cache_factory'
+
   # data collectors
   webprofiler.request:
     class: Drupal\webprofiler\DataCollector\RequestDataCollector
@@ -137,6 +145,11 @@ services:
     arguments: ['%app.root%']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/assets.html.twig', id: 'assets', label: 'Assets', priority: 700 }
+
+  webprofiler.cache:
+    class: Drupal\webprofiler\DataCollector\CacheDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/cache.html.twig', id: 'cache', label: 'Cache', priority: 650 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
