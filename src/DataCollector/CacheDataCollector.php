@@ -57,7 +57,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @param \stdClass $cache
    *   The cache object.
    */
-  public function registerCacheHit($bin, $cache) {
+  public function registerCacheHit(string $bin, \stdClass $cache) {
     $current = isset($this->data['cache'][$bin][$cache->cid]) ? $this->data['cache'][$bin][$cache->cid] : NULL;
 
     if (!$current) {
@@ -130,12 +130,13 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Callback to return the total amount of hit cache CIDs keyed by bin.
    *
-   * @param $type
+   * @param string $type
+   *   The type of collected data.
    *
    * @return array
    *   The total amount of hit cache CIDs keyed by bin.
    */
-  public function cacheCids($type) {
+  public function cacheCids(string $type) {
     $hits = [];
     foreach ($this->data['cache'] as $bin => $caches) {
       $hits[$bin] = 0;
@@ -199,8 +200,13 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
       '#theme' => 'webprofiler_dashboard_table',
       '#data' => [
         '#type' => 'table',
-        '#header' => [$this->t('CID'), $this->t('Hit'), $this->t('Miss'), $this->t('Tags')],
-        '#rows' => array_map(function(\stdClass $cache) {
+        '#header' => [
+          $this->t('CID'),
+          $this->t('Hit'),
+          $this->t('Miss'),
+          $this->t('Tags')
+        ],
+        '#rows' => array_map(function (\stdClass $cache) {
           return [
             $cache->cid,
             $cache->{CacheDataCollector::WEBPROFILER_CACHE_HIT},
