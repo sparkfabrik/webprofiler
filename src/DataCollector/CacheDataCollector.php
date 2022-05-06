@@ -54,10 +54,10 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param string $bin
    *   The bin name.
-   * @param \stdClass $cache
+   * @param object $cache
    *   The cache object.
    */
-  public function registerCacheHit(string $bin, \stdClass $cache) {
+  public function registerCacheHit(string $bin, object $cache) {
     $current = isset($this->data['cache'][$bin][$cache->cid]) ? $this->data['cache'][$bin][$cache->cid] : NULL;
 
     if (!$current) {
@@ -204,7 +204,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
           $this->t('CID'),
           $this->t('Hit'),
           $this->t('Miss'),
-          $this->t('Tags')
+          $this->t('Tags'),
         ],
         '#rows' => array_map(function (\stdClass $cache) {
           return [
