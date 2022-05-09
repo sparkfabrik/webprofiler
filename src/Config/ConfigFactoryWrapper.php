@@ -13,8 +13,9 @@ use Drupal\webprofiler\DataCollector\ConfigDataCollector;
 class ConfigFactoryWrapper extends ConfigFactory {
 
   /**
+   * The data collector to store config data.
+   *
    * @var \Drupal\webprofiler\DataCollector\ConfigDataCollector
-   *   The data collector to store config data.
    */
   private ConfigDataCollector $dataCollector;
 
