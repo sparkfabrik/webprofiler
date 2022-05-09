@@ -151,6 +151,11 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/cache.html.twig', id: 'cache', label: 'Cache', priority: 650 }
 
+  webprofiler.config:
+    class: Drupal\webprofiler\DataCollector\ConfigDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 600 }
+
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
     arguments: ['@redirect.destination']

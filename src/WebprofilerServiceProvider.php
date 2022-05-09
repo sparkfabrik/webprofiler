@@ -50,6 +50,11 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
       ->setClass('Drupal\webprofiler\Access\AccessManagerWrapper')
       ->addMethodCall('setDataCollector',
         [new Reference('webprofiler.request')]);
+
+    // Replace the regular config.factory service with a traceable one.
+    $container->getDefinition('config.factory')
+      ->setClass('Drupal\webprofiler\Config\ConfigFactoryWrapper')
+      ->addMethodCall('setDataCollector', [new Reference('webprofiler.config')]);
   }
 
 }
