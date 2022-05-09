@@ -43,13 +43,13 @@ class ConfigDataCollector extends DataCollector implements HasPanelInterface {
    * @param string $name
    *   The name of the config.
    * @param \Drupal\Core\Config\ImmutableConfig $config
-   *  The config object.
+   *   The config object.
    */
   public function addConfig(string $name, ImmutableConfig $config) {
     $data = $config->get();
     unset($data['_core']);
 
-    if(!isset($this->data['configs'][$name])) {
+    if (!isset($this->data['configs'][$name])) {
       $this->data['configs'][$name] = [
         'count' => 1,
         'data' => $data,

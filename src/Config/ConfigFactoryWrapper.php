@@ -14,6 +14,7 @@ class ConfigFactoryWrapper extends ConfigFactory {
 
   /**
    * @var \Drupal\webprofiler\DataCollector\ConfigDataCollector
+   *   The data collector to store config data.
    */
   private ConfigDataCollector $dataCollector;
 
@@ -43,8 +44,10 @@ class ConfigFactoryWrapper extends ConfigFactory {
    * Set the data collector to store config data.
    *
    * @param \Drupal\webprofiler\DataCollector\ConfigDataCollector $dataCollector
+   *   The data collector to store config data.
    */
   public function setDataCollector(ConfigDataCollector $dataCollector) {
     $this->dataCollector = $dataCollector;
   }
+
 }

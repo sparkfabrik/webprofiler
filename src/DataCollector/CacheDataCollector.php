@@ -85,7 +85,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
 
     if (!$current) {
       $current = new \StdClass();
-      $current->cid= $cid;
+      $current->cid = $cid;
       $current->{CacheDataCollector::WEBPROFILER_CACHE_HIT} = 0;
       $current->{CacheDataCollector::WEBPROFILER_CACHE_MISS} = 0;
       $this->data['cache'][$bin][$cid] = $current;
