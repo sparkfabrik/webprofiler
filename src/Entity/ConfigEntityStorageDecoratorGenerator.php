@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Entity;
 
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 use PhpParser\Node\Stmt\ClassMethod;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -16,7 +19,6 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
-use Twig\Error\Error as TwigError;
 
 /**
  * Generate decorators for config entity storage classes.
@@ -136,7 +138,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @return \PhpParser\Node\Stmt[]|null
    *   Array of statements.
    */
-  private function getAst(string $classPath): array {
+  private function getAst(string $classPath): ?array {
     $code = file_get_contents($classPath);
     $parser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
 
@@ -193,9 +195,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       $params = [];
       /** @var \PhpParser\Node\Param $param */
       foreach ($node->getParams() as $param) {
-        $params[] = [
-          'name' => $param->var->name,
-        ];
+        $params[] = $param->var->name;
       }
 
       $methods[] = [
@@ -204,19 +204,34 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       ];
     }
 
-    try {
-      /** @var \Twig\Environment $twig */
-      $twig = \Drupal::service('twig');
+    $file = new PhpFile();
+    $file->addComment('This file is auto-generated.');
+    $namespace = $file->addNamespace(new PhpNamespace('Drupal\webprofiler\Entity'));
 
-      return $twig->render('@webprofiler/Decorator/storageDecorator.php.twig', [
-        'decorator' => $decorator,
-        'interface' => $class['interface'],
-        'methods' => $methods,
-      ]);
+    $generated_class = $namespace->addClass($decorator);
+    $generated_class->setExtends(ConfigEntityStorageDecorator::class);
+    $generated_class->addImplement($class['interface']);
+    foreach ($methods as $method) {
+      $generated_method = $generated_class
+        ->addMethod($method['name']);
+
+      foreach ($method['params'] as $param) {
+        $generated_method->addParameter($param);
+      }
+
+      $generated_method
+        ->addBody(
+          'return $this->getOriginalObject()->?(...?);',
+          [
+            $method['name'],
+            array_map(function($param) {
+              return new Literal('$' . $param);
+              }, $method['params'])
+          ]
+        );
     }
-    catch (TwigError $e) {
-      throw new \Exception('Unable to create a decorator. ' . $e->getMessage());
-    }
+
+    return (string)$file;
   }
 
   /**

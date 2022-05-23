@@ -1,7 +1,7 @@
 {% block toolbar %}
 
   {% set icon %}
-    {{ include('@webprofiler/Icon/blocks.svg') }}
+    {{ include('@webprofiler/Icon/cache.svg') }}
     <span class="sf-toolbar-value">{{ collector.getCacheHitsCount }} / {{ collector.getCacheMissesCount }}</span>
   {% endset %}
 

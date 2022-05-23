@@ -14,4 +14,11 @@ database:
     js/database.js: {}
   dependencies:
     - core/once
+
+database.highlight:
+  version: VERSION
+  js:
+    js/database.highlight.js: {}
+  dependencies:
+    - core/once
     - core/loadjs

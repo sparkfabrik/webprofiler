@@ -32,6 +32,13 @@
 
 {% block panel %}
   {{ attach_library('webprofiler/database')}}
+
+  {% if collector.querycount <= 200 %}
+    {{ attach_library('webprofiler/database.highlight')}}
+  {% else %}
+    <p>{{ 'Too many queries, highlighting has been disabled.'|t }}</p>
+  {% endif %}
+
   {% for query in collector.queries %}
     {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
   {% endfor %}
