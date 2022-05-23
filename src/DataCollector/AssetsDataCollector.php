@@ -108,7 +108,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
         ],
         [
           'label' => $this->t('Settings'),
-          'content' => $this->renderSettings($this->data['js']['drupalSettings']),
+          'content' => $this->renderSettings($this->data['js']??['drupalSettings']),
         ],
         [
           'label' => $this->t('JS'),
