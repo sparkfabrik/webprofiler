@@ -7,6 +7,7 @@ namespace Drupal\webprofiler\Entity;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PsrPrinter;
 use PhpParser\Node\Stmt\ClassMethod;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -42,7 +43,8 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
 
     foreach ($classes as $class) {
       try {
-        $body = $this->createDecorator($class);
+        $methods = $this->getMethods($class);
+        $body = $this->createDecorator($class, $methods);
         $this->writeDecorator($class['id'], $body);
       }
       catch (\Exception $e) {
@@ -69,7 +71,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @return array
    *   Information about every config entity storage classes.
    */
-  public function getClasses(): array {
+  private function getClasses(): array {
     $definitions = $this->entityTypeManager->getDefinitions();
     $classes = [];
 
@@ -173,14 +175,12 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @param array $class
    *   The class information.
    *
-   * @return string
-   *   The decorator class body.
+   * @return array
+   *   The methods of the class.
    *
    * @throws \Exception
    */
-  private function createDecorator(array $class): string {
-    $decorator = $class['class'] . 'Decorator';
-
+  private function getMethods(array $class): array {
     $classPath = $this->getClassPath($class['interface']);
     $ast = $this->getAst($classPath);
 
@@ -204,6 +204,23 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       ];
     }
 
+    return $methods;
+  }
+
+  /**
+   * Create the decorator from class information and methods.
+   *
+   * @param array $class
+   *   The class information.
+   * @param array $methods
+   *   The methods of the class.
+   *
+   * @return string
+   *   The decorator class body.
+   */
+  private function createDecorator(array $class, array $methods): string {
+    $decorator = $class['class'] . 'Decorator';
+
     $file = new PhpFile();
     $file->addComment('This file is auto-generated.');
     $namespace = $file->addNamespace(new PhpNamespace('Drupal\webprofiler\Entity'));
@@ -226,12 +243,14 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
             $method['name'],
             array_map(function($param) {
               return new Literal('$' . $param);
-              }, $method['params'])
+            }, $method['params'])
           ]
         );
     }
 
-    return (string)$file;
+    $printer = new PsrPrinter();
+
+    return $printer->printFile($file);
   }
 
   /**
