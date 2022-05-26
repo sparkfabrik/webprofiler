@@ -112,6 +112,11 @@ services:
       - { name: event_subscriber }
       - { name: data_collector, template: '@webprofiler/Collector/request.html.twig', id: 'request', label: 'Request', priority: 1000 }
 
+  webprofiler.devel:
+    class: Drupal\webprofiler\DataCollector\DevelDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/devel.html.twig', id: 'devel', label: 'Devel', priority: 980 }
+
   webprofiler.time:
     class: Drupal\webprofiler\DataCollector\TimeDataCollector
     arguments: ['@tracer.tracer_factory']
