@@ -6,7 +6,7 @@
 
   "use strict";
 
-  Drupal.behaviors.webprofiler_database = {
+  Drupal.behaviors.webprofiler_database_highlight = {
     attach: function (context) {
       // Dynamically download highlightjs.
       once('database', '.webprofiler__panel').forEach(function (element) {
