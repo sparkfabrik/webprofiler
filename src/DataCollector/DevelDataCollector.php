@@ -20,7 +20,9 @@ class DevelDataCollector extends DataCollector {
    * {@inheritdoc}
    */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
-    $this->data['original_route'] = \Drupal::routeMatch()->getRouteName();
+    $original_route = \Drupal::routeMatch()->getRouteName();
+    $original_route_parameters = \Drupal::routeMatch()->getRawParameters()->all();
+    $this->data['destination'] = Url::fromRoute($original_route, $original_route_parameters)->toString();
   }
 
   /**
@@ -30,7 +32,7 @@ class DevelDataCollector extends DataCollector {
    *   The list of Devel links.
    */
   public function getLinks(): array {
-    return $this->develMenuLinks($this->data['original_route']);
+    return $this->develMenuLinks($this->data['destination']);
   }
 
   /**
@@ -50,16 +52,18 @@ class DevelDataCollector extends DataCollector {
   /**
    * Return the list of Devel links for a given route.
    *
-   * @param string $original_route
-   *   The original route.
+   * @param string $destination
+   *   The route to use as a destination.
    *
    * @return array
    *   Array containing Devel Menu links
    */
-  protected function develMenuLinks(string $original_route): array {
+  protected function develMenuLinks(string $destination): array {
     // We cannot use injected services here because at this point this
     // class is deserialized from a storage and not constructed.
+    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTreeService */
     $menuLinkTreeService = \Drupal::service('menu.link_tree');
+    /** @var \Drupal\Core\Render\Renderer $rendererService */
     $rendererService = \Drupal::service('renderer');
 
     $parameters = new MenuTreeParameters();
@@ -80,11 +84,12 @@ class DevelDataCollector extends DataCollector {
       // Get the link url and replace the destination parameter with the
       // original route.
       $url = $item_link->getUrlObject();
-      $url->setOption('query', ['destination' => Url::fromRoute($original_route)->toString()]);
+      $url->setOption('query', ['destination' => $destination]);
 
       // Build and render the link.
       $link = Link::fromTextAndUrl($item_link->getTitle(), $url);
-      $rendered = $rendererService->renderPlain($link->toRenderable());
+      $renderable = $link->toRenderable();
+      $rendered = $rendererService->renderPlain($renderable);
 
       $links[] = Markup::create($rendered);;
     }

@@ -68,14 +68,14 @@ class ServicePass implements CompilerPassInterface {
         }
       }
 
-      if ($definition instanceof Definition) {
+      if ($definition instanceof Definition && $definition->getClass() !== NULL) {
         $class = $definition->getClass();
 
         try {
           $reflectedClass = new \ReflectionClass($class);
           $file = $reflectedClass->getFileName();
         }
-        catch (\ReflectionException $e) {
+        catch (\ReflectionException|\Exception $e) {
           $file = NULL;
         }
 
@@ -84,7 +84,6 @@ class ServicePass implements CompilerPassInterface {
         $synthetic = $definition->isSynthetic();
       }
       else {
-        $id = $definition->__toString();
         $class = NULL;
         $file = NULL;
         $tags = [];
