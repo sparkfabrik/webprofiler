@@ -38,7 +38,7 @@ services:
     arguments: ['@webprofiler.profiler', '@twig', '%webprofiler.templates%']
 
   webprofiler.toolbar_listener:
-    class: Drupal\webprofiler\EventListener\WebDebugToolbarListener
+    class: Drupal\webprofiler\EventListener\ToolbarListener
     arguments: ['@renderer', '@current_user', '@url_generator', '@webprofiler.csp', '@webprofiler.collector.dump', '@config.factory']
     tags:
       - { name: event_subscriber }
@@ -160,6 +160,12 @@ services:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 600 }
+
+  webprofiler.events:
+    class: Drupal\webprofiler\DataCollector\EventsDataCollector
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 500 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

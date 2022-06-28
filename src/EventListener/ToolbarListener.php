@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Listen to kernel response event to inject the toolbar.
  */
-class WebDebugToolbarListener implements EventSubscriberInterface {
+class ToolbarListener implements EventSubscriberInterface {
 
   /**
    * An immutable config object.

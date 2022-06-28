@@ -20,20 +20,12 @@ use Symfony\Component\Process\Process;
 class DrupalDataCollector extends DataCollector implements LateDataCollectorInterface {
 
   /**
-   * The Redirect destination service.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  private RedirectDestinationInterface $redirectDestination;
-
-  /**
    * DrupalDataCollector constructor.
    *
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The Redirect destination service.
    */
-  public function __construct(RedirectDestinationInterface $redirectDestination) {
-    $this->redirectDestination = $redirectDestination;
+  public function __construct(private readonly RedirectDestinationInterface $redirectDestination) {
   }
 
   /**

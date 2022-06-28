@@ -160,7 +160,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
    * @param array $blocks
    *   The list of blocks to render.
    * @param string $label
-   *   The list label.
+   *   The list's label.
    *
    * @return array
    *   The render array of the list of blocks.
