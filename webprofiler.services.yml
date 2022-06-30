@@ -167,6 +167,12 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 500 }
 
+  webprofiler.extensions:
+    class: Drupal\webprofiler\DataCollector\ExtensionsDataCollector
+    arguments: ['@module_handler', '@theme_handler', '%app.root%']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 400 }
+
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
     arguments: ['@redirect.destination']
