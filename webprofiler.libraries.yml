@@ -6,6 +6,7 @@ dashboard:
   js:
     js/dashboard.js: { }
   dependencies:
+    - core/once
     - core/drupal.ajax
 
 database:
