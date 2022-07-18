@@ -11,7 +11,7 @@ build:
     testing:
       container_command.commit-checks:
         commands:
-          - "./vendor/bin/phpstan analyse -c modules/webprofiler/http_queue/phpstan.neon"
+          - "./vendor/bin/phpstan analyse -c modules/webprofiler/phpstan.neon"
         halt-on-fail: true
       # run_tests task is executed several times in order of performance speeds.
       # halt-on-fail can be set on the run_tests tasks in order to fail fast.
