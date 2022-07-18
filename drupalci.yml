@@ -2,6 +2,11 @@ build:
   assessment:
     validate_codebase:
       phplint:
+      csslint:
+        halt-on-fail: false
+      eslint:
+        # A test must pass eslinting standards check in order to continue processing.
+        halt-on-fail: true
       phpcs:
         # phpcs will use core's specified version of Coder.
         sniff-all-files: true
@@ -27,8 +32,24 @@ build:
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+      run_tests.simpletest:
+        types: 'Simpletest'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
       run_tests.functional:
         types: 'PHPUnit-Functional'
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+      # Functional JavaScript tests require a concurrency of 1 because there is
+      # only one instance of PhantomJS on the testbot machine.
+      run_tests.javascript:
+        concurrency: 1
+        types: 'PHPUnit-FunctionalJavascript'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      # Run nightwatch testing.
+      # @see https://www.drupal.org/project/drupal/issues/2869825
+      nightwatchjs:
