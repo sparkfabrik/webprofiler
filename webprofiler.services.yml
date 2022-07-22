@@ -115,51 +115,51 @@ services:
   webprofiler.devel:
     class: Drupal\webprofiler\DataCollector\DevelDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/devel.html.twig', id: 'devel', label: 'Devel', priority: 980 }
+      - { name: data_collector, template: '@webprofiler/Collector/devel.html.twig', id: 'devel', label: 'Devel', priority: 950 }
 
   webprofiler.time:
     class: Drupal\webprofiler\DataCollector\TimeDataCollector
     arguments: ['@tracer.tracer_factory']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/time.html.twig', id: 'time', label: 'Time', priority: 950 }
+      - { name: data_collector, template: '@webprofiler/Collector/time.html.twig', id: 'time', label: 'Time', priority: 900 }
 
   webprofiler.memory:
     class: Drupal\webprofiler\DataCollector\MemoryDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 900 }
+      - { name: data_collector, template: '@webprofiler/Collector/memory.html.twig', id: 'memory', label: 'Memory', priority: 580 }
 
   webprofiler.ajax:
     class: Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 850 }
+      - { name: data_collector, template: '@webprofiler/Collector/ajax.html.twig', id: 'ajax', label: 'Ajax', priority: 800 }
 
   webprofiler.database:
     class: Drupal\webprofiler\DataCollector\DatabaseDataCollector
     arguments: ['@database', '@config.factory']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 800 }
+      - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 750 }
 
   webprofiler.services:
     class: Drupal\webprofiler\DataCollector\ServicesDataCollector
     arguments: ['@service_container']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/services.html.twig', id: 'services', label: 'Services', priority: 750 }
+      - { name: data_collector, template: '@webprofiler/Collector/services.html.twig', id: 'services', label: 'Services', priority: 700 }
 
   webprofiler.assets:
     class: Drupal\webprofiler\DataCollector\AssetsDataCollector
     arguments: ['%app.root%']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/assets.html.twig', id: 'assets', label: 'Assets', priority: 700 }
+      - { name: data_collector, template: '@webprofiler/Collector/assets.html.twig', id: 'assets', label: 'Assets', priority: 650 }
 
   webprofiler.cache:
     class: Drupal\webprofiler\DataCollector\CacheDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/cache.html.twig', id: 'cache', label: 'Cache', priority: 650 }
+      - { name: data_collector, template: '@webprofiler/Collector/cache.html.twig', id: 'cache', label: 'Cache', priority: 600 }
 
   webprofiler.config:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 600 }
+      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 550 }
 
   webprofiler.events:
     class: Drupal\webprofiler\DataCollector\EventsDataCollector
@@ -171,7 +171,13 @@ services:
     class: Drupal\webprofiler\DataCollector\ExtensionsDataCollector
     arguments: ['@module_handler', '@theme_handler', '%app.root%']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 400 }
+      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 450 }
+
+  webprofiler.forms:
+    class: Drupal\webprofiler\DataCollector\FormsDataCollector
+    arguments: ['@form_builder']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/forms.html.twig', id: 'forms', label: 'Forms', priority: 400 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

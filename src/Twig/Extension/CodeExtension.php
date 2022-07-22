@@ -14,20 +14,20 @@ use Twig\TwigFilter;
 class CodeExtension extends AbstractExtension {
 
   /**
-   * The File link formatter service.
+   * Formats debug file links.
    *
-   * @var \Symfony\Component\HttpKernel\Debug\FileLinkFormatter
+   * @var string|\Symfony\Component\HttpKernel\Debug\FileLinkFormatter|array|false
    */
-  private FileLinkFormatter $fileLinkFormat;
+  private string|FileLinkFormatter|array|false $fileLinkFormat;
 
   /**
    * CodeExtension constructor.
    *
-   * @param \Symfony\Component\HttpKernel\Debug\FileLinkFormatter $file_link_format
-   *   The File link formatter service.
+   * @param string|\Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
+   *   Formats debug file links.
    */
-  public function __construct(FileLinkFormatter $file_link_format) {
-    $this->fileLinkFormat = $file_link_format;
+  public function __construct(string|FileLinkFormatter $fileLinkFormat) {
+    $this->fileLinkFormat = $fileLinkFormat ?: ini_get('xdebug.file_link_format') ?: get_cfg_var('xdebug.file_link_format');
   }
 
   /**
@@ -35,23 +35,19 @@ class CodeExtension extends AbstractExtension {
    */
   public function getFilters(): array {
     return [
-      new TwigFilter(
-        'abbr_class',
-        [$this, 'abbrClass'],
-        ['is_safe' => ['html']]
-      ),
-      new TwigFilter('file_link', [$this, 'getFileLink']),
+      new TwigFilter('abbr_class', $this->abbrClass(...), ['is_safe' => ['html']]),
+      new TwigFilter('file_link', $this->getFileLink(...)),
     ];
   }
 
   /**
-   * Return the abbreviated form of a class name.
+   * Return the short version of a class name.
    *
    * @param string $class
-   *   The class name to abbreviate.
+   *   A class name.
    *
    * @return string
-   *   The abbreviated form of a class name.
+   *   The short version of a class name.
    */
   public function abbrClass(string $class): string {
     $parts = explode('\\', $class);
@@ -61,18 +57,25 @@ class CodeExtension extends AbstractExtension {
   }
 
   /**
-   * Returns the link for a given file/line pair.
+   * Returns a link to a source file.
    *
    * @param string $file
-   *   An absolute file path.
+   *   File path.
    * @param int $line
-   *   The line's number.
+   *   LIne number inside the file.
    *
-   * @return string
-   *   A link to file.
+   * @return string|false
+   *   A link to a source file, or FALSE if the link cannot be created.
    */
-  public function getFileLink(string $file, int $line): string {
-    return $this->fileLinkFormat->format($file ?? '', $line);
+  public function getFileLink(string $file, int $line): string|false {
+    if ($fmt = $this->fileLinkFormat) {
+      return \is_string($fmt) ? strtr($fmt, [
+        '%f' => $file,
+        '%l' => $line,
+      ]) : $fmt->format($file, $line);
+    }
+
+    return FALSE;
   }
 
 }

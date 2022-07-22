@@ -55,6 +55,10 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     $container->getDefinition('config.factory')
       ->setClass('Drupal\webprofiler\Config\ConfigFactoryWrapper')
       ->addMethodCall('setDataCollector', [new Reference('webprofiler.config')]);
+
+    // Replace the regular form_builder service with a traceable one.
+    $container->getDefinition('form_builder')
+      ->setClass('Drupal\webprofiler\Form\FormBuilderWrapper');
   }
 
 }
