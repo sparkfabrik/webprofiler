@@ -21,8 +21,13 @@ class DevelDataCollector extends DataCollector {
    */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     $original_route = \Drupal::routeMatch()->getRouteName();
-    $original_route_parameters = \Drupal::routeMatch()->getRawParameters()->all();
-    $this->data['destination'] = Url::fromRoute($original_route, $original_route_parameters)->toString();
+    if ($original_route != NULL) {
+      $original_route_parameters = \Drupal::routeMatch()
+        ->getRawParameters()
+        ->all();
+      $this->data['destination'] = Url::fromRoute($original_route, $original_route_parameters)
+        ->toString();
+    }
   }
 
   /**
