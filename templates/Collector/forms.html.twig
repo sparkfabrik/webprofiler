@@ -6,6 +6,12 @@
   {% endset %}
 
   {% set text %}
+    {% if collector.getForms|length == 0 %}
+      <div class="sf-toolbar-info-piece">
+        <b>{{ 'No forms collected'|t }}</b>
+      </div>
+    {% endif %}
+
     {% for key, form in collector.getForms %}
       <div class="sf-toolbar-info-piece">
         <b>{{ key }}</b>
