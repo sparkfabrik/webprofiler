@@ -20,6 +20,7 @@ class SettingsForm extends ConfigFormBase {
    *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
    */
+  // @phpstan-ignore-next-line
   private Profiler $profiler;
 
   /**
@@ -27,6 +28,7 @@ class SettingsForm extends ConfigFormBase {
    *
    * @var array
    */
+  // @phpstan-ignore-next-line
   private array $templates;
 
   /**

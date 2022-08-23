@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\StackMiddleware;
 
 use Drupal\Core\Database\Database;

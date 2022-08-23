@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -48,7 +50,7 @@ class ServicePass implements CompilerPassInterface {
         $node = $graph->getNode($id);
 
         foreach ($node->getInEdges() as $edge) {
-          /** @var \Symfony\Component\DependencyInjection\Reference $edgeValue */
+          /** @var \Symfony\Component\DependencyInjection\Reference|null $edgeValue */
           $edgeValue = $edge->getValue();
 
           $inEdges[] = [
@@ -58,7 +60,7 @@ class ServicePass implements CompilerPassInterface {
         }
 
         foreach ($node->getOutEdges() as $edge) {
-          /** @var \Symfony\Component\DependencyInjection\Reference $edgeValue */
+          /** @var \Symfony\Component\DependencyInjection\Reference|null $edgeValue */
           $edgeValue = $edge->getValue();
 
           $outEdges[] = [

@@ -121,7 +121,7 @@ trait PanelTrait {
   /**
    * Render a link to a file.
    *
-   * @param string $file
+   * @param string|false $file
    *   The file path.
    * @param int $line
    *   The file line.
@@ -131,14 +131,14 @@ trait PanelTrait {
    * @return array
    *   A render array for the link.
    */
-  protected function renderClasslink(string $file, int $line, string $label): array {
+  protected function renderClasslink(string|false $file, int $line, string $label): array {
     $flf = \Drupal::service('webprofiler.file_link_formatter');
 
     return [
       '#type' => 'inline_template',
       '#template' => '<a href="{{ href }}">{{ label }}</a>',
       '#context' => [
-        'href' => $flf->format($file ?? '', $line),
+        'href' => $flf->format($file ?: '', $line),
         'label' => $label,
       ],
     ];

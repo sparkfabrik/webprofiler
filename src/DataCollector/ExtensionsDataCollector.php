@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Extension\Extension;
@@ -155,7 +157,7 @@ class ExtensionsDataCollector extends DataCollector implements HasPanelInterface
             $extension['path'],
             $extension['info'],
             $extension['experimental'] ? $this->t('Yes') : $this->t('No'),
-            $extension['version'] ? $this->t('Yes') : $this->t('No'),
+            $extension['obsolete'] ? $this->t('Yes') : $this->t('No'),
           ];
         }, $data),
         '#attributes' => [

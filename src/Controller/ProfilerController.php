@@ -103,7 +103,7 @@ class ProfilerController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function toolbarAction(Request $request, string $token): Response {
-    if ('empty' === $token || NULL === $token) {
+    if ('empty' == $token || NULL == $token) {
       return new Response('', 200, ['Content-Type' => 'text/html']);
     }
 
@@ -122,7 +122,7 @@ class ProfilerController extends ControllerBase {
     }
 
     $response = new Response('', 200, ['Content-Type' => 'text/html']);
-    $nonces = $this->cspHandler ? $this->cspHandler->getNonces($request, $response) : [];
+    $nonces = $this->cspHandler->getNonces($request, $response);
 
     $toolbar = [
       '#theme' => 'webprofiler_toolbar',

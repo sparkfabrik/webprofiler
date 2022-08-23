@@ -40,6 +40,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
+  // @phpstan-ignore-next-line
   private EntityTypeManagerInterface $entityManager;
 
   /**
@@ -71,7 +72,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    * {@inheritdoc}
    */
   public function getStorage($entity_type_id) {
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $handler */
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $handler */
     $handler = $this->getHandler($entity_type_id, 'storage');
     $entity_kind = ($handler instanceof ConfigEntityStorageInterface) ? 'config' : 'content';
 

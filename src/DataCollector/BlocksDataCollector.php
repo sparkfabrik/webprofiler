@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\webprofiler\Entity\EntityDecorator;
+use Drupal\webprofiler\Entity\EntityTypeManagerWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -43,6 +44,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     $storage = $this->entityManager->getStorage('block');
 
+    assert ($this->entityManager instanceof EntityTypeManagerWrapper);
     $loaded = $this->entityManager->getLoaded('config', 'block');
     $rendered = $this->entityManager->getRendered('block');
 

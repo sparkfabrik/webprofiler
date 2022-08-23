@@ -157,11 +157,14 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    *   TRUE if this Node represents a config entity storage class.
    */
   private function isConfigEntityStorage(Node $node): bool {
-    if ($node instanceof Class_
-      && $node->extends !== NULL &&
+    if (!$node instanceof Class_) {
+      return FALSE;
+    }
+
+    if ($node->extends !== NULL &&
       $node->implements !== NULL &&
       $node->extends->parts[0] == 'ConfigEntityStorage' &&
-      isset($node->implements[0]) ?? $node->implements[0]->parts[0] != ''
+      isset($node->implements[0]) || $node->implements[0]->parts[0] != ''
     ) {
       return TRUE;
     }

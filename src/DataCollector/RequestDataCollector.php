@@ -25,7 +25,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
   /**
    * The Controller resolver service.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
    */
   private ControllerResolverInterface $controllerResolver;
 

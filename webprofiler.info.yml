@@ -5,6 +5,7 @@ package: Development
 core_version_requirement: ^10
 configure: webprofiler.settings
 dependencies:
-  tracer:tracer
+  - devel:devel
+  - tracer:tracer
 tags:
  - developer

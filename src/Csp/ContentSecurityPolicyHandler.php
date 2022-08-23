@@ -204,7 +204,7 @@ class ContentSecurityPolicyHandler {
 
     foreach (explode(';', $header) as $directive) {
       $parts = explode(' ', trim($directive));
-      if (\count($parts) < 1) {
+      if (count($parts) <= 1) {
         continue;
       }
       $name = array_shift($parts);

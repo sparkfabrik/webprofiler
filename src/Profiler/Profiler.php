@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\Profiler;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -30,11 +32,7 @@ class Profiler extends SymfonyProfiler {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
    */
-  public function __construct(
-    private readonly FileProfilerStorage $storage,
-    private readonly LoggerInterface $logger,
-    private readonly ConfigFactoryInterface $config
-  ) {
+  public function __construct(FileProfilerStorage $storage, LoggerInterface $logger, private readonly ConfigFactoryInterface $config) {
     parent::__construct($storage, $logger);
 
     $this->activeToolbarItems = $this->config->get('webprofiler.settings')

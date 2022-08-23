@@ -91,14 +91,11 @@ class ToolbarListener implements EventSubscriberInterface {
       return;
     }
 
-    $nonces = [];
-    if ($this->cspHandler) {
-      if ($this->dumpDataCollector && $this->dumpDataCollector->getDumpsCount() > 0) {
-        $this->cspHandler->disableCsp();
-      }
-
-      $nonces = $this->cspHandler->updateResponseHeaders($request, $response);
+    if ($this->dumpDataCollector->getDumpsCount() > 0) {
+      $this->cspHandler->disableCsp();
     }
+
+    $nonces = $this->cspHandler->updateResponseHeaders($request, $response);
 
     // Do not capture redirects or modify XML HTTP Requests.
     if ($request->isXmlHttpRequest()) {

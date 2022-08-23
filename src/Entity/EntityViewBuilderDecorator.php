@@ -88,10 +88,10 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    assert ($entity_type instanceof EntityViewBuilderInterface);
+
     return new static(
-      $entity_type,
-      $container->get('entity.manager'),
-      $container->get('language_manager')
+      $entity_type
     );
   }
 

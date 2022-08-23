@@ -11,6 +11,7 @@ use Drupal\webprofiler\DataCollector\HasPanelInterface;
 use Drupal\webprofiler\Profiler\TemplateManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
@@ -78,8 +79,7 @@ class DashboardController extends ControllerBase {
       return [];
     }
 
-    /** @var \Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface $el */
-    $collectors = array_filter($profile->getCollectors(), function ($el) {
+    $collectors = array_filter($profile->getCollectors(), function (DataCollectorInterface $el) {
       return $el instanceof HasPanelInterface;
     });
 

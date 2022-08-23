@@ -48,9 +48,12 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
 
     $this->addGitInfo($this->data);
 
-    if (preg_match('~^(\d+(?:\.\d+)*)(.+)?$~', $this->data['php_version'], $matches) && isset($matches[2])) {
+    if (preg_match('~^(\d+(?:\.\d+)*)(.+)?$~', $this->data['php_version'], $matches)) {
       $this->data['php_version'] = $matches[1];
-      $this->data['php_version_extra'] = $matches[2];
+
+      if (isset($matches[2])) {
+        $this->data['php_version_extra'] = $matches[2];
+      }
     }
   }
 

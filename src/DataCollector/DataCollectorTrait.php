@@ -36,11 +36,10 @@ trait DataCollectorTrait {
         $class,
         $method,
         $reflectedMethod->getFilename(),
-        $reflectedMethod->getStartLine() ?? ''
+        $reflectedMethod->getStartLine() ?: ''
       );
     }
     catch (\ReflectionException $re) {
-      return NULL;
     }
     finally {
       return $data;
@@ -57,7 +56,7 @@ trait DataCollectorTrait {
    *   A human-readable string.
    */
   private function convertToBytes(string $value): int {
-    if ('-1' === $value) {
+    if ('-1' == $value) {
       return -1;
     }
 
@@ -78,6 +77,7 @@ trait DataCollectorTrait {
       'g' => 1024 * 1024 * 1024,
       'm' => 1024 * 1024,
       'k' => 1024,
+      default => 0,
     };
 
     return $max;

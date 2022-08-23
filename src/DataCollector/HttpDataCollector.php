@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\webprofiler\Http\HttpClientMiddleware;
@@ -84,7 +86,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
     foreach ($failed as $data) {
       /** @var \GuzzleHttp\Psr7\Request $request */
       $request = $data['request'];
-      /** @var \GuzzleHttp\Psr7\Response $response */
+      /** @var \GuzzleHttp\Psr7\Response|null $response */
       $response = $data['response'];
 
       $uri = $request->getUri();
