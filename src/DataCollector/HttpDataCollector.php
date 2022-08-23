@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class HttpDataCollector extends DataCollector implements HasPanelInterface {
 
-  use StringTranslationTrait;
+  use StringTranslationTrait, PanelTrait;
 
   /**
    * @param \Drupal\webprofiler\Http\HttpClientMiddleware $middleware
@@ -150,8 +150,100 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
    * {@inheritdoc}
    */
   public function getPanel(): array {
-    $build = [];
+    return array_merge(
+      $this->renderHttpCalls($this->getCompletedRequests(), 'Completed'),
+      $this->renderHttpCalls($this->getFailedRequests(), 'Failed'),
+    );
+  }
 
-    return $build;
+  /**
+   * Render a list of blocks.
+   *
+   * @param array $calls
+   *   The list of blocks to render.
+   * @param string $label
+   *   The list's label.
+   *
+   * @return array
+   *   The render array of the list of blocks.
+   */
+  private function renderHttpCalls(array $calls, string $label): array {
+    if (count($calls) == 0) {
+      return [
+        $label => [
+          '#markup' => '<p>' . $this->t('No @label HTTP calls collected',
+              ['@label' => $label]) . '</p>',
+        ],
+      ];
+    }
+
+    $rows = [];
+    foreach ($calls as $call) {
+      $rows[] = [
+        $call['request']['method'],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($call['request']['uri'])),
+            ],
+          ],
+        ],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($call['request']['headers'])),
+            ],
+          ],
+        ],
+        $call['request']['protocol'],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($call['request']['stats'])),
+            ],
+          ],
+        ],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($call['response'])),
+            ],
+          ],
+        ],
+      ];
+    }
+
+    return [
+      $label => [
+        '#theme' => 'webprofiler_dashboard_table',
+        '#title' => $label,
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [
+            $this->t('Method'),
+            $this->t('Uri'),
+            $this->t('Request headers'),
+            $this->t('Request protocol'),
+            $this->t('Request stats'),
+            $this->t('Response'),
+          ],
+          '#rows' => $rows,
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+          '#sticky' => TRUE,
+        ],
+      ],
+    ];
   }
 }
