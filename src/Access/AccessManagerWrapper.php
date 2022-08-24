@@ -28,7 +28,7 @@ class AccessManagerWrapper extends AccessManager {
   protected function performCheck(
     $service_id,
     ArgumentsResolverInterface $arguments_resolver
-  ) {
+  ): AccessResultInterface {
     $callable = $this->checkProvider->loadCheck($service_id);
     $arguments = $arguments_resolver->getArguments($callable);
     /** @var \Drupal\Core\Access\AccessResultInterface $service_access */
@@ -49,7 +49,7 @@ class AccessManagerWrapper extends AccessManager {
    * @param \Drupal\webprofiler\DataCollector\RequestDataCollector $dataCollector
    *   The data collector to set.
    */
-  public function setDataCollector(RequestDataCollector $dataCollector) {
+  public function setDataCollector(RequestDataCollector $dataCollector): void {
     $this->dataCollector = $dataCollector;
   }
 

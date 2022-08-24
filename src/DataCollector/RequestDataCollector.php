@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector as BaseReque
 /**
  * DataCollector for HTTP Request.
  */
+// @phpstan-ignore-next-line
 class RequestDataCollector extends BaseRequestDataCollector implements HasPanelInterface {
 
   use DataCollectorTrait;

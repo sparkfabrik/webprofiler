@@ -47,7 +47,7 @@ class HttpClientMiddleware {
         };
 
         $options['on_stats'] = function (TransferStats $stats) use ($request, $next) {
-          $request->stats = $stats;
+          $request->stats = $stats; // @phpstan-ignore-line
           $next($stats);
         };
 
