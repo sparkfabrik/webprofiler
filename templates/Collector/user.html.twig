@@ -22,7 +22,9 @@
         <span>{{ collector.provider }}</span>
       </div>
     {% else %}
-      {{ collector.anonymous }}
+      <div class="sf-toolbar-info-piece">
+        <b>{{ collector.anonymous }}</b>
+      </div>
     {% endif %}
   {% endset %}
 
