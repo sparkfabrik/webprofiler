@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\webprofiler\Http\HttpClientMiddleware;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,14 +12,21 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 /**
  * Collects data about http calls during request.
  */
-class HttpDataCollector extends DataCollector implements HasPanelInterface {
+class HttpDataCollector extends DataCollector implements DrupalDataCollectorInterface {
 
-  use StringTranslationTrait, PanelTrait;
+  use StringTranslationTrait, DrupalDataCollectorTrait;
+
+  /**
+   * @var \GuzzleHttp\Client
+   */
+  private $middleware;
 
   /**
    * @param \Drupal\webprofiler\Http\HttpClientMiddleware $middleware
    */
-  public function __construct(private readonly HttpClientMiddleware $middleware) {
+  public function __construct(HttpClientMiddleware $middleware) {
+    $this->middleware = $middleware;
+
     $this->data['completed'] = [];
     $this->data['failed'] = [];
   }
@@ -28,21 +34,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'http';
-  }
-
-  /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
     $completed = $this->middleware->getCompletedRequests();
     $failed = $this->middleware->getFailedRequests();
 
@@ -52,7 +44,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $data['response'];
       /** @var \GuzzleHttp\TransferStats $stats */
-      $stats = $request->stats; // @phpstan-ignore-line
+      $stats = $request->stats;
 
       $uri = $request->getUri();
       $this->data['completed'][] = [
@@ -86,7 +78,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
     foreach ($failed as $data) {
       /** @var \GuzzleHttp\Psr7\Request $request */
       $request = $data['request'];
-      /** @var \GuzzleHttp\Psr7\Response|null $response */
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $data['response'];
 
       $uri = $request->getUri();
@@ -123,129 +115,62 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * @return int
    */
-  public function getCompletedRequestsCount(): int {
+  public function getCompletedRequestsCount() {
     return count($this->getCompletedRequests());
   }
 
   /**
    * @return array
    */
-  public function getCompletedRequests(): array {
+  public function getCompletedRequests() {
     return $this->data['completed'];
   }
 
   /**
    * @return int
    */
-  public function getFailedRequestsCount(): int {
+  public function getFailedRequestsCount() {
     return count($this->getFailedRequests());
   }
 
   /**
    * @return array
    */
-  public function getFailedRequests(): array {
+  public function getFailedRequests() {
     return $this->data['failed'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): array {
-    return array_merge(
-      $this->renderHttpCalls($this->getCompletedRequests(), 'Completed'),
-      $this->renderHttpCalls($this->getFailedRequests(), 'Failed'),
+  public function getName() {
+    return 'http';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->t('Http');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPanelSummary() {
+    return $this->t(
+      'Completed @completed, error @error', [
+        '@completed' => $this->getCompletedRequestsCount(),
+        '@error' => $this->getFailedRequestsCount(),
+      ]
     );
   }
 
   /**
-   * Render a list of blocks.
-   *
-   * @param array $calls
-   *   The list of blocks to render.
-   * @param string $label
-   *   The list's label.
-   *
-   * @return array
-   *   The render array of the list of blocks.
+   * {@inheritdoc}
    */
-  private function renderHttpCalls(array $calls, string $label): array {
-    if (count($calls) == 0) {
-      return [
-        $label => [
-          '#markup' => '<p>' . $this->t('No @label HTTP calls collected',
-              ['@label' => $label]) . '</p>',
-        ],
-      ];
-    }
-
-    $rows = [];
-    foreach ($calls as $call) {
-      $rows[] = [
-        $call['request']['method'],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($call['request']['uri'])),
-            ],
-          ],
-        ],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($call['request']['headers'])),
-            ],
-          ],
-        ],
-        $call['request']['protocol'],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($call['request']['stats'])),
-            ],
-          ],
-        ],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($call['response'])),
-            ],
-          ],
-        ],
-      ];
-    }
-
-    return [
-      $label => [
-        '#theme' => 'webprofiler_dashboard_table',
-        '#title' => $label,
-        '#data' => [
-          '#type' => 'table',
-          '#header' => [
-            $this->t('Method'),
-            $this->t('Uri'),
-            $this->t('Request headers'),
-            $this->t('Request protocol'),
-            $this->t('Request stats'),
-            $this->t('Response'),
-          ],
-          '#rows' => $rows,
-          '#attributes' => [
-            'class' => [
-              'webprofiler__table',
-            ],
-          ],
-          '#sticky' => TRUE,
-        ],
-      ],
-    ];
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAYAAACOGPReAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATlJREFUeNrsleERgjAMha0TdISOwAZ2BEZghI7ABo7AOQFuwAjoBLgBblBbfb0LudByp/4jdw+PNnxtkqYq7/3h13Y8/MF26B9spfo6yAX1QSa6EY2Y0xLrzROgddAMOcgLmuFbhDqyG00W8Rm1JWgEWCG0oQBuJKjGigNUs/xWUJdJheZQJzhZFGkgKWkw1mM8bmTCvOPQcSVXrTA+Ydc0kujXJGg6p5VwrG5BJzb2CLriN9kT74afUylPloQ+kdDPELXpg1qGvwbtURwjFGkkC8RIZw6d2QeO7MII81wRbDm0Z068Zf0G1bxQl8z1UH1zoQwk9NRZdkPoHt+KbZoqa+HYZS4T3iimdEvRDrIF4KIRclBNjk+uSB2/eBJUvR9KSek26BZHOit2zl3oqkV91P6//3N7CTAAIIc/qj2gy4gAAAAASUVORK5CYII=';
   }
+
 }

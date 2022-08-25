@@ -1,38 +1,41 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Asset;
 
 use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\webprofiler\DataCollector\AssetsDataCollector;
 
 /**
- * Collect data about rendered javascript files.
+ * Class JsCollectionRendererWrapper.
  */
 class JsCollectionRendererWrapper implements AssetCollectionRendererInterface {
 
   /**
-   * JsCollectionRendererWrapper constructor.
-   *
-   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $assetCollectionRenderer
-   *   The decorated asset collection renderer.
-   * @param \Drupal\webprofiler\DataCollector\AssetsDataCollector $dataCollector
-   *   The assets data collector.
+   * @var \Drupal\Core\Asset\AssetCollectionRendererInterface
    */
-  public function __construct(
-    private readonly AssetCollectionRendererInterface $assetCollectionRenderer,
-    private readonly AssetsDataCollector $dataCollector
-  ) {
+  private $assetCollectionRenderer;
+
+  /**
+   * @var \Drupal\webprofiler\DataCollector\AssetsDataCollector
+   */
+  private $dataCollector;
+
+  /**
+   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $assetCollectionRenderer
+   * @param \Drupal\webprofiler\DataCollector\AssetsDataCollector $dataCollector
+   */
+  public function __construct(AssetCollectionRendererInterface $assetCollectionRenderer, AssetsDataCollector $dataCollector) {
+    $this->assetCollectionRenderer = $assetCollectionRenderer;
+    $this->dataCollector = $dataCollector;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function render(array $assets): array {
-    $this->dataCollector->addJsAsset($assets);
+  public function render(array $js_assets) {
+    $this->dataCollector->addJsAsset($js_assets);
 
-    return $this->assetCollectionRenderer->render($assets);
+    return $this->assetCollectionRenderer->render($js_assets);
   }
 
 }

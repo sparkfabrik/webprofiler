@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -15,6 +13,27 @@ use Drupal\webprofiler\DataCollector\CacheDataCollector;
 class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidatorInterface {
 
   /**
+   * The data collector to register the calls.
+   *
+   * @var \Drupal\webprofiler\DataCollector\CacheDataCollector
+   */
+  protected $cacheDataCollector;
+
+  /**
+   * The wrapped cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
+   * The name of the wrapped cache bin.
+   *
+   * @var string
+   */
+  protected $bin;
+
+  /**
    * Constructs a new CacheBackendWrapper.
    *
    * @param \Drupal\webprofiler\DataCollector\CacheDataCollector $cacheDataCollector
@@ -24,17 +43,16 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
    * @param string $bin
    *   The name of the wrapped cache bin.
    */
-  public function __construct(
-    protected readonly CacheDataCollector $cacheDataCollector,
-    protected readonly CacheBackendInterface $cacheBackend,
-    protected readonly string $bin
-  ) {
+  public function __construct(CacheDataCollector $cacheDataCollector, CacheBackendInterface $cacheBackend, $bin) {
+    $this->cacheDataCollector = $cacheDataCollector;
+    $this->cacheBackend = $cacheBackend;
+    $this->bin = $bin;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function get($cid, $allow_invalid = FALSE): object|bool {
+  public function get($cid, $allow_invalid = FALSE) {
     $cache = $this->cacheBackend->get($cid, $allow_invalid);
 
     if ($cache) {
@@ -55,7 +73,7 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
   /**
    * {@inheritdoc}
    */
-  public function getMultiple(&$cids, $allow_invalid = FALSE): array {
+  public function getMultiple(&$cids, $allow_invalid = FALSE) {
     $cidsCopy = $cids;
     $cache = $this->cacheBackend->getMultiple($cids, $allow_invalid);
 
@@ -65,7 +83,7 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
       }
       else {
         $cacheCopy = new \stdClass();
-        $cacheCopy->cid = $cid;
+        $cacheCopy->cid = $cache[$cid]->cid;
         $cacheCopy->expire = $cache[$cid]->expire;
         $cacheCopy->tags = $cache[$cid]->tags;
 
@@ -80,49 +98,49 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
-    $this->cacheBackend->set($cid, $data, $expire, $tags);
+    return $this->cacheBackend->set($cid, $data, $expire, $tags);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setMultiple(array $items) {
-    $this->cacheBackend->setMultiple($items);
+    return $this->cacheBackend->setMultiple($items);
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $this->cacheBackend->delete($cid);
+    return $this->cacheBackend->delete($cid);
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteMultiple(array $cids) {
-    $this->cacheBackend->deleteMultiple($cids);
+    return $this->cacheBackend->deleteMultiple($cids);
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteAll() {
-    $this->cacheBackend->deleteAll();
+    return $this->cacheBackend->deleteAll();
   }
 
   /**
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    $this->cacheBackend->invalidate($cid);
+    return $this->cacheBackend->invalidate($cid);
   }
 
   /**
    * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {
-    $this->cacheBackend->invalidateMultiple($cids);
+    return $this->cacheBackend->invalidateMultiple($cids);
   }
 
   /**
@@ -138,21 +156,21 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
    * {@inheritdoc}
    */
   public function invalidateAll() {
-    $this->cacheBackend->invalidateAll();
+    return $this->cacheBackend->invalidateAll();
   }
 
   /**
    * {@inheritdoc}
    */
   public function garbageCollection() {
-    $this->cacheBackend->garbageCollection();
+    return $this->cacheBackend->garbageCollection();
   }
 
   /**
    * {@inheritdoc}
    */
   public function removeBin() {
-    $this->cacheBackend->removeBin();
+    return $this->cacheBackend->removeBin();
   }
 
 }

@@ -1,41 +1,40 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
 use Drupal\webprofiler\Form\FormBuilderWrapper;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Class FormsDataCollector
+ * Class FormsDataCollector.
  */
-class FormsDataCollector extends DataCollector implements HasPanelInterface {
+class FormsDataCollector extends DataCollector implements DrupalDataCollectorInterface {
 
-  use StringTranslationTrait, PanelTrait;
+  use StringTranslationTrait, DrupalDataCollectorTrait;
+
+  /**
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  private $formBuilder;
 
   /**
    * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    */
-  public function __construct(private readonly FormBuilderInterface $formBuilder) {
+  public function __construct(FormBuilderInterface $formBuilder) {
+    $this->formBuilder = $formBuilder;
+
     $this->data['forms'] = [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'forms';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
     $this->data['forms'] = [];
 
     if ($this->formBuilder instanceof FormBuilderWrapper) {
@@ -44,115 +43,45 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
-  }
-
-  /**
-   * Return the list of collected forms.
-   *
    * @return array
-   *   The list of collected forms.
    */
-  public function getForms(): array {
+  public function getForms() {
     return (!empty($this->data['forms']) && is_array($this->data['forms'])) ? $this->data['forms'] : [];
   }
 
   /**
-   * Return the number of forms in the page.
-   *
    * @return int
-   *   The number of forms in the page.
    */
-  public function getFormsCount(): int {
+  public function getFormsCount() {
     return count($this->getForms());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): array {
-    $build = [];
-    $forms = $this->data['forms'];
-
-    if (count($forms) == 0) {
-      return [
-          '#markup' => '<p>' . $this->t('No forms collected') . '</p>',
-      ];
-    }
-
-    foreach ($forms as $form) {
-      $build[] = $this->renderForm($form);
-    }
-
-    return $build;
+  public function getName() {
+    return 'forms';
   }
 
   /**
-   * Render all elements of a form.
-   *
-   * @param array $form
-   *   The form.
-   *
-   * @return array
-   *   The render array for the form.
+   * {@inheritdoc}
    */
-  public function renderForm(array $form): array {
-    $rows = $this->renderElement($form['elements']);
-
-    return [
-      '#theme' => 'webprofiler_dashboard_table',
-      '#title' => '',
-      '#data' => [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('Name'),
-          $this->t('Title'),
-          $this->t('Type'),
-          $this->t('Access'),
-        ],
-        '#rows' => $rows,
-        '#attributes' => [
-          'class' => [
-            'webprofiler__table',
-          ],
-        ],
-        '#sticky' => TRUE,
-      ],
-    ];
+  public function getTitle() {
+    return $this->t('Forms');
   }
 
   /**
-   * Render a single form element.
-   *
-   * @param array $elements
-   *   Form elements.
-   * @param string $parent
-   *   Internal use. The parent element name.
-   *
-   * @return array
-   *   A row for the table.
+   * {@inheritdoc}
    */
-  public function renderElement(array $elements, string $parent = ''): array {
-    $rows = [];
-
-    foreach ($elements as $name => $element) {
-      $label = $parent == '' ? $name : implode(' > ', [$parent, $name]);
-
-      $rows[] = [
-        $label,
-        $element['#title'],
-        $element['#type'],
-        $element['#access'] ? 'Yes' : 'No',
-      ];
-
-      if (isset($element['#children'])) {
-        $rows = array_merge($rows, $this->renderElement($element['#children'], $label));
-      }
-    }
-
-    return $rows;
+  public function getPanelSummary() {
+    return $this->t('Rendered: @forms', ['@forms' => $this->getFormsCount()]);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0RkE1QUM1QjkxNkMxMUUzQjA3OUEzQTNEMUVGMjVDOCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo0RkE1QUM1QzkxNkMxMUUzQjA3OUEzQTNEMUVGMjVDOCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjRGQTVBQzU5OTE2QzExRTNCMDc5QTNBM0QxRUYyNUM4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjRGQTVBQzVBOTE2QzExRTNCMDc5QTNBM0QxRUYyNUM4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+I7130QAAAKRJREFUeNrsVVsKxCAMzIgH8897eDHxGP55LX+0RmjpYxHdyrLsNl9iknEyExA5Z5oZgibH9wPKVlJrnVNKRwZCkPceQ4AhhOpUjJFaeaXUBRjssrW2FvDZGINS2GV9AQb3rpvCvZWhc24rKpdDmp17P2MKjzIFEAD16vdDi73Xbx2/pelZItnz6oiusneB32b4is0Iw8eUfzBlOiCef/l2LAIMAGACWQCJ5bXFAAAAAElFTkSuQmCC';
+  }
+
 }

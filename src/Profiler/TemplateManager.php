@@ -1,13 +1,19 @@
 <?php
 
-declare(strict_types=1);
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Drupal\webprofiler\Profiler;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Profiler\Profiler as SymfonyProfiler;
 use Symfony\Component\HttpKernel\Profiler\Profile;
-use Symfony\Component\HttpKernel\Profiler\Profiler;
-use Twig\Environment;
 
 /**
  * Profiler Templates Manager.
@@ -15,56 +21,51 @@ use Twig\Environment;
 class TemplateManager {
 
   /**
-   * The profiler service.
-   *
-   * @var \Symfony\Component\HttpKernel\Profiler\Profiler
+   * @var \Twig_Environment
    */
-  protected Profiler $profiler;
+  protected $twig;
 
   /**
-   * The Twig environment service.
-   *
-   * @var \Twig\Environment
+   * @var \Twig_Loader_Chain
    */
-  protected Environment $twig;
+  protected $twigLoader;
 
   /**
-   * Data collector templates retrieved by ProfilerPass class.
-   *
    * @var array
    */
-  protected array $templates;
+  protected $templates;
 
   /**
-   * TemplateManager constructor.
+   * @var \Symfony\Component\HttpKernel\Profiler\Profiler
+   */
+  protected $profiler;
+
+  /**
+   * Constructor.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profiler $profiler
-   *   The profiler service.
-   * @param \Twig\Environment $twig
-   *   The Twig environment service.
+   * @param \Twig_Environment $twig
+   * @param \Twig_Loader_Chain $twigLoader
    * @param array $templates
-   *   Data collector templates retrieved by ProfilerPass class.
    */
-  public function __construct(Profiler $profiler, Environment $twig, array $templates) {
+  public function __construct(SymfonyProfiler $profiler, \Twig_Environment $twig, \Twig_Loader_Chain $twigLoader, array $templates) {
     $this->profiler = $profiler;
     $this->twig = $twig;
+    $this->twigLoader = $twigLoader;
     $this->templates = $templates;
   }
 
   /**
-   * Get the template name for a given panel.
+   * Gets the template name for a given panel.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
-   *   A profile.
    * @param string $panel
-   *   A data collector name.
    *
-   * @return string
-   *   The template name for a given panel.
+   * @return mixed
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function getName(Profile $profile, string $panel): string {
+  public function getName(Profile $profile, $panel) {
     $templates = $this->getNames($profile);
 
     if (!isset($templates[$panel])) {
@@ -75,16 +76,31 @@ class TemplateManager {
   }
 
   /**
-   * Get template names of templates that are present in the viewed profile.
+   * Gets the templates for a given profile.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
-   *   A profile.
    *
    * @return array
-   *   Template names of templates that are present in the viewed profile.
    */
-  public function getNames(Profile $profile): array {
-    $loader = $this->twig->getLoader();
+  public function getTemplates(Profile $profile) {
+    $templates = $this->getNames($profile);
+    foreach ($templates as $name => $template) {
+      $templates[$name] = $this->twig->loadTemplate($template);
+    }
+
+    return $templates;
+  }
+
+  /**
+   * Gets template names of templates that are present in the viewed profile.
+   *
+   * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
+   *
+   * @return array
+   *
+   * @throws \UnexpectedValueException
+   */
+  protected function getNames(Profile $profile) {
     $templates = [];
 
     foreach ($this->templates as $arguments) {
@@ -92,17 +108,17 @@ class TemplateManager {
         continue;
       }
 
-      [$name, $template] = $arguments;
+      list($name, $template) = $arguments;
 
       if (!$this->profiler->has($name) || !$profile->hasCollector($name)) {
         continue;
       }
 
-      if (str_ends_with($template, '.html.twig')) {
+      if ('.html.twig' === substr($template, -10)) {
         $template = substr($template, 0, -10);
       }
 
-      if (!$loader->exists($template . '.html.twig')) {
+      if (!$this->twigLoader->exists($template . '.html.twig')) {
         throw new \UnexpectedValueException(sprintf('The profiler template "%s.html.twig" for data collector "%s" does not exist.', $template, $name));
       }
 

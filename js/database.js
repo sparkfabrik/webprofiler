@@ -2,44 +2,68 @@
  * @file
  * Database panel app.
  */
-(function (Drupal) {
+(function ($, Drupal, drupalSettings) {
 
-  "use strict";
+    "use strict";
 
-  Drupal.behaviors.webprofiler_database = {
-    attach: function (context) {
-      // Swap placeholders.
-      once('executable-toggle', '[data-webprofiler-executable-toggle]', context).forEach(function (element) {
-        element.addEventListener('click', function (e) {
-          let qid = e.target.dataset.webprofilerQid;
-          document.querySelector("[data-webprofiler-placeholder-query='"+qid+"']").classList.toggle('is-hidden');
-          document.querySelector("[data-webprofiler-executable-query='"+qid+"']").classList.toggle('is-hidden');
-        });
-      });
+    Drupal.behaviors.webprofiler_database = {
+        attach: function (context) {
+            $(context).find('.js--explain-trigger').once('js--explain-trigger').each(function () {
 
-      // Show placeholders.
-      once('placeholder-toggle', '[data-webprofiler-placeholder-toggle]', context).forEach(function (element) {
-        element.addEventListener('click', function (e) {
-          let qid = e.target.dataset.webprofilerQid;
-          document.querySelector("[data-webprofiler-placeholder-target='"+qid+"']").classList.toggle('is-hidden');
-        });
-      });
+                $(this).on('click', function () {
+                    var position = $(this).attr('data-wp-queryPosition'),
+                        wrapper = $(this).parent().parent().find('.js--explain-target'),
+                        loader = $(this).parent().parent().find('.js--loader');
 
-      // Copy to clipboard.
-      if (navigator.clipboard && window.isSecureContext) {
-        once('query-copy', '[data-webprofiler-copy]', context).forEach(function (element) {
-          element.addEventListener('click', function (e) {
-            let qid = e.target.dataset.webprofilerQid;
-            let query = document.querySelector("[data-webprofiler-executable-query='" + qid + "']").innerText;
-            navigator.clipboard.writeText(query);
-          });
-        });
-      }
-      else {
-        once('query-copy', '[data-webprofiler-copy]', context).forEach(function (element) {
-          element.classList.toggle('is-hidden');
-        });
-      }
+                    if (wrapper.html().length === 0) {
+
+                        var url = Drupal.url('admin/reports/profiler/database_explain/' + drupalSettings.webprofiler.token + '/' + position);
+
+                        loader.show();
+
+                        $.getJSON(url, function (data) {
+                            _.templateSettings.variable = 'rc';
+                            var template = _.template(
+                                $("#wp-query-explain-template").html()
+                            );
+                            wrapper.html(template(data));
+                            loader.hide();
+                            delete _.templateSettings.variable;
+                        });
+                    }
+                    wrapper.toggle();
+
+                });
+            });
+
+            $(context).find('.js--code-toggle').once('js--code-toggle').each(function () {
+                $(this).on('click', function () {
+                    $(this).parent().find('.js--code-target').find('code').toggleClass('is--hidden');
+                });
+            });
+
+            $(context).find('.js--code-toggle--global').once('js--code-toggle--global').each(function () {
+                $(this).on('click', function () {
+
+                    if($(this).hasClass('js--placeholder-visible')){
+                        $('.js--placeholder-query').addClass('is--hidden');
+                        $('.js--original-query').removeClass('is--hidden');
+
+                    }else{
+                        $('.js--placeholder-query').removeClass('is--hidden');
+                        $('.js--original-query').addClass('is--hidden');
+                    }
+                    $(this).toggleClass('js--placeholder-visible');
+                });
+            });
+
+            if (typeof hljs != "undefined") {
+                var highlightBlock = (typeof hljs.highlightElement === "function") ? hljs.highlightElement : hljs.highlightBlock;
+                $('code.sql').each(function (i, block) {
+                    highlightBlock(block);
+                });
+            }
+        }
     }
-  }
-})(Drupal);
+})
+(jQuery, Drupal, drupalSettings);

@@ -1,39 +1,46 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects database data.
+ * Class DatabaseDataCollector.
  */
-class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
+class DatabaseDataCollector extends DataCollector implements DrupalDataCollectorInterface {
+
+  use StringTranslationTrait, DrupalDataCollectorTrait;
 
   /**
-   * DatabaseDataCollector constructor.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The Config factory service.
+   * @var \Drupal\Core\Database\Connection
    */
-  public function __construct(
-    protected readonly Connection $database,
-    protected readonly ConfigFactoryInterface $configFactory
-  ) {
+  private $database;
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private $configFactory;
+
+  /**
+   * @param \Drupal\Core\Database\Connection $database
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   */
+  public function __construct(Connection $database, ConfigFactoryInterface $configFactory) {
+    $this->database = $database;
+    $this->configFactory = $configFactory;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
     $connections = [];
     foreach (Database::getAllConnectionInfo() as $key => $info) {
       try {
@@ -69,6 +76,17 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
       }
     }
 
+    $querySort = $this->configFactory->get('webprofiler.config')
+      ->get('query_sort');
+    if ('duration' === $querySort) {
+      usort(
+        $data, [
+          "Drupal\\webprofiler\\DataCollector\\DatabaseDataCollector",
+          "orderQueryByTime",
+        ]
+      );
+    }
+
     $this->data['queries'] = $data;
 
     $options = $this->database->getConnectionOptions();
@@ -80,80 +98,32 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getName(): string {
-    return 'database';
-  }
-
-  /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPanel(): array {
-    // Panel is implemented in the template.
-    return [];
-  }
-
-  /**
-   * Return the database info.
-   *
    * @return array
-   *   The database info.
    */
-  public function getDatabase(): array {
+  public function getDatabase() {
     return $this->data['database'];
   }
 
   /**
-   * Return the number of execute queries.
-   *
    * @return int
-   *   The number of execute queries.
    */
-  public function getQueryCount(): int {
+  public function getQueryCount() {
     return count($this->data['queries']);
   }
 
   /**
-   * Return a list of execute queries.
-   *
-   * Queries are sorted by the value of query_sort config option.
-   *
    * @return array
-   *   A list of execute queries.
    */
-  public function getQueries(): array {
-    $querySort = \Drupal::configFactory()
-      ->get('webprofiler.config')
-      ->get('query_sort') ?: '';
-
-    $queries = $this->data['queries'];
-    if ('duration' === $querySort) {
-      usort(
-        $queries, [
-          "Drupal\\webprofiler\\DataCollector\\DatabaseDataCollector",
-          "orderQueryByTime",
-        ]
-      );
-    }
-
-    return $queries;
+  public function getQueries() {
+    return $this->data['queries'];
   }
 
   /**
    * Returns the total execution time.
    *
    * @return float
-   *   The total execution time.
    */
-  public function getTime(): float {
+  public function getTime() {
     $time = 0;
 
     foreach ($this->data['queries'] as $query) {
@@ -164,30 +134,133 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * Returns the configured query highlight threshold.
+   * Returns a color based on the number of executed queries.
    *
-   * @return int
-   *   The configured query highlight threshold.
+   * @return string
    */
-  public function getQueryHighlightThreshold(): int {
-    // When a profile is loaded from storage this object is deserialized and
-    // no constructor is called, so we cannot use dependency injection.
-    return \Drupal::config('webprofiler.settings')->get('query_highlight');
+  public function getColorCode() {
+    if ($this->getQueryCount() < 100) {
+      return 'green';
+    }
+    if ($this->getQueryCount() < 200) {
+      return 'yellow';
+    }
+
+    return 'red';
   }
 
   /**
-   * Order queries by time.
-   *
-   * @param array $a
-   *   A query data.
-   * @param array $b
-   *   A query data.
+   * Returns the configured query highlight threshold.
    *
    * @return int
-   *   The comparison result.
    */
-  private function orderQueryByTime(array $a, array $b): int {
-    return $a['time'] <=> $b['time'];
+  public function getQueryHighlightThreshold() {
+    // When a profile is loaded from storage this object is deserialized and
+    // no constructor is called so we cannot use dependency injection.
+    return \Drupal::config('webprofiler.config')->get('query_highlight');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return 'database';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->t('Database');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPanelSummary() {
+    return $this->t('Executed queries: @count', ['@count' => $this->getQueryCount()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQRJREFUeNpi/P//PwM1ARMDlcGogZQDlpMnT7pxc3NbA9nhQKxOpL5rQLwJiPeBsI6Ozl+YBOOOHTv+AOllQNwtLS39F2owKYZ/gRq8G4i3ggxEToggWzvc3d2Pk+1lNL4fFAs6ODi8JzdS7mMRVyDVoAMHDsANdAPiOCC+jCQvQKqBQB/BDbwBxK5AHA3E/kB8nKJkA8TMQBwLxaBIKQbi70AvTADSBiSadwFXpCikpKQU8PDwkGTaly9fHFigkaKIJid4584dkiMFFI6jkTJII0WVmpHCAixZQEXWYhDeuXMnyLsVlEQKI45qFBQZ8eRECi4DBaAlDqle/8A48ip6gAADANdQY88Uc0oGAAAAAElFTkSuQmCC';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibraries() {
+    return [
+      'webprofiler/database',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getData() {
+    $data = $this->data;
+
+    $conn = Database::getConnection();
+    foreach ($data['queries'] as &$query) {
+      $explain = TRUE;
+      $type = 'select';
+
+      if (strpos($query['query'], 'INSERT') !== FALSE) {
+        $explain = FALSE;
+        $type = 'insert';
+      }
+
+      if (strpos($query['query'], 'UPDATE') !== FALSE) {
+        $explain = FALSE;
+        $type = 'update';
+      }
+
+      if (strpos($query['query'], 'CREATE') !== FALSE) {
+        $explain = FALSE;
+        $type = 'create';
+      }
+
+      if (strpos($query['query'], 'DELETE') !== FALSE) {
+        $explain = FALSE;
+        $type = 'delete';
+      }
+
+      $query['explain'] = $explain;
+      $query['type'] = $type;
+
+      $quoted = [];
+
+      if (isset($query['args'])) {
+        foreach ((array) $query['args'] as $key => $val) {
+          $quoted[$key] = is_null($val) ? 'NULL' : $conn->quote($val);
+        }
+      }
+
+      $query['query_args'] = strtr($query['query'], $quoted);
+    }
+
+    $data['query_highlight_threshold'] = $this->getQueryHighlightThreshold();
+
+    return $data;
+  }
+
+  /**
+   * @param $a
+   * @param $b
+   *
+   * @return int
+   */
+  private function orderQueryByTime($a, $b) {
+    $at = $a['time'];
+    $bt = $b['time'];
+
+    if ($at == $bt) {
+      return 0;
+    }
+    return ($at < $bt) ? 1 : -1;
   }
 
 }

@@ -1,29 +1,25 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Http;
 
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Promise\Create;
-use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Class HttpClientMiddleware
+ * Class HttpClientMiddleware.
  */
 class HttpClientMiddleware {
 
   /**
    * @var array
    */
-  private array $completedRequests;
+  private $completedRequests;
 
   /**
    * @var array
    */
-  private array $failedRequests;
+  private $failedRequests;
 
   /**
    *
@@ -34,20 +30,23 @@ class HttpClientMiddleware {
   }
 
   /**
-   *
-   *
+   * {@inheritdoc}
    */
-  public function __invoke(): \Closure {
+  public function __invoke() {
     return function ($handler) {
-      return function (RequestInterface $request, array $options) use ($handler): PromiseInterface {
+      return function (RequestInterface $request, array $options) use ($handler) {
 
         // If on_stats callback is already set then save it
         // and call it after ours.
-        $next = $options['on_stats'] ?? function (TransferStats $stats) {
-        };
+        if (isset($options['on_stats'])) {
+          $next = $options['on_stats'];
+        }
+        else {
+          $next = function (TransferStats $stats) {};
+        }
 
         $options['on_stats'] = function (TransferStats $stats) use ($request, $next) {
-          $request->stats = $stats; // @phpstan-ignore-line
+          $request->stats = $stats;
           $next($stats);
         };
 
@@ -72,7 +71,7 @@ class HttpClientMiddleware {
               'message' => $reason->getMessage(),
             ];
 
-            return Create::rejectionFor($reason);
+            return \GuzzleHttp\Promise\rejection_for($reason);
           }
         );
       };
@@ -82,14 +81,14 @@ class HttpClientMiddleware {
   /**
    * @return array
    */
-  public function getCompletedRequests(): array {
+  public function getCompletedRequests() {
     return $this->completedRequests;
   }
 
   /**
    * @return array
    */
-  public function getFailedRequests(): array {
+  public function getFailedRequests() {
     return $this->failedRequests;
   }
 

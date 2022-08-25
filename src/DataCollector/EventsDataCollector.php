@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\tracer\EventDispatcher\EventDispatcherTraceableInterface;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
+use Drupal\webprofiler\EventDispatcher\EventDispatcherTraceableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,34 +12,30 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Class EventsDataCollector
+ * Class EventsDataCollector.
  */
-class EventsDataCollector extends DataCollector implements LateDataCollectorInterface, HasPanelInterface {
+class EventsDataCollector extends DataCollector implements DrupalDataCollectorInterface, LateDataCollectorInterface {
 
-  use StringTranslationTrait, DataCollectorTrait, PanelTrait;
+  use StringTranslationTrait, DrupalDataCollectorTrait;
+
+  /**
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  private $eventDispatcher;
 
   /**
    * EventsDataCollector constructor.
    *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   The event dispatcher.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    */
-  public function __construct(
-    private readonly EventDispatcherInterface $eventDispatcher,
-  ) {
+  public function __construct(EventDispatcherInterface $event_dispatcher) {
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getName() {
-    return 'events';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
     $this->data = [
       'called_listeners' => [],
       'called_listeners_count' => 0,
@@ -54,197 +49,97 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
    */
   public function lateCollect() {
     if ($this->eventDispatcher instanceof EventDispatcherTraceableInterface) {
-      $count_called = 0;
-      $called_listeners = $this->eventDispatcher->getCalledListeners();
-      foreach ($called_listeners as &$called_events) {
-        foreach ($called_events as &$priority) {
+      $countCalled = 0;
+      $calledListeners = $this->eventDispatcher->getCalledListeners();
+      foreach ($calledListeners as &$events) {
+        foreach ($events as &$priority) {
           foreach ($priority as &$listener) {
-            $count_called++;
+            $countCalled++;
             $listener['clazz'] = $this->getMethodData($listener['class'], $listener['method']);
           }
         }
       }
 
-      $count_not_called = 0;
-      $not_called_listeners = $this->eventDispatcher->getNotCalledListeners();
-      foreach ($not_called_listeners as $not_called_events) {
-        foreach ($not_called_events as $priority) {
+      $countNotCalled = 0;
+      $notCalledListeners = $this->eventDispatcher->getNotCalledListeners();
+      foreach ($notCalledListeners as $events) {
+        foreach ($events as $priority) {
           foreach ($priority as $listener) {
-            $count_not_called++;
+            $countNotCalled++;
           }
         }
       }
 
       $this->data = [
-        'called_listeners' => $called_listeners,
-        'called_listeners_count' => $count_called,
-        'not_called_listeners' => $not_called_listeners,
-        'not_called_listeners_count' => $count_not_called,
+        'called_listeners' => $calledListeners,
+        'called_listeners_count' => $countCalled,
+        'not_called_listeners' => $notCalledListeners,
+        'not_called_listeners_count' => $countNotCalled,
       ];
     }
   }
 
   /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
-  }
-
-  /**
-   * Return an array of all the events that have been dispatched.
-   *
    * @return array
-   *   An array of all the events that have been dispatched.
    */
-  public function getCalledListeners(): array {
+  public function getCalledListeners() {
     return $this->data['called_listeners'];
   }
 
   /**
-   * Return an array of all the events that have not been dispatched.
-   *
    * @return array
-   *   An array of all the events that have not been dispatched.
    */
-  public function getNotCalledListeners(): array {
+  public function getNotCalledListeners() {
     return $this->data['not_called_listeners'];
   }
 
   /**
-   * Return the count of the events that have been dispatched.
-   *
    * @return int
-   *   The count of the events that have been dispatched.
    */
-  public function getCalledListenersCount(): int {
+  public function getCalledListenersCount() {
     return $this->data['called_listeners_count'];
   }
 
   /**
-   * Return the count of the events that have not been dispatched.
-   *
    * @return int
-   *   The count of the events that have not been dispatched.
    */
-  public function getNotCalledListenersCount(): int {
+  public function getNotCalledListenersCount() {
     return $this->data['not_called_listeners_count'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): array {
-    $tabs = [
-      'called' => [
-        'label' => 'Called listeners',
-        'content' => $this->renderListeners($this->getCalledListeners(), 'Called listeners', TRUE),
-      ],
-      'not-called' => [
-        'label' => 'Not called listeners',
-        'content' => $this->renderListeners($this->getNotCalledListeners(), 'Not called listeners', FALSE),
-      ],
-    ];
-
-    return [
-      '#theme' => 'webprofiler_dashboard_tabs',
-      '#tabs' => $tabs,
-    ];
+  public function getName() {
+    return 'events';
   }
 
   /**
-   * Render a list of listeners.
-   *
-   * @param array $listeners
-   *   The list of listeners to render.
-   * @param string $label
-   *   The list's label.
-   * @param bool $called
-   *   TRUE if the table is for called listeners, FALSE otherwise.
-   *
-   * @return array
-   *   The render array of the list of blocks.
+   * @return mixed
    */
-  private function renderListeners(array $listeners, string $label, bool $called): array {
-    if (count($listeners) == 0) {
-      return [
-        $label => [
-          '#markup' => '<p>' . $this->t('No @label listeners collected',
-              ['@label' => $label]) . '</p>',
-        ],
-      ];
-    }
-
-    $rows = [];
-    foreach ($listeners as $name => $priorities) {
-      foreach ($priorities as $priority => $subscribers) {
-        foreach ($subscribers as $key => $subscriber) {
-          $rows[] = [
-            $name,
-            [
-              'data' => [
-                '#type' => 'inline_template',
-                '#template' => '{{ data|raw }}',
-                '#context' => [
-                  'data' => $this->classLink($subscriber),
-                ],
-              ],
-              'class' => 'webprofiler__value',
-            ],
-            $priority,
-          ];
-        }
-      }
-    }
-
-    return [
-      $label => [
-        '#theme' => 'webprofiler_dashboard_table',
-        '#data' => [
-          '#type' => 'table',
-          '#header' => [
-            $this->t('Called listeners'),
-            $called ? $this->t('Class') : $this->t('Service'),
-            $this->t('Priority'),
-          ],
-          '#rows' => $rows,
-          '#attributes' => [
-            'class' => [
-              'webprofiler__table',
-            ],
-          ],
-          '#sticky' => TRUE,
-        ],
-      ],
-    ];
+  public function getData() {
+    return $this->data;
   }
 
   /**
-   * Render the link to a class.
-   *
-   * The class can be a regular class, a service or a closure.
-   *
-   * @param array $subscriber
-   *   Event subscriber data.
-   *
-   * @return array
-   *   A render array of the link to the class.
+   * {@inheritdoc}
    */
-  private function classLink(array $subscriber): array {
-    if (isset($subscriber['class'])) {
-      if ($subscriber['class'] == 'Closure') {
-        return [
-          '#markup' => $this->t('Closure'),
-        ];
-      }
-      else {
-        return $this->renderClassLinkFromMethodData($subscriber['clazz']);
-      }
-    }
+  public function getTitle() {
+    return $this->t('Events');
+  }
 
-    return [
-      '#markup' => sprintf('%s::%s', $subscriber['service'][0], $subscriber['service'][1]),
-    ];
+  /**
+   * {@inheritdoc}
+   */
+  public function getPanelSummary() {
+    return $this->t('Called listeners: @listeners', ['@listeners' => $this->getCalledListenersCount()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAYAAACOGPReAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABFJJREFUeNrkVVlIY2cY/RMTE81NMkkajUs1OBqkiVsjjAtStGrtSGyFjOjAQNVCKRb66ot9KrjgQx+FUgTBKkURbIfighWl4r6h44pajcZEo3ESTeKS9PzB2AyNZaD1qRcOem+S83/f+c53Lsvj8ZD/+mKTB7gehJTj+2d9fZ1MTk6S0NBQSW9vb97e3t7jmpqaXzIzM185HA7vd4KDg8nGxoaysbGxVCwWm/V6/aDL5TKlpKSQpKSkv5NyuVxyc3Mj7e7u/jw2NjYxJyfnMDIykmGz2UQgEBAWi0XcbjeRSqWhZWVl4v39fXVXV5cqNzf3exxmCNj+9fU1MzQ09JVWq32sUqmMu7u7QhwiDwoKIoeHh2R7e5twOByCwcrQhUShUJjz8vJkw8PDX5+fn8sDkvb3938YHR39rlAoNBoMBgGqtWxubnJRKbu9vZ20trZSQoJnvKioKMvZ2Rn/6urKmpqayvT19ekCks7NzaUnJyeboK0kPj7+cGZmJprH4zGnp6duEBFUTg4ODqjmIfPz87GQxoRnori4ODOKUPuTsnw+RRvPGIYJMZvNDNplYmJiLvPz839oamoSj4yMfAJNuRqN5mV9ff0fOPDF1NSUAt85lclkDkjnys7O/vGOlZLeQgjIgUggnmqHqmMqKip+z8jI8MAFnpKSkpXZ2dn38JkIUAFRQNjt/R2Xv09twBFwAGwClunp6efLy8tZdFgUW1tbiaOjo1/is9fUhcA+YL69fzvzSyQSEQZHfBJBT4J2Bf9qo9Rq9bxcLndeXl4STJrA8B4Mc/atN4pesAk5OTkh1PB0exYXF/kWi4UTFhZG+Hw+wZQJ5BDR7fEPIroYASu9uLggJpOJYO2I0+kkqI47Njb2MdzAKS4uXisvL5/FurIGBgaeYoDS1dVVsrKyQpaWlghsF7hS2IJERER4T4U/qckT4ccP6BYplco+rOcxqn0fZFqj0fgkLS3tV18m0EICktJV9F101xcWFj5Cu+HQ1YGNoeSXWGErpv8IwVOSlZXVh7xw0zy4V1MY3/uXWgetMzB8EZUHw7lKSEjgQ0MONLei2kcTExN5R0dHMehshw7x3umLRKI7YDhaDOSJ18hstq2qquobLMG30DKYkuzs7KggTa5Pf4p/rJReSCud1WplEBYuSMGrra39FG1ywsPDgwsLC+0YFoMAKi0qKupA5c57K0V1XjsdHx+/g6mXUksVFBS8wmF23FeMj48/w7PXiLsxePcG65qPDNCsra15XRCQFNP1AgRPMaA4aOvp6OjQ2O12cVtb20vE389YAHFLS0sO2vbYbLYQHKRHShEEy5ul+kIAe02Q5vy6urouTNyDV8VNT0/PBGzzxW1wRIHsM7T+W3V1tROvEE9lZeUCKlVgSfyD6S9SGsKdnZ1pOp3OkJ6efj04OPgTnmsAlv8PACXa/Q4L4UByuZqbm/UNDQ1vkLL+3+/9ByH9U4ABADscgvUMKuLiAAAAAElFTkSuQmCC';
   }
 
 }

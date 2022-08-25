@@ -1,30 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Entity;
 
 use Drupal\webprofiler\Decorator;
 
 /**
- * Decorator for services that manage entities.
+ * Class EntityDecorator.
  */
 class EntityDecorator extends Decorator {
 
   /**
-   * Entities managed by services decorated with this decorator.
-   *
    * @var array
    */
-  protected array $entities;
+  protected $entities;
 
   /**
-   * Return the entities managed by services decorated with this decorator.
-   *
-   * @return array
-   *   The entities managed by services decorated with this decorator.
+   * @return mixed
    */
-  public function getEntities(): array {
+  public function getEntities() {
     return $this->entities;
   }
 

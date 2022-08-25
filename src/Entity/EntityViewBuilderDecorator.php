@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Entity;
 
 use Drupal\Core\Entity\EntityHandlerInterface;
@@ -13,18 +11,15 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Decorator for entity view builder handlers.
+ * Class EntityViewBuilderDecorator.
  */
 class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandlerInterface, EntityViewBuilderInterface {
 
   /**
-   * EntityViewBuilderDecorator constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $config_entity_storage
-   *   The config entity storage to decorate.
+   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $controller
    */
-  final public function __construct(EntityViewBuilderInterface $config_entity_storage) {
-    parent::__construct($config_entity_storage);
+  public function __construct(EntityViewBuilderInterface $controller) {
+    parent::__construct($controller);
 
     $this->entities = [];
   }
@@ -81,17 +76,17 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return $this->getOriginalObject()->getCacheTag();
+    return $this->getOriginalObject()->getCacheTags();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    assert ($entity_type instanceof EntityViewBuilderInterface);
-
     return new static(
-      $entity_type
+      $entity_type,
+      $container->get('entity_type.manager'),
+      $container->get('language_manager')
     );
   }
 

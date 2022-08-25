@@ -1,35 +1,30 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\tracer\DependencyInjection\TraceableContainer;
+use Drupal\webprofiler\DependencyInjection\TraceableContainer;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects data about services.
+ * Class ServicesDataCollector.
  */
-class ServicesDataCollector extends DataCollector implements HasPanelInterface {
+class ServicesDataCollector extends DataCollector implements DrupalDataCollectorInterface {
 
-  use StringTranslationTrait, DataCollectorTrait, PanelTrait;
+  use StringTranslationTrait, DrupalDataCollectorTrait;
 
   /**
-   * The service container.
-   *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   *   $container
    */
-  private ContainerInterface $container;
+  private $container;
 
   /**
-   * ServicesDataCollector constructor.
-   *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container.
    */
   public function __construct(ContainerInterface $container) {
     $this->container = $container;
@@ -38,146 +33,119 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'services';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
     if ($this->getServicesCount()) {
+
       $tracedData = [];
       if ($this->container instanceof TraceableContainer) {
         $tracedData = $this->container->getTracedData();
       }
 
       foreach (array_keys($this->getServices()) as $id) {
-        $this->data['services'][$id]['initialized'] = $this->container->initialized($id);
-        $this->data['services'][$id]['time'] = $tracedData[$id] ?? NULL;
+        $this->data['services'][$id]['initialized'] = ($this->container->initialized($id)) ? TRUE : FALSE;
+        $this->data['services'][$id]['time'] = isset($tracedData[$id]) ? $tracedData[$id] : NULL;
       }
     }
   }
 
   /**
-   * Set services.
-   *
-   * @param array $services
-   *   Array of services.
+   * @param $services
    */
-  public function setServices(array $services) {
+  public function setServices($services) {
     $this->data['services'] = $services;
   }
 
   /**
-   * Returns services.
-   *
    * @return array
-   *   Array of services.
    */
-  public function getServices(): array {
+  public function getServices() {
     return $this->data['services'];
   }
 
   /**
-   * Return the number of services.
-   *
    * @return int
-   *   The number of services.
    */
-  public function getServicesCount(): int {
+  public function getServicesCount() {
     return count($this->getServices());
   }
 
   /**
-   * Returns array of services that are initialized.
-   *
    * @return array
-   *   Array of services that are initialized.
    */
-  public function getInitializedServices(): array {
+  public function getInitializedServices() {
     return array_filter($this->getServices(), function ($item) {
       return $item['initialized'];
     });
   }
 
   /**
-   * Returns the number of services that are initialized.
-   *
    * @return int
-   *   The number of services that are initialized.
    */
-  public function getInitializedServicesCount(): int {
+  public function getInitializedServicesCount() {
     return count($this->getInitializedServices());
   }
 
   /**
-   * Return all services but the ones from Webprofiler itself.
-   *
    * @return array
-   *   All services but the ones from Webprofiler itself.
    */
-  public function getInitializedServicesWithoutWebprofiler(): array {
+  public function getInitializedServicesWithoutWebprofiler() {
     return array_filter($this->getInitializedServices(), function ($item) {
-      return !str_starts_with($item['value']['id'], 'webprofiler');
+      return strpos($item['value']['id'], 'webprofiler') !== 0;
     });
   }
 
   /**
-   * Return the number of services but the ones from Webprofiler itself.
-   *
    * @return int
-   *   The number of services but the ones from Webprofiler itself.
    */
-  public function getInitializedServicesWithoutWebprofilerCount(): int {
+  public function getInitializedServicesWithoutWebprofilerCount() {
     return count($this->getInitializedServicesWithoutWebprofiler());
-  }
-
-  /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): array {
-    return [
-      '#theme' => 'webprofiler_dashboard_tabs',
-      '#tabs' => [
-        [
-          'label' => $this->t('Services'),
-          'content' => $this->renderServices($this->data['services']),
-        ],
-        [
-          'label' => $this->t('Middlewares'),
-          'content' => $this->renderMiddlewares($this->extractMiddlewares($this->data)),
-        ],
-      ],
-    ];
+  public function getName() {
+    return 'services';
   }
 
   /**
-   * Extract middlewares from the data.
-   *
-   * @param array $data
-   *   All the services collected.
-   *
-   * @return array
-   *   Only services that are middlewares.
+   * {@inheritdoc}
    */
-  private function extractMiddlewares(array $data): array {
-    $middlewares = array_filter($data['services'], function ($service) {
+  public function getTitle() {
+    return $this->t('Services');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPanelSummary() {
+    return $this->t('Initialized: @count', [
+      '@count' => $this->getInitializedServicesCount(),
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAYAAACOGPReAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQVJREFUeNrkVe0NgjAQBeMAdYO6AWxQNtANGEFHcALZANyADegGsIFsIBvgu6Q/LtWmxdTEjyYvd6Hw8t5de6TzPCex1yp5w/pz0rVrQymVIXSAACqt9TGG0p0hpHWIZb9lebWENOXn1FgWbL8GJHACNHs+ohyjlxSEZPEcKGYC6SbEvljgUHzEOR3IXiiB6YOTlLqdo1Y54tZHDLIauCHtETtn962P6EUVqhhi0gelIJEEk1MjMg9Py9xol/0SuBqFva/DULY3ZSqQF767v8TyZKv83tFXWVaEufsUG+DCr2nwQLGOlGQNizZPy3fMU16K5uV5+qQEpFTC+hCN9Pd/0XcBBgBxwVqjDkAznAAAAABJRU5ErkJggg==';
+  }
+
+  /**
+   * @return array
+   */
+  public function getData() {
+    $data = $this->data;
+
+    $http_middleware = array_filter($data['services'], function ($service) {
       return isset($service['value']['tags']['http_middleware']);
     });
 
-    foreach ($middlewares as &$service) {
+    foreach ($http_middleware as &$service) {
       $service['value']['handle_method'] = $this->getMethodData($service['value']['class'], 'handle');
     }
 
-    uasort($middlewares, function ($a, $b) {
+    uasort($http_middleware, function ($a, $b) {
       $va = $a['value']['tags']['http_middleware'][0]['priority'];
       $vb = $b['value']['tags']['http_middleware'][0]['priority'];
 
@@ -187,147 +155,9 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
       return ($va > $vb) ? -1 : 1;
     });
 
-    return $middlewares;
-  }
+    $data['http_middleware'] = $http_middleware;
 
-  /**
-   * Render tags data.
-   *
-   * @param array $tags
-   *   A list of service's tags.
-   *
-   * @return string
-   *   The rendered tags as a string.
-   */
-  private function renderTags(array $tags): string {
-    return implode(', ', array_keys(array_filter($tags, function ($tag) {
-      return $tag != '_provider';
-    }, ARRAY_FILTER_USE_KEY)));
-  }
-
-  /**
-   * Render the provider of a service.
-   *
-   * @param array $tags
-   *   A list of service's tags.
-   *
-   * @return string
-   *   The rendered provider as a string.
-   */
-  private function renderProvider(array $tags): string {
-    $tags = array_filter($tags, function ($tag) {
-      return $tag == '_provider';
-    }, ARRAY_FILTER_USE_KEY);
-
-    return $tags['_provider'][0]['provider'] ?? '';
-  }
-
-  /**
-   * Render a table of services.
-   *
-   * @param array $data
-   *   Services data.
-   *
-   * @return array
-   *   A render array for the services table.
-   */
-  private function renderServices(array $data): array {
-    $rows = [];
-    foreach ($data as $service) {
-      $class_link = '';
-      if (isset($service['value']['file'])) {
-        $class_link = $this->renderClasslink($service['value']['file'], 0, $service['value']['class']);
-      }
-
-      $rows[] = [
-        $service['value']['id'],
-        [
-          'data' => $class_link,
-        ],
-        $this->renderProvider($service['value']['tags']),
-        $service['initialized'] ? 'Yes' : 'No',
-        $service['value']['public'] ? 'Yes' : 'No',
-        $service['value']['synthetic'] ? 'Yes' : 'No',
-        $this->renderTags($service['value']['tags']),
-      ];
-    }
-
-    return [
-      '#theme' => 'webprofiler_dashboard_table',
-      '#data' => [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('ID'),
-          $this->t('Class'),
-          $this->t('Provider'),
-          $this->t('Initialized'),
-          $this->t('Public'),
-          $this->t('Synthetic'),
-          $this->t('Tags'),
-        ],
-        '#rows' => $rows,
-        '#attributes' => [
-          'class' => [
-            'webprofiler__table',
-          ],
-        ],
-        '#sticky' => TRUE,
-      ],
-    ];
-  }
-
-  /**
-   * Render a table of middlewares.
-   *
-   * @param array $extractMiddlewares
-   *   Middlewares data.
-   *
-   * @return array
-   *   A render array for the middlewares table.
-   */
-  private function renderMiddlewares(array $extractMiddlewares): array {
-    $rows = [];
-    foreach ($extractMiddlewares as $middleware) {
-      $class_link = '';
-      if (isset($middleware['value']['handle_method'])) {
-        $class_link = $this->renderClassLinkFromMethodData($middleware['value']['handle_method']);
-      }
-
-      $rows[] = [
-        $middleware['value']['id'],
-        [
-          'data' => $class_link,
-        ],
-        $this->renderProvider($middleware['value']['tags']),
-        $middleware['initialized'] ? 'Yes' : 'No',
-        $middleware['value']['public'] ? 'Yes' : 'No',
-        $middleware['value']['synthetic'] ? 'Yes' : 'No',
-        $middleware['value']['tags']['http_middleware'][0]['priority'],
-      ];
-    }
-
-    return [
-      '#theme' => 'webprofiler_dashboard_table',
-      '#data' => [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('ID'),
-          $this->t('Class'),
-          $this->t('Provider'),
-          $this->t('Initialized'),
-          $this->t('Public'),
-          $this->t('Synthetic'),
-          $this->t('Priority'),
-        ],
-        '#rows' => $rows,
-        '#attributes' => [
-          'class' => [
-            'webprofiler__table',
-          ],
-        ],
-        '#sticky' => TRUE,
-      ],
-    ];
+    return $data;
   }
 
 }

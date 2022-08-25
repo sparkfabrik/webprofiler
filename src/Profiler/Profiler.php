@@ -1,41 +1,49 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\Profiler;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
-use Symfony\Component\HttpKernel\Profiler\FileProfilerStorage;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\Profiler as SymfonyProfiler;
+use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
 
 /**
- * Extend the Symfony profiler to allow to choose the list of collectors.
+ * Class Profiler.
  */
 class Profiler extends SymfonyProfiler {
 
   /**
-   * List of items to show in the toolbar.
-   *
-   * @var string[]
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  private array $activeToolbarItems;
+  private $config;
 
   /**
-   * Profiler constructor.
-   *
-   * @param \Symfony\Component\HttpKernel\Profiler\FileProfilerStorage $storage
-   *   The profiler storage.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The logger.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *   The config factory service.
+   * @var array
    */
-  public function __construct(FileProfilerStorage $storage, LoggerInterface $logger, private readonly ConfigFactoryInterface $config) {
+  private $activeToolbarItems;
+
+  private $localStorage;
+  private $localLogger;
+
+  /**
+   * Constructor.
+   *
+   * @param \Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface $storage
+   *   A ProfilerStorageInterface instance.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A LoggerInterface instance.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   */
+  public function __construct(ProfilerStorageInterface $storage, LoggerInterface $logger = NULL, ConfigFactoryInterface $config) {
     parent::__construct($storage, $logger);
 
-    $this->activeToolbarItems = $this->config->get('webprofiler.settings')
+    $this->localStorage = $storage;
+    $this->localLogger = $logger;
+
+    $this->config = $config;
+    $this->activeToolbarItems = $this->config->get('webprofiler.config')
       ->get('active_toolbar_items');
   }
 
@@ -52,6 +60,19 @@ class Profiler extends SymfonyProfiler {
         parent::add($collector);
       }
     }
+  }
+
+  /**
+   * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
+   *
+   * @return bool
+   */
+  public function updateProfile(Profile $profile) {
+    if (!($ret = $this->localStorage->write($profile)) && NULL !== $this->localLogger) {
+      $this->localLogger->warning('Unable to store the profiler information.');
+    }
+
+    return $ret;
   }
 
 }

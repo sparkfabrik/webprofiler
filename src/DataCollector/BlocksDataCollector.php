@@ -1,32 +1,34 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\webprofiler\DrupalDataCollectorInterface;
 use Drupal\webprofiler\Entity\EntityDecorator;
-use Drupal\webprofiler\Entity\EntityTypeManagerWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects blocks data.
+ * Class BlocksDataCollector.
  */
-class BlocksDataCollector extends DataCollector implements HasPanelInterface {
+class BlocksDataCollector extends DataCollector implements DrupalDataCollectorInterface {
 
-  use StringTranslationTrait;
+  use StringTranslationTrait, DrupalDataCollectorTrait;
 
   /**
-   * BlocksDataCollector constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityManager
-   *   The Entity type manager service.
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  public function __construct(protected readonly EntityTypeManagerInterface $entityManager) {
+  private $entityTypeManager;
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+
     $this->data['blocks']['loaded'] = [];
     $this->data['blocks']['rendered'] = [];
   }
@@ -34,19 +36,10 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'blocks';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
-    $storage = $this->entityManager->getStorage('block');
-
-    assert ($this->entityManager instanceof EntityTypeManagerWrapper);
-    $loaded = $this->entityManager->getLoaded('config', 'block');
-    $rendered = $this->entityManager->getRendered('block');
+  public function collect(Request $request, Response $response, \Exception $exception = NULL) {
+    $storage = $this->entityTypeManager->getStorage('block');
+    $loaded = $this->entityTypeManager->getLoaded('config', 'block');
+    $rendered = $this->entityTypeManager->getRendered('block');
 
     if ($loaded) {
       $this->data['blocks']['loaded'] = $this->getBlocksData($loaded, $storage);
@@ -58,76 +51,71 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * Return a list of rendered blocks.
-   *
    * @return array
-   *   A list of rendered blocks.
    */
-  public function getRenderedBlocks(): array {
+  public function getRenderedBlocks() {
     return $this->data['blocks']['rendered'];
   }
 
   /**
-   * Return the number of rendered blocks.
-   *
    * @return int
-   *   The number of rendered blocks.
    */
-  public function getRenderedBlocksCount(): int {
+  public function getRenderedBlocksCount() {
     return count($this->getRenderedBlocks());
   }
 
   /**
-   * Return a list of loaded blocks.
-   *
    * @return array
-   *   A list of loaded blocks.
    */
-  public function getLoadedBlocks(): array {
+  public function getLoadedBlocks() {
     return $this->data['blocks']['loaded'];
   }
 
   /**
-   * Return the number of loaded blocks.
-   *
    * @return int
-   *   The number of rendered blocks.
    */
-  public function getLoadedBlocksCount(): int {
+  public function getLoadedBlocksCount() {
     return count($this->getLoadedBlocks());
-  }
-
-  /**
-   * Reset the collected data.
-   */
-  public function reset() {
-    $this->data = [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPanel(): array {
-    return array_merge(
-      $this->renderBlocks($this->getLoadedBlocks(), 'Loaded'),
-      $this->renderBlocks($this->getRenderedBlocks(), 'Rendered'),
-    );
+  public function getName() {
+    return 'blocks';
   }
 
   /**
-   * Return the data to store about blocks.
-   *
-   * @param \Drupal\webprofiler\Entity\EntityDecorator $decorator
-   *   An entity decorator.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The block storage service.
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->t('Blocks');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPanelSummary() {
+    return $this->t('Loaded: @loaded, rendered: @rendered', [
+      '@loaded' => $this->getLoadedBlocksCount(),
+      '@rendered' => $this->getRenderedBlocksCount(),
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon() {
+    return 'iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAYAAACOGPReAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowNDgwMTE3NDA3MjA2ODExOEY2MkNCNjI0NDY3NzkwRCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowQjg5OTA4OEYwQTgxMUUzQkJDRThFQjA5Q0E1REFCRCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowQjg5OTA4N0YwQTgxMUUzQkJDRThFQjA5Q0E1REFCRCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1LjEgTWFjaW50b3NoIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDM4MDExNzQwNzIwNjgxMTg3MUZDQ0I0RjY1RTlEM0IiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDQ4MDExNzQwNzIwNjgxMThGNjJDQjYyNDQ2Nzc5MEQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz68h+kGAAAAWElEQVR42mL8//8/A7UBEwMNwAg3lAVEODg4UCW2Dhw4wDgapgyMtEj8eCMKFPCkyI1GFCJMiUnQVDUUX0SNllK4wxRf+JAdUeQUfaMRRd+ib4SHKUCAAQAMcyf8vLAstgAAAABJRU5ErkJggg==';
+  }
+
+  /**
+   * @param $decorator
+   * @param $storage
    *
    * @return array
-   *   The data to store about blocks.
-   *
-   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  private function getBlocksData(EntityDecorator $decorator, EntityStorageInterface $storage): array {
+  private function getBlocksData(EntityDecorator $decorator, EntityStorageInterface $storage) {
     $blocks = [];
 
     /** @var \Drupal\block\BlockInterface $block */
@@ -154,73 +142,6 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
     }
 
     return $blocks;
-  }
-
-  /**
-   * Render a list of blocks.
-   *
-   * @param array $blocks
-   *   The list of blocks to render.
-   * @param string $label
-   *   The list's label.
-   *
-   * @return array
-   *   The render array of the list of blocks.
-   */
-  private function renderBlocks(array $blocks, string $label): array {
-    if (count($blocks) == 0) {
-      return [
-        $label => [
-          '#markup' => '<p>' . $this->t('No @label blocks collected',
-              ['@label' => $label]) . '</p>',
-        ],
-      ];
-    }
-
-    $rows = [];
-    foreach ($blocks as $block) {
-      $rows[] = [
-        $block['id'],
-        $block['settings']['label'],
-        $block['region'] ?? 'No region',
-        $block['settings']['provider'],
-        $block['theme'],
-        $block['status'] ? $this->t('Enabled') : $this->t('Disabled'),
-        $block['plugin'],
-      ];
-    }
-
-    return [
-      $label => [
-        '#theme' => 'webprofiler_dashboard_table',
-        '#title' => $label,
-        '#data' => [
-          '#type' => 'table',
-          '#header' => [
-            $this->t('ID'),
-            $this->t('Label'),
-            $this->t('Region'),
-            $this->t('Source'),
-            [
-              'data' => $this->t('Theme'),
-              'class' => [RESPONSIVE_PRIORITY_LOW],
-            ],
-            $this->t('Status'),
-            [
-              'data' => $this->t('Plugin'),
-              'class' => [RESPONSIVE_PRIORITY_LOW],
-            ],
-          ],
-          '#rows' => $rows,
-          '#attributes' => [
-            'class' => [
-              'webprofiler__table',
-            ],
-          ],
-          '#sticky' => TRUE,
-        ],
-      ],
-    ];
   }
 
 }

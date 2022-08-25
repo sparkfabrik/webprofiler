@@ -1,17 +1,24 @@
 {% block toolbar %}
+    {% set icon %}
+        <a href="{{ url("devel.admin_settings") }}" title="{{ 'Devel menu'|t }}">
+            <img width="26" height="28" alt="{{ collector.title }}"
+                 src="data:image/png;base64,{{ collector.icon }}"/>
+        </a>
+    {% endset %}
 
-  {% set icon %}
-    {{ include('@webprofiler/Icon/blocks.svg') }}
-    <span class="sf-toolbar-value"></span>
-  {% endset %}
+    {% set text %}
+    {% spaceless %}
+        {% for item in collector.links %}
+            <div class="sf-toolbar-info-piece">
+                <span>{{ item }}</span>
+            </div>
+        {% endfor %}
+    {% endspaceless %}
+    {% endset %}
 
-  {% set text %}
-    {% for item in collector.links %}
-      <div class="sf-toolbar-info-piece">
-        <b>{{ item }}</b>
-      </div>
-    {% endfor %}
-  {% endset %}
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon">{{ icon|default('') }}</div>
+        <div class="sf-toolbar-info">{{ text|default('') }}</div>
+    </div>
 
-  {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: false }) }}
 {% endblock %}

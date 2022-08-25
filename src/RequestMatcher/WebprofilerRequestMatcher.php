@@ -1,49 +1,43 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\webprofiler\RequestMatcher;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Path\PathMatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 /**
- * Exclude some path to be profiled.
+ * Class WebprofilerRequestMatcher.
  */
 class WebprofilerRequestMatcher implements RequestMatcherInterface {
 
   /**
-   * An immutable config object.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  private ImmutableConfig $config;
+  private $configFactory;
 
   /**
-   * WebprofilerRequestMatcher constructor.
-   *
-   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
-   *   The path matcher service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *   The config factory service.
+   * @var \Drupal\Core\Path\PathMatcherInterface
    */
-  public function __construct(
-    protected readonly PathMatcherInterface $pathMatcher,
-    ConfigFactoryInterface $config
-  ) {
-    $this->config = $config->get('webprofiler.settings');
+  private $pathMatcher;
+
+  /**
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
+   */
+  public function __construct(ConfigFactoryInterface $configFactory, PathMatcherInterface $pathMatcher) {
+    $this->configFactory = $configFactory;
+    $this->pathMatcher = $pathMatcher;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function matches(Request $request): bool {
+  public function matches(Request $request) {
     $path = $request->getPathInfo();
 
-    $patterns = $this->config->get('exclude_paths');
+    $patterns = $this->configFactory->get('webprofiler.config')->get('exclude');
 
     // Never add Webprofiler to phpinfo page.
     $patterns .= "\r\n/admin/reports/status/php";
