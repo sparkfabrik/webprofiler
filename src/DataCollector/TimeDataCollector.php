@@ -21,7 +21,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
    * @param \Drupal\tracer\TracerFactory $tracerFactory
    *   The tracer factory.
    */
-  public function __construct(protected readonly TracerFactory $tracerFactory) {
+  public function __construct(private readonly TracerFactory $tracerFactory) {
   }
 
   /**

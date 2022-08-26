@@ -170,31 +170,31 @@ services:
   webprofiler.config:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 500 }
+      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 400 }
 
   webprofiler.events:
     class: Drupal\webprofiler\DataCollector\EventsDataCollector
     arguments: ['@event_dispatcher']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 450 }
+      - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 350 }
 
   webprofiler.extensions:
     class: Drupal\webprofiler\DataCollector\ExtensionsDataCollector
     arguments: ['@module_handler', '@theme_handler', '%app.root%']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 400 }
+      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 300 }
 
   webprofiler.forms:
     class: Drupal\webprofiler\DataCollector\FormsDataCollector
     arguments: ['@form_builder']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/forms.html.twig', id: 'forms', label: 'Forms', priority: 350 }
+      - { name: data_collector, template: '@webprofiler/Collector/forms.html.twig', id: 'forms', label: 'Forms', priority: 250 }
 
   webprofiler.http:
     class: Drupal\webprofiler\DataCollector\HttpDataCollector
     arguments: ['@http_client_middleware.webprofiler']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 300 }
+      - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 200 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

@@ -157,4 +157,21 @@ trait PanelTrait {
     return $this->renderClasslink($method->getFile(), $method->getLine(), $method->getClass() . '::' . $method->getMethod());
   }
 
+  /**
+   * Render a time value.
+   *
+   * @param float $time
+   *   The time value.
+   * @param string $unit
+   *   The time unit.
+   *
+   * @return string
+   *   The rendered time value.
+   */
+  protected function renderTime(float $time, string $unit = 'ms'): string {
+    $time = round($time * 100, 2) / 100;
+
+    return $time . ' ' . $unit;
+  }
+
 }

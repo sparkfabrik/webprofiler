@@ -39,12 +39,33 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'priority' => 500,
         ]);
     }
+
+    // Add ViewsDataCollector only if Views module is enabled.
+    if (isset($modules['views'])) {
+      $container->register('webprofiler.views', 'Drupal\webprofiler\DataCollector\ViewsDataCollector')
+        ->addArgument(new Reference(('views.executable')))
+        ->addArgument(new Reference(('entity_type.manager')))
+        ->addTag('data_collector', [
+          'template' => '@webprofiler/Collector/views.html.twig',
+          'id' => 'views',
+          'label' => 'Views',
+          'priority' => 450,
+        ]);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
+    $modules = $container->getParameter('container.modules');
+
+    // Alter the views.executable service only if Views module is enabled.
+    if (isset($modules['views'])) {
+      $container->getDefinition('views.executable')
+        ->setClass('Drupal\webprofiler\Views\ViewExecutableFactoryWrapper');
+    }
+
     // Replace the regular access_manager service with a traceable one.
     $container->getDefinition('access_manager')
       ->setClass('Drupal\webprofiler\Access\AccessManagerWrapper')

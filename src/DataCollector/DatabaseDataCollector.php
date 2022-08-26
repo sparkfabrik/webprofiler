@@ -25,8 +25,8 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *   The Config factory service.
    */
   public function __construct(
-    protected readonly Connection $database,
-    protected readonly ConfigFactoryInterface $configFactory
+    private readonly Connection $database,
+    private readonly ConfigFactoryInterface $configFactory
   ) {
   }
 
