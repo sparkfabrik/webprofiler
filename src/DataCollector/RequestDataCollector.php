@@ -56,6 +56,8 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     parent::collect($request, $response);
 
+    $this->data['big_pipe'] = $response->headers->get('X-Drupal-BigPipe-Placeholder');
+
     if ($controller = $this->controllerResolver->getController($request)) {
       $this->data['controller'] = $this->getMethodData(
         $controller[0], $controller[1]
@@ -69,6 +71,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    */
   public function getPanel(): array {
     return array_merge(
+      $this->renderBigPipe($this->data['big_pipe']),
       $this->renderTable(
         $this->getRequestQuery()->all(), 'GET parameters'),
       $this->renderTable(
@@ -120,6 +123,32 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    */
   public function getAccessChecks(): ParameterBag {
     return new ParameterBag($this->data['access_checks']->getValue());
+  }
+
+  /**
+   * Return the render array with BigPipe data.
+   *
+   * @param string|null $big_pipe
+   *   The BigPipe placeholder.
+   *
+   * @return array
+   *   The render array with BigPipe data.
+   */
+  private function renderBigPipe(?string $big_pipe): array {
+    if ($big_pipe == NULL) {
+      return [];
+    }
+
+    $parts = explode('&', substr($big_pipe, strlen('callback=')));
+    $data = urldecode($parts[0]);
+
+    return [
+      '#type' => 'inline_template',
+      '#template' => '<h3>BigPipe placeholder</h3>{{ data|raw }}',
+      '#context' => [
+        'data' => $data,
+      ],
+    ];
   }
 
   /**

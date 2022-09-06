@@ -6,6 +6,7 @@
 
   <div class="webprofiler__dashboard">
     <div class="webprofiler__collectors">
+      <h4>{{ 'Collectors'|t }}</h4>
       <ul>
         {% for collector in collectors %}
           <li class="webprofiler__collector"><a
@@ -13,6 +14,24 @@
               class="use-ajax" data-collector-name="{{ collector.name }}">{{ collector.name|capitalize }}</a></li>
         {% endfor %}
       </ul>
+
+      {% if profile.children|length > 0 %}
+        <h4>{{ 'Children'|t }}</h4>
+        <ul>
+          {% for children in profile.children %}
+            <li><a
+                href="{{ path('webprofiler.dashboard', {'token': children.token}) }}"
+                >{{ children.token }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if profile.parent is not null %}
+        <h4>{{ 'Parent'|t }}</h4>
+        <p><a
+            href="{{ path('webprofiler.dashboard', {'token': profile.parent.token}) }}"
+          >{{ profile.parent.token }}</a></p>
+      {% endif %}
     </div>
 
     <div class="webprofiler__panels">

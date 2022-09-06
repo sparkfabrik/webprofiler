@@ -80,6 +80,12 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     // Replace the regular form_builder service with a traceable one.
     $container->getDefinition('form_builder')
       ->setClass('Drupal\webprofiler\Form\FormBuilderWrapper');
+
+    // Alter the big_pipe service only if BigPipe module is enabled.
+    if (isset($modules['big_pipe'])) {
+      $container->getDefinition('big_pipe')
+        ->setClass('Drupal\webprofiler\Render\TraceableBigPipe');
+    }
   }
 
 }

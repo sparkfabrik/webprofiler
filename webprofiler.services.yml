@@ -21,7 +21,7 @@ services:
     arguments: ['@path.matcher', '@config.factory']
 
   webprofiler.profiler_listener:
-    class: Symfony\Component\HttpKernel\EventListener\ProfilerListener
+    class: Drupal\webprofiler\EventListener\ProfilerListener
     arguments: ['@webprofiler.profiler', '@request_stack', '@webprofiler.matcher']
     tags:
       - { name: event_subscriber }
