@@ -155,4 +155,14 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
     $this->cacheBackend->removeBin();
   }
 
+  /**
+   * Return the wrapped cache backend.
+   *
+   * @return \Drupal\Core\Cache\CacheBackendInterface
+   *   The wrapped cache backend.
+   */
+  public function getWrapped(): CacheBackendInterface {
+    return $this->cacheBackend;
+  }
+
 }

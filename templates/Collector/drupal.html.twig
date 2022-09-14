@@ -2,7 +2,7 @@
 
   {% set icon %}
     <span class="sf-toolbar-label">
-      {{ include('@webprofiler/Icon/symfony.svg') }}
+      {{ include('@webprofiler/Icon/drupal-10.svg') }}
     </span>
     <span class="sf-toolbar-value">{{ collector.drupalVersion }}</span>
   {% endset %}
@@ -19,6 +19,15 @@
           {% endif %}
         </span>
       </div>
+
+      {% if collector.traceId %}
+        <div class="sf-toolbar-info-piece">
+          <b>Trace Id</b>
+          <span>
+            {{ collector.traceId }}
+          </span>
+        </div>
+      {% endif %}
     </div>
 
     <div class="sf-toolbar-info-group">

@@ -55,6 +55,12 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
         $this->data['php_version_extra'] = $matches[2];
       }
     }
+
+    // If OpenTelemetry is present, add the TraceId to collected data.
+    $abstract_span_class = '\OpenTelemetry\API\Trace\AbstractSpan';
+    if (class_exists($abstract_span_class)) {
+      $this->data['trace_id'] = $abstract_span_class::getCurrent()->getContext()->getTraceId();
+    }
   }
 
   /**
@@ -174,6 +180,13 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
    */
   public function getSapiName(): string {
     return $this->data['sapi_name'];
+  }
+
+  /**
+   * Gets the OpenTelemetry TraceId, if any.
+   */
+  public function getTraceId(): ?string {
+    return $this->data['trace_id'] ?? NULL;
   }
 
   /**
