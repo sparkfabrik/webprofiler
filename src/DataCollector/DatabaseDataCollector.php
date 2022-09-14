@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +20,9 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The Config factory service.
    */
   public function __construct(
-    private readonly Connection $database,
-    private readonly ConfigFactoryInterface $configFactory
+    private readonly Connection $database
   ) {
   }
 
