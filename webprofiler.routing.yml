@@ -44,3 +44,17 @@ webprofiler.settings:
     _title: 'Webprofiler settings'
   requirements:
     _permission: 'access webprofiler'
+
+# save frontend data
+webprofiler.frontend.save:
+  path: '/admin/reports/profiler/frontend/{profile}/save'
+  defaults:
+    _controller: '\Drupal\webprofiler\Controller\PerformanceTimingController::savePerformanceTimingAction'
+    _title: 'Save performance timing data'
+  options:
+    parameters:
+      profile:
+        type: 'webprofiler:token'
+  methods:  [POST]
+  requirements:
+    _permission: 'view webprofiler toolbar'

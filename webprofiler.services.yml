@@ -75,6 +75,12 @@ services:
     tags:
       - { name: http_client_middleware }
 
+  # parameter converter service for profile token
+  webprofiler.token_converter:
+    class: Drupal\webprofiler\Routing\TokenConverter
+    tags:
+      - { name: paramconverter }
+
   # debug services
   webprofiler.debug.entity_type.manager:
     class: Drupal\webprofiler\Entity\EntityTypeManagerWrapper
@@ -195,6 +201,11 @@ services:
     arguments: ['@http_client_middleware.webprofiler']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 200 }
+
+  webprofiler.performance_timing:
+    class: Drupal\webprofiler\DataCollector\PerformanceTimingDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/performance_timing.html.twig', id: 'performance_timing', label: 'Performance Timing', priority: 200 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
