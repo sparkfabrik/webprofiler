@@ -170,7 +170,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
       '#type' => 'inline_template',
       '#template' => '{{ data|raw }}',
       '#context' => [
-        'data' => $this->dumpData($this->cloneVar($settings['data'])),
+        'data' => array_key_exists('drupalSettings', $settings) ? $this->dumpData($this->cloneVar($settings['drupalSettings'])): 'n/a',
       ],
     ];
   }
