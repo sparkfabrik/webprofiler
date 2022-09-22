@@ -1,0 +1,123 @@
+{% block toolbar %}
+  {% set icon %}
+    {{ include('@webprofiler/Icon/time.svg') }}
+    <span class="sf-toolbar-value" id="wp--frontend__toolbar">0</span>
+  {% endset %}
+
+  {% set text %}
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'DNS lookup'|t }}</b>
+      <span id="wp--frontend__dns"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'TCP handshake'|t }}</b>
+      <span id="wp--frontend__tcp"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'TTFB' }}</b>
+      <span id="wp--frontend__ttfb"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'Data download'|t }}</b>
+      <span id="wp--frontend__data"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'DOM building'|t }}</b>
+      <span id="wp--frontend__dom"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'Largest Contentful Paint' }}</b>
+      <span id="wp--frontend__lcp"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'First Input Delay'|t }}</b>
+      <span id="wp--frontend__fid"></span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'Cumulative Layout Shift'|t }}</b>
+      <span id="wp--frontend__cls"></span>
+    </div>
+  {% endset %}
+
+  <script>
+    const navigation = performance.getEntriesByType('navigation')[0],
+      dns = +(navigation.domainLookupEnd - navigation.domainLookupStart).toFixed(2),
+      tcp = +(navigation.connectEnd - navigation.connectEnd).toFixed(2),
+      ttfb = +(navigation.responseStart - navigation.connectEnd).toFixed(2),
+      data = +(navigation.responseEnd - navigation.responseStart).toFixed(2),
+      dom = +(navigation.loadEventStart - navigation.responseEnd).toFixed(2);
+
+    document.getElementById('wp--frontend__toolbar').innerHTML = ttfb + ' ms';
+    document.getElementById('wp--frontend__dns').innerHTML = dns + ' ms';
+    document.getElementById('wp--frontend__tcp').innerHTML = tcp + ' ms';
+    document.getElementById('wp--frontend__ttfb').innerHTML = ttfb + ' ms';
+    document.getElementById('wp--frontend__data').innerHTML = data + ' ms';
+    document.getElementById('wp--frontend__dom').innerHTML = dom + ' ms';
+
+    const payload = JSON.stringify(
+      {
+        'navigation': navigation,
+        'timeOrigin': performance.timeOrigin
+      }
+    );
+
+    (
+      navigator.sendBeacon &&
+      navigator.sendBeacon('{{ url("webprofiler.frontend.save", {profile: token}) }}', payload)
+    ) ||
+    fetch('{{ url("webprofiler.frontend.save", {profile: token}) }}', {payload, method: 'POST', keepalive: true});
+
+    new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      if (lastEntry) {
+        document.getElementById('wp--frontend__lcp').innerHTML = +(lastEntry.startTime).toFixed(2) + ' ms';
+      }
+    }).observe({type: 'largest-contentful-paint', buffered: true});
+
+    new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      if (lastEntry) {
+        document.getElementById('wp--frontend__fid').innerHTML = +(lastEntry.processingStart - lastEntry.startTime).toFixed(2) + ' ms';
+      }
+    }).observe({type: 'first-input', buffered: true});
+
+    new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      let sessionValue = 0;
+      let sessionEntries = [];
+
+      entries.forEach((entry) => {
+        // Only count layout shifts without recent user input.
+        if (!entry.hadRecentInput) {
+          console.log('xxx');
+          const firstSessionEntry = sessionEntries[0];
+          const lastSessionEntry = sessionEntries[sessionEntries.length - 1];
+
+          // If the entry occurred less than 1 second after the previous entry and
+          // less than 5 seconds after the first entry in the session, include the
+          // entry in the current session. Otherwise, start a new session.
+          if (sessionValue &&
+            entry.startTime - lastSessionEntry.startTime < 1000 &&
+            entry.startTime - firstSessionEntry.startTime < 5000) {
+            sessionValue += entry.value;
+            sessionEntries.push(entry);
+          }
+          else {
+            sessionValue = entry.value;
+            sessionEntries = [entry];
+          }
+
+          document.getElementById('wp--frontend__cls').innerHTML = +(sessionValue).toFixed(2) + ' ms';
+        }
+      });
+    }).observe({type: 'layout-shift', buffered: true});
+  </script>
+
+  {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
+{% endblock %}
+
+{% block panel %}
+  {{ collector.panel() }}
+{% endblock %}

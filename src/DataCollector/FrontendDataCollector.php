@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 /**
  * Collects data about frontend performance.
  */
-class PerformanceTimingDataCollector extends DataCollector implements HasPanelInterface {
+class FrontendDataCollector extends DataCollector implements HasPanelInterface {
 
   use StringTranslationTrait, DataCollectorTrait, PanelTrait;
 
@@ -25,7 +25,7 @@ class PerformanceTimingDataCollector extends DataCollector implements HasPanelIn
    * {@inheritdoc}
    */
   public function getName(): string {
-    return 'performance_timing';
+    return 'frontend';
   }
 
   /**

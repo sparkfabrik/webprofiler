@@ -202,10 +202,10 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 200 }
 
-  webprofiler.performance_timing:
-    class: Drupal\webprofiler\DataCollector\PerformanceTimingDataCollector
+  webprofiler.frontend:
+    class: Drupal\webprofiler\DataCollector\FrontendDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/performance_timing.html.twig', id: 'performance_timing', label: 'Performance Timing', priority: 200 }
+      - { name: data_collector, template: '@webprofiler/Collector/frontend.html.twig', id: 'frontend', label: 'Frontend performances', priority: 200 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

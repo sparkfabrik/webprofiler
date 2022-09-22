@@ -49,7 +49,7 @@ webprofiler.settings:
 webprofiler.frontend.save:
   path: '/admin/reports/profiler/frontend/{profile}/save'
   defaults:
-    _controller: '\Drupal\webprofiler\Controller\PerformanceTimingController::savePerformanceTimingAction'
+    _controller: '\Drupal\webprofiler\Controller\FrontendController::savePerformanceTimingAction'
     _title: 'Save performance timing data'
   options:
     parameters:
