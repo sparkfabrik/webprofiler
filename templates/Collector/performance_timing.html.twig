@@ -44,21 +44,17 @@
 
     const payload = JSON.stringify(
       {
-        'navigation': performance.getEntriesByType('navigation')[0],
+        'navigation': navigation,
         'timeOrigin': performance.timeOrigin
       }
     );
 
-    try {
-      const x = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
-      x.open('POST', '{{ url("webprofiler.frontend.save", {profile: token}) }}', 1);
-      x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      x.setRequestHeader('Content-type', 'application/json');
-      x.send(payload);
-    }
-    catch (e) {
-      window.console && console.log(e);
-    }
+    (
+      navigator.sendBeacon &&
+      navigator.sendBeacon('{{ url("webprofiler.frontend.save", {profile: token}) }}', payload)
+    ) ||
+    fetch('{{ url("webprofiler.frontend.save", {profile: token}) }}', {payload, method: 'POST', keepalive: true});
+
   </script>
 
   {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
