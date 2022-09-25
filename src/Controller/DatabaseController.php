@@ -121,7 +121,7 @@ class DatabaseController extends ControllerBase {
     $token = $profile->getToken();
 
     if (!$profile = $this->profiler->loadProfile($token)) {
-      throw new NotFoundHttpException((string) $this->t('Token @token does not exist.', ['@token' => $token]));
+      throw new NotFoundHttpException(sprintf('Token %s does not exist.', $token));
     }
 
     /** @var \Drupal\webprofiler\DataCollector\DatabaseDataCollector $databaseCollector */

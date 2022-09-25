@@ -44,7 +44,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
     $storage = $this->entityManager->getStorage('block');
 
-    assert ($this->entityManager instanceof EntityTypeManagerWrapper);
+    assert($this->entityManager instanceof EntityTypeManagerWrapper);
     $loaded = $this->entityManager->getLoaded('config', 'block');
     $rendered = $this->entityManager->getRendered('block');
 
@@ -192,7 +192,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
 
     return [
       $label => [
-        '#theme' => 'webprofiler_dashboard_table',
+        '#theme' => 'webprofiler_dashboard_section',
         '#title' => $label,
         '#data' => [
           '#type' => 'table',

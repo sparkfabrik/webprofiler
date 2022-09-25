@@ -20,7 +20,7 @@ class ViewExecutableFactoryWrapper extends ViewExecutableFactory {
   /**
    * The list of views that have been executed.
    *
-   * @var \Drupal\webprofiler\Views\TraceableViewExecutable[] $view_executable
+   * @var \Drupal\webprofiler\Views\TraceableViewExecutable[]
    */
   private array $views;
 
@@ -53,4 +53,5 @@ class ViewExecutableFactoryWrapper extends ViewExecutableFactory {
   public function getViews(): array {
     return $this->views;
   }
+
 }

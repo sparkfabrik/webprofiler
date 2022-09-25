@@ -102,7 +102,7 @@ trait PanelTrait {
 
     return [
       $label => [
-        '#theme' => 'webprofiler_dashboard_table',
+        '#theme' => 'webprofiler_dashboard_section',
         '#title' => $label,
         '#data' => [
           '#type' => 'table',

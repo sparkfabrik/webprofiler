@@ -58,7 +58,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    *   The cache object.
    */
   public function registerCacheHit(string $bin, object $cache) {
-    $current = isset($this->data['cache'][$bin][$cache->cid]) ? $this->data['cache'][$bin][$cache->cid] : NULL;
+    $current = $this->data['cache'][$bin][$cache->cid] ?? NULL;
 
     if (!$current) {
       $current = clone($cache);
@@ -80,8 +80,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    *   The cache cid.
    */
   public function registerCacheMiss(string $bin, string $cid) {
-    $current = isset($this->data['cache'][$bin][$cid]) ?
-      $this->data['cache'][$bin][$cid] : NULL;
+    $current = $this->data['cache'][$bin][$cid] ?? NULL;
 
     if (!$current) {
       $current = new \StdClass();
@@ -141,7 +140,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
     $hits = [];
     foreach ($this->data['cache'] as $bin => $caches) {
       $hits[$bin] = 0;
-      foreach ($caches as $cid => $cache) {
+      foreach ($caches as $cache) {
         $hits[$bin] += $cache->{$type};
       }
     }
@@ -198,7 +197,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    */
   public function renderTable(array $data): array {
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

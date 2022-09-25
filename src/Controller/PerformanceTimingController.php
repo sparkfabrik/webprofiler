@@ -44,7 +44,7 @@ class PerformanceTimingController extends ControllerBase {
    *   The request.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *  The response.
+   *   The response.
    */
   public function savePerformanceTimingAction(Profile $profile, Request $request): JsonResponse {
     $this->profiler->disable();
@@ -58,4 +58,5 @@ class PerformanceTimingController extends ControllerBase {
 
     return new JsonResponse(['success' => TRUE]);
   }
+
 }

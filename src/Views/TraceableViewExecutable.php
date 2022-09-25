@@ -60,4 +60,5 @@ class TraceableViewExecutable extends ViewExecutable {
 
     return $output;
   }
+
 }

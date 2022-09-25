@@ -12,14 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Class FormsDataCollector
+ * Collects forms data.
  */
 class FormsDataCollector extends DataCollector implements HasPanelInterface {
 
   use StringTranslationTrait, PanelTrait;
 
   /**
+   * FormsDataCollector constructor.
+   *
    * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   *   The form builder.
    */
   public function __construct(private readonly FormBuilderInterface $formBuilder) {
     $this->data['forms'] = [];
@@ -103,7 +106,7 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
     $rows = $this->renderElement($form['elements']);
 
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#title' => '',
       '#data' => [
         '#type' => 'table',
@@ -155,4 +158,5 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
 
     return $rows;
   }
+
 }

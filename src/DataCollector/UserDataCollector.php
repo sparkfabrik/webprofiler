@@ -12,17 +12,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Class UserDataCollector
+ * Collects users data.
  */
 class UserDataCollector extends DataCollector {
 
   use StringTranslationTrait;
 
   /**
+   * UserDataCollector constructor.
+   *
    * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityManager
+   *   The entity manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
    * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface $providerCollector
+   *   The authentication collector.
    */
   public function __construct(
     private readonly AccountInterface $currentUser,

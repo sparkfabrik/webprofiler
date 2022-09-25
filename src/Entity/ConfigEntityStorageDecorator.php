@@ -217,7 +217,7 @@ class ConfigEntityStorageDecorator extends EntityDecorator implements ConfigEnti
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    assert ($entity_type instanceof ConfigEntityStorageInterface);
+    assert($entity_type instanceof ConfigEntityStorageInterface);
 
     return new static(
       $entity_type

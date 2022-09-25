@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Defines a data collector for the extension system.
+ * Collects extensions data.
  */
 class ExtensionsDataCollector extends DataCollector implements HasPanelInterface {
 
@@ -58,9 +58,13 @@ class ExtensionsDataCollector extends DataCollector implements HasPanelInterface
   }
 
   /**
+   * Extracts data from extensions.
+   *
    * @param array $extensions
+   *   The extensions.
    *
    * @return array
+   *   The extracted data.
    */
   private function extractData(array $extensions): array {
     return array_map(function (Extension $extension) {
@@ -88,7 +92,7 @@ class ExtensionsDataCollector extends DataCollector implements HasPanelInterface
    *   The total number of active extensions.
    */
   public function getExtensionsCount(): int {
-    return isset($this->data['count']) ? $this->data['count'] : 0;
+    return $this->data['count'] ?? 0;
   }
 
   /**
@@ -141,7 +145,7 @@ class ExtensionsDataCollector extends DataCollector implements HasPanelInterface
    */
   private function renderExtensions(array $data): array {
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

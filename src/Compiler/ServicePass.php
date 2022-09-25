@@ -77,7 +77,7 @@ class ServicePass implements CompilerPassInterface {
           $reflectedClass = new \ReflectionClass($class);
           $file = $reflectedClass->getFileName();
         }
-        catch (\ReflectionException|\Exception $e) {
+        catch (\ReflectionException | \Exception $e) {
           $file = NULL;
         }
 

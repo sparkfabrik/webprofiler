@@ -93,7 +93,7 @@ class ConfigDataCollector extends DataCollector implements HasPanelInterface {
     }
 
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

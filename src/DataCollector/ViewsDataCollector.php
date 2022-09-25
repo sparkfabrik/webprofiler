@@ -6,14 +6,13 @@ namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
 use Drupal\webprofiler\Views\ViewExecutableFactoryWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects data about rendered views.
+ * Collects views data.
  */
 class ViewsDataCollector extends DataCollector implements HasPanelInterface {
 
@@ -22,12 +21,14 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * ViewsDataCollector constructor.
    *
-   * @param ViewExecutableFactoryWrapper $view_executable_factory
+   * @param \Drupal\webprofiler\Views\ViewExecutableFactoryWrapper $viewExecutableFactory
+   *   The view executable factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityManager
+   *   The entity manager.
    */
   public function __construct(
-    private readonly ViewExecutableFactoryWrapper $view_executable_factory,
-    private readonly EntityTypeManagerInterface   $entityManager) {
+    private readonly ViewExecutableFactoryWrapper $viewExecutableFactory,
+    private readonly EntityTypeManagerInterface $entityManager) {
 
     $this->data['views'] = [];
   }
@@ -43,7 +44,7 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
    * {@inheritdoc}
    */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
-    $views = $this->view_executable_factory->getViews();
+    $views = $this->viewExecutableFactory->getViews();
     $storage = $this->entityManager->getStorage('view');
 
     foreach ($views as $view) {
@@ -118,7 +119,7 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
     }
 
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

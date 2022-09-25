@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector as BaseRequestDataCollector;
 
 /**
- * DataCollector for HTTP Request.
+ * Collects HTTP requests data.
+ *
+ * @phpstan-ignore-next-line
  */
-// @phpstan-ignore-next-line
 class RequestDataCollector extends BaseRequestDataCollector implements HasPanelInterface {
 
   use DataCollectorTrait;
@@ -217,7 +218,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
 
     return [
       $label => [
-        '#theme' => 'webprofiler_dashboard_table',
+        '#theme' => 'webprofiler_dashboard_section',
         '#title' => $label,
         '#data' => [
           '#type' => 'table',

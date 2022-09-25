@@ -11,22 +11,26 @@ use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Class HttpClientMiddleware
+ * A stack middleware that collects data about the request.
  */
 class HttpClientMiddleware {
 
   /**
+   * List of request completed with success.
+   *
    * @var array
    */
   private array $completedRequests;
 
   /**
+   * List of failed requests.
+   *
    * @var array
    */
   private array $failedRequests;
 
   /**
-   *
+   * HttpClientMiddleware constructor.
    */
   public function __construct() {
     $this->completedRequests = [];
@@ -34,8 +38,10 @@ class HttpClientMiddleware {
   }
 
   /**
+   * Invoke the middleware.
    *
-   *
+   * @return \Closure
+   *   The middleware closure, used to collect data about the request.
    */
   public function __invoke(): \Closure {
     return function ($handler) {
@@ -47,7 +53,8 @@ class HttpClientMiddleware {
         };
 
         $options['on_stats'] = function (TransferStats $stats) use ($request, $next) {
-          $request->stats = $stats; // @phpstan-ignore-line
+          // @phpstan-ignore-next-line
+          $request->stats = $stats;
           $next($stats);
         };
 
@@ -80,14 +87,20 @@ class HttpClientMiddleware {
   }
 
   /**
+   * Return the list of completed requests.
+   *
    * @return array
+   *   The list of completed requests.
    */
   public function getCompletedRequests(): array {
     return $this->completedRequests;
   }
 
   /**
+   * Return the list of failed requests.
+   *
    * @return array
+   *   The list of failed requests.
    */
   public function getFailedRequests(): array {
     return $this->failedRequests;

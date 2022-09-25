@@ -50,7 +50,7 @@ class TraceableBigPipe extends BigPipe {
       }
       catch (\Exception $e) {
         if ($this->configFactory->get('system.logging')
-            ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -85,7 +85,7 @@ class TraceableBigPipe extends BigPipe {
       }
       catch (\Exception $e) {
         if ($this->configFactory->get('system.logging')
-            ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -166,7 +166,7 @@ EOF;
       }
       catch (\Exception $e) {
         if ($this->configFactory->get('system.logging')
-            ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -204,7 +204,7 @@ EOF;
       }
       catch (\Exception $e) {
         if ($this->configFactory->get('system.logging')
-            ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          ->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {

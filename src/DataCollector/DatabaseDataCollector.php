@@ -126,9 +126,13 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *   A list of execute queries.
    */
   public function getQueries(): array {
+    // When a profile is loaded from storage this object is deserialized and
+    // no constructor is called, so we cannot use dependency injection.
+    // phpcs:disable
     $querySort = \Drupal::configFactory()
       ->get('webprofiler.config')
       ->get('query_sort') ?: '';
+    // phpcs:enable
 
     $queries = $this->data['queries'];
     if ('duration' === $querySort) {
@@ -168,22 +172,9 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   public function getQueryHighlightThreshold(): int {
     // When a profile is loaded from storage this object is deserialized and
     // no constructor is called, so we cannot use dependency injection.
+    // phpcs:disable
     return \Drupal::config('webprofiler.settings')->get('query_highlight');
-  }
-
-  /**
-   * Order queries by time.
-   *
-   * @param array $a
-   *   A query data.
-   * @param array $b
-   *   A query data.
-   *
-   * @return int
-   *   The comparison result.
-   */
-  private function orderQueryByTime(array $a, array $b): int {
-    return $a['time'] <=> $b['time'];
+    // php:enable
   }
 
 }

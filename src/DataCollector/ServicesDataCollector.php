@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects data about services.
+ * Collects services data.
  */
 class ServicesDataCollector extends DataCollector implements HasPanelInterface {
 
@@ -253,7 +253,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
     }
 
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [
@@ -307,7 +307,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
     }
 
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

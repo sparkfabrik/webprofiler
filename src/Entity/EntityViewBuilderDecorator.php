@@ -88,7 +88,7 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    assert ($entity_type instanceof EntityViewBuilderInterface);
+    assert($entity_type instanceof EntityViewBuilderInterface);
 
     return new static(
       $entity_type

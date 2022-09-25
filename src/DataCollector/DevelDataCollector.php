@@ -7,8 +7,8 @@ namespace Drupal\webprofiler\DataCollector;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\devel\Plugin\Menu\DestinationMenuLink;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -19,12 +19,23 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class DevelDataCollector extends DataCollector {
 
   /**
+   * DevelDataCollector constructor.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match.
+   */
+  public function __construct(
+    private readonly RouteMatchInterface $routeMatch,
+  ) {
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
-    $original_route = \Drupal::routeMatch()->getRouteName();
+    $original_route = $this->routeMatch->getRouteName();
     if ($original_route != NULL) {
-      $original_route_parameters = \Drupal::routeMatch()
+      $original_route_parameters = $this->routeMatch
         ->getRawParameters()
         ->all();
       $this->data['destination'] = Url::fromRoute($original_route, $original_route_parameters)
@@ -66,26 +77,28 @@ class DevelDataCollector extends DataCollector {
    *   Array containing Devel Menu links
    */
   protected function develMenuLinks(string $destination): array {
-    // We cannot use injected services here because at this point this
-    // class is deserialized from a storage and not constructed.
+    // When a profile is loaded from storage this object is deserialized and
+    // no constructor is called, so we cannot use dependency injection.
+    // phpcs:disable
     /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTreeService */
     $menuLinkTreeService = \Drupal::service('menu.link_tree');
     /** @var \Drupal\Core\Render\Renderer $rendererService */
     $rendererService = \Drupal::service('renderer');
+    // phpcs:enable
 
     $parameters = new MenuTreeParameters();
     $parameters->setMaxDepth(1)->onlyEnabledLinks();
     $tree = $menuLinkTreeService->load('devel', $parameters);
 
-    $manipulators = array(
-      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-    );
+    $manipulators = [
+      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+    ];
     $tree = $menuLinkTreeService->transform($tree, $manipulators);
 
-    $links = array();
+    $links = [];
     foreach ($tree as $item) {
-      /** @var DestinationMenuLink $item_link */
+      /** @var \Drupal\devel\Plugin\Menu\DestinationMenuLink $item_link */
       $item_link = $item->link;
 
       // Get the link url and replace the destination parameter with the
@@ -98,9 +111,11 @@ class DevelDataCollector extends DataCollector {
       $renderable = $link->toRenderable();
       $rendered = $rendererService->renderPlain($renderable);
 
-      $links[] = Markup::create($rendered);;
+      $links[] = Markup::create($rendered);
+
     }
 
     return $links;
   }
+
 }

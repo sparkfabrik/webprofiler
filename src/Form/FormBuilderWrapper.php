@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
- * Class FormBuilderWrapper
+ * Wrap the form builder to collect form data.
  */
 class FormBuilderWrapper extends FormBuilder {
 

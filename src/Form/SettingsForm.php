@@ -7,7 +7,6 @@ namespace Drupal\webprofiler\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
@@ -19,16 +18,18 @@ class SettingsForm extends ConfigFormBase {
    * The Profiler service.
    *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
+   *
+   * @phpstan-ignore-next-line
    */
-  // @phpstan-ignore-next-line
   private Profiler $profiler;
 
   /**
    * A list of registered data collector templates.
    *
    * @var array
+   *
+   * @phpstan-ignore-next-line
    */
-  // @phpstan-ignore-next-line
   private array $templates;
 
   /**

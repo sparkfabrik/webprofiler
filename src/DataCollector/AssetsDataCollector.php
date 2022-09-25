@@ -108,7 +108,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
         ],
         [
           'label' => $this->t('Settings'),
-          'content' => $this->renderSettings($this->data['js']??['drupalSettings']),
+          'content' => $this->renderSettings($this->data['js'] ?? ['drupalSettings']),
         ],
         [
           'label' => $this->t('JS'),
@@ -129,7 +129,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   private function renderCss(array $data): array {
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [
@@ -170,7 +170,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
       '#type' => 'inline_template',
       '#template' => '{{ data|raw }}',
       '#context' => [
-        'data' => array_key_exists('drupalSettings', $settings) ? $this->dumpData($this->cloneVar($settings['drupalSettings'])): 'n/a',
+        'data' => array_key_exists('drupalSettings', $settings) ? $this->dumpData($this->cloneVar($settings['drupalSettings'])) : 'n/a',
       ],
     ];
   }
@@ -186,7 +186,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   private function renderJs(array $data): array {
     return [
-      '#theme' => 'webprofiler_dashboard_table',
+      '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
         '#type' => 'table',
         '#header' => [

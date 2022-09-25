@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collects data about frontend performance.
+ * Collects frontend performance data.
  */
 class PerformanceTimingDataCollector extends DataCollector implements HasPanelInterface {
 

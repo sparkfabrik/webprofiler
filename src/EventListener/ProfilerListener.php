@@ -3,7 +3,6 @@
 namespace Drupal\webprofiler\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -11,7 +10,6 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
@@ -44,7 +42,7 @@ class ProfilerListener implements EventSubscriberInterface {
   /**
    * Collected profiles.
    *
-   * @var \SplObjectStorage<Request, Profile>
+   * @var \SplObjectStorage<\Symfony\Component\HttpFoundation\Request, \Symfony\Component\HttpKernel\Profiler\Profile>
    */
   private \SplObjectStorage $profiles;
 
@@ -58,7 +56,7 @@ class ProfilerListener implements EventSubscriberInterface {
   /**
    * Store the parents of the current request.
    *
-   * @var \SplObjectStorage<Request, Request|null>
+   * @var \SplObjectStorage<\Symfony\Component\HttpFoundation\Request, \Symfony\Component\HttpFoundation\Request|null>
    */
   private \SplObjectStorage $parents;
 

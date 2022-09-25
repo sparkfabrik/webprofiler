@@ -51,9 +51,6 @@ services:
     factory: Drupal\webprofiler\FileLinkFormatterFactory::getFileLinkFormatter
     arguments: ['@request_stack', '@config.factory']
 
-  webprofiler.twig_profile:
-    class: Twig\Profiler\Profile
-
   webprofiler.twig.code_extension:
     class: Drupal\webprofiler\Twig\Extension\CodeExtension
     arguments: [ '@webprofiler.file_link_formatter' ]
@@ -131,6 +128,7 @@ services:
 
   webprofiler.devel:
     class: Drupal\webprofiler\DataCollector\DevelDataCollector
+    arguments: ['@current_route_match']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/devel.html.twig', id: 'devel', label: 'Devel', priority: 900 }
 
@@ -207,8 +205,14 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/performance_timing.html.twig', id: 'performance_timing', label: 'Performance Timing', priority: 200 }
 
+  webprofiler.theme:
+    class: Drupal\webprofiler\DataCollector\ThemeDataCollector
+    arguments: ['@theme.manager', '@theme.negotiator', '@tracer.twig_profile']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 150 }
+
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
-    arguments: ['@redirect.destination']
+    arguments: ['@redirect.destination', '%install_profile%']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }

@@ -24,8 +24,13 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
    *
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The Redirect destination service.
+   * @param string $drupalProfile
+   *   The installed profile.
    */
-  public function __construct(private readonly RedirectDestinationInterface $redirectDestination) {
+  public function __construct(
+    private readonly RedirectDestinationInterface $redirectDestination,
+    private readonly string $drupalProfile
+  ) {
   }
 
   /**
@@ -35,7 +40,7 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
     $this->data = [
       'token' => $response->headers->get('X-Debug-Token'),
       'drupal_version' => \Drupal::VERSION,
-      'drupal_profile' => \Drupal::installProfile(),
+      'drupal_profile' => $this->drupalProfile,
       'webprofiler_config_url' => (new Url('webprofiler.settings', [], ['query' => $this->redirectDestination->getAsArray()]))->toString(),
       'php_version' => \PHP_VERSION,
       'php_architecture' => \PHP_INT_SIZE * 8,

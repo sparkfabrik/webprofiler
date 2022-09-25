@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Collects data about timed events.
+ * Collects timed events data.
  */
 class TimeDataCollector extends DataCollector implements LateDataCollectorInterface {
 

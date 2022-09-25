@@ -66,6 +66,12 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
         ->setClass('Drupal\webprofiler\Views\ViewExecutableFactoryWrapper');
     }
 
+    // Alter the big_pipe service only if BigPipe module is enabled.
+    if (isset($modules['big_pipe'])) {
+      $container->getDefinition('big_pipe')
+        ->setClass('Drupal\webprofiler\Render\TraceableBigPipe');
+    }
+
     // Replace the regular access_manager service with a traceable one.
     $container->getDefinition('access_manager')
       ->setClass('Drupal\webprofiler\Access\AccessManagerWrapper')
@@ -81,11 +87,9 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     $container->getDefinition('form_builder')
       ->setClass('Drupal\webprofiler\Form\FormBuilderWrapper');
 
-    // Alter the big_pipe service only if BigPipe module is enabled.
-    if (isset($modules['big_pipe'])) {
-      $container->getDefinition('big_pipe')
-        ->setClass('Drupal\webprofiler\Render\TraceableBigPipe');
-    }
+    // Replace the regular theme.negotiator service with a traceable one.
+    $container->getDefinition('theme.negotiator')
+      ->setClass('Drupal\webprofiler\Theme\ThemeNegotiatorWrapper');
   }
 
 }

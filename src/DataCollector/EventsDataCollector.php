@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Class EventsDataCollector
+ * Collects events data.
  */
 class EventsDataCollector extends DataCollector implements LateDataCollectorInterface, HasPanelInterface {
 
@@ -178,7 +178,7 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
     $rows = [];
     foreach ($listeners as $name => $priorities) {
       foreach ($priorities as $priority => $subscribers) {
-        foreach ($subscribers as $key => $subscriber) {
+        foreach ($subscribers as $subscriber) {
           $rows[] = [
             $name,
             [
@@ -199,7 +199,7 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
 
     return [
       $label => [
-        '#theme' => 'webprofiler_dashboard_table',
+        '#theme' => 'webprofiler_dashboard_section',
         '#data' => [
           '#type' => 'table',
           '#header' => [

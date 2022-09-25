@@ -39,8 +39,9 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    * The original entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   *
+   * @phpstan-ignore-next-line
    */
-  // @phpstan-ignore-next-line
   private EntityTypeManagerInterface $entityManager;
 
   /**
@@ -148,8 +149,11 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    */
   private function getStorageDecorator(string $entity_type, object $handler): object {
     // Loaded this way to avoid circular references.
+    // phpcs:disable
     /** @var \Drupal\webprofiler\DecoratorGeneratorInterface $decoratorGenerator */
     $decoratorGenerator = \Drupal::service('webprofiler.config_entity_storage_decorator_generator');
+    // phpcs:enable
+
     $decorators = $decoratorGenerator->getDecorators();
 
     $storage = PhpStorageFactory::get('webprofiler');

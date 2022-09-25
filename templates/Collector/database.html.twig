@@ -53,7 +53,7 @@
     data-webprofiler-slow="{% if slow_query %}1{% else %}0{% endif %}"
     class="{% if slow_query %}slow-query{% endif %}"
   >
-    <pre>
+    <pre style="white-space: unset;">
       <code data-webprofiler-placeholder-query="{{ qid }}" class="language-sql">{{ query.query }}</code>
       {% if query.args %}<code data-webprofiler-executable-query="{{ qid }}" class="language-sql is-hidden">{{ query_executable(query) }}</code>{% endif %}
     </pre>

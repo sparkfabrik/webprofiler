@@ -18,7 +18,10 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
   use StringTranslationTrait, PanelTrait;
 
   /**
+   * HttpDataCollector constructor.
+   *
    * @param \Drupal\webprofiler\Http\HttpClientMiddleware $middleware
+   *   The http client middleware.
    */
   public function __construct(private readonly HttpClientMiddleware $middleware) {
     $this->data['completed'] = [];
@@ -52,7 +55,8 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $data['response'];
       /** @var \GuzzleHttp\TransferStats $stats */
-      $stats = $request->stats; // @phpstan-ignore-line
+      // @phpstan-ignore-next-line
+      $stats = $request->stats;
 
       $uri = $request->getUri();
       $this->data['completed'][] = [
@@ -225,7 +229,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
 
     return [
       $label => [
-        '#theme' => 'webprofiler_dashboard_table',
+        '#theme' => 'webprofiler_dashboard_section',
         '#title' => $label,
         '#data' => [
           '#type' => 'table',
@@ -248,4 +252,5 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
       ],
     ];
   }
+
 }

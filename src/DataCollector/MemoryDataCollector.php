@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
  * Collects memory data.
- * */
+ */
 class MemoryDataCollector extends DataCollector implements LateDataCollectorInterface {
 
   use DataCollectorTrait;
