@@ -65,6 +65,8 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
       ) ?? 'no controller';
       $this->data['access_checks'] = $this->accessChecks;
     }
+
+    unset($this->data['request_attributes']['_route_params']);
   }
 
   /**

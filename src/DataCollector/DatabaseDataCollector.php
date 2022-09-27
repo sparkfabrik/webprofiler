@@ -61,6 +61,9 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
         // Save time in milliseconds.
         $query['time'] = $query['time'] * 1000;
         $query['database'] = $key;
+
+        $query['query'] = str_replace('"', '', $query['query']);
+
         $data[] = $query;
       }
     }
