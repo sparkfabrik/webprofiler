@@ -1,8 +1,8 @@
 [[_TOC_]]
 
 #### Dependencies
-- d3.js: Webprofiler module requires D3 library 3.x (not 4.x) to render data.
-- highlight.js: Webprofiler module requires highlight 9.7.x library to syntax highlight collected queries.
+- d3.js: WebProfiler module requires D3 library 3.x (not 4.x) to render data.
+- highlight.js: WebProfiler module requires highlight 9.7.x library to syntax highlight collected queries.
 
 #### Install using Composer (recommended)
 If you use Composer to manage dependencies, edit [composer.json](composer.json) as follows:
@@ -79,8 +79,8 @@ It is also possible to collect the time needed to instantiate every single servi
 Add the following two lines to `settings.php` (or, even better, to `settings.local.php`):
 
     ```
-    $class_loader->addPsr4('Drupal\\webprofiler\\', [ __DIR__ . '/../../modules/contrib/devel/webprofiler/src']);
-    $settings['container_base_class'] = '\Drupal\webprofiler\DependencyInjection\TraceableContainer';
+    $class_loader->addPsr4('Drupal\\WebProfiler\\', [ __DIR__ . '/../../modules/contrib/devel/WebProfiler/src']);
+    $settings['container_base_class'] = '\Drupal\WebProfiler\DependencyInjection\TraceableContainer';
     ```
 
-Check if the path from the Webprofiler module in your `settings.php` file matches the location of the installed Webprofiler module in your project.
+Check if the path from the WebProfiler module in your `settings.php` file matches the location of the installed WebProfiler module in your project.
