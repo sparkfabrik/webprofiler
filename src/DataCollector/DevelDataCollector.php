@@ -112,7 +112,6 @@ class DevelDataCollector extends DataCollector {
       $rendered = $rendererService->renderPlain($renderable);
 
       $links[] = Markup::create($rendered);
-
     }
 
     return $links;

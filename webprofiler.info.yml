@@ -1,6 +1,6 @@
-name: Webprofiler
+name: WebProfiler
 type: module
-description: 'Drupal Webprofiler.'
+description: 'Drupal WebProfiler.'
 package: Development
 core_version_requirement: ^10
 configure: webprofiler.settings
