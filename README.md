@@ -79,8 +79,8 @@ It is also possible to collect the time needed to instantiate every single servi
 Add the following two lines to `settings.php` (or, even better, to `settings.local.php`):
 
     ```
-    $class_loader->addPsr4('Drupal\\WebProfiler\\', [ __DIR__ . '/../../modules/contrib/devel/WebProfiler/src']);
-    $settings['container_base_class'] = '\Drupal\WebProfiler\DependencyInjection\TraceableContainer';
+    $class_loader->addPsr4('Drupal\\webprofiler\\', [ __DIR__ . '/../../modules/contrib/devel/webprofiler/src']);
+    $settings['container_base_class'] = '\Drupal\webprofiler\DependencyInjection\TraceableContainer';
     ```
 
 Check if the path from the WebProfiler module in your `settings.php` file matches the location of the installed WebProfiler module in your project.
