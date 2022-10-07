@@ -23,7 +23,7 @@ class DevelDataCollector extends DataCollector implements DrupalDataCollectorInt
   /**
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  private RouteMatchInterface $routeMatch;
+  private $routeMatch;
 
   /**
    * DevelDataCollector constructor.
