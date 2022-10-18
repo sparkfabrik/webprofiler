@@ -211,6 +211,12 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 150 }
 
+  webprofiler.routing:
+    class: Drupal\webprofiler\DataCollector\RoutingDataCollector
+    arguments: ['@router.route_provider']
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/routing.html.twig', id: 'routing', label: 'Routing', priority: 100 }
+
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
     arguments: ['@redirect.destination', '%install_profile%']

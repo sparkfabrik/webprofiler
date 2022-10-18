@@ -88,13 +88,6 @@ class ServicePass implements CompilerPassInterface {
         $public = $definition->isPublic();
         $synthetic = $definition->isSynthetic();
       }
-      else {
-        $class = NULL;
-        $file = NULL;
-        $tags = [];
-        $public = NULL;
-        $synthetic = NULL;
-      }
 
       $data[$id] = [
         'inEdges' => $inEdges,
