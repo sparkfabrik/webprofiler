@@ -90,6 +90,10 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     // Replace the regular theme.negotiator service with a traceable one.
     $container->getDefinition('theme.negotiator')
       ->setClass('Drupal\webprofiler\Theme\ThemeNegotiatorWrapper');
+
+    // Replace the regular string_translation service with a traceable one.
+    $container->getDefinition('string_translation')
+      ->setClass('Drupal\webprofiler\StringTranslation\TranslationManagerWrapper');
   }
 
 }
