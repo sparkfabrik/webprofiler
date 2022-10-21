@@ -110,6 +110,12 @@ services:
     decorates: state
     arguments: ['@keyvalue','@webprofiler.debug.state.inner', '@webprofiler.state']
 
+  webprofiler.debug.mail_manager:
+    class: Drupal\webprofiler\Mail\MailManagerWrapper
+    public: false
+    decorates: plugin.manager.mail
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory', '@logger.factory', '@string_translation', '@renderer', '@webprofiler.debug.mail_manager.inner', '@webprofiler.mail']
+
   # data collectors
   webprofiler.request:
     class: Drupal\webprofiler\DataCollector\RequestDataCollector
@@ -225,6 +231,11 @@ services:
     arguments: ['@string_translation']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/translations.html.twig', id: 'translations', label: 'Translations', priority: 100 }
+
+  webprofiler.mail:
+    class: Drupal\webprofiler\DataCollector\MailDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/mail.html.twig', id: 'mail', label: 'Mail', priority: 50 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
