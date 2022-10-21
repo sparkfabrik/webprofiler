@@ -15,19 +15,19 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 /**
  * Collects frontend performance data.
  */
-class PerformanceTimingController extends ControllerBase {
+class FrontendController extends ControllerBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): PerformanceTimingController {
+  public static function create(ContainerInterface $container): FrontendController {
     return new static(
       $container->get('webprofiler.profiler')
     );
   }
 
   /**
-   * PerformanceTimingController constructor.
+   * FrontendController constructor.
    *
    * @param \Drupal\webprofiler\Profiler\Profiler $profiler
    *   The profiler.
@@ -36,7 +36,7 @@ class PerformanceTimingController extends ControllerBase {
   }
 
   /**
-   * Save the performance data to performance_timing collector.
+   * Save the performance data to frontend collector.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
    *   The profile.
@@ -51,8 +51,8 @@ class PerformanceTimingController extends ControllerBase {
 
     $data = Json::decode($request->getContent());
 
-    /** @var \Drupal\webprofiler\DataCollector\PerformanceTimingDataCollector $collector */
-    $collector = $profile->getCollector('performance_timing');
+    /** @var \Drupal\webprofiler\DataCollector\FrontendDataCollector $collector */
+    $collector = $profile->getCollector('frontend');
     $collector->setData($data);
     $this->profiler->updateProfile($profile);
 

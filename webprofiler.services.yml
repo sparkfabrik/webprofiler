@@ -207,7 +207,7 @@ services:
   webprofiler.frontend:
     class: Drupal\webprofiler\DataCollector\FrontendDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/frontend.html.twig', id: 'frontend', label: 'Frontend performances', priority: 300 }
+      - { name: data_collector, template: '@webprofiler/Collector/frontend.html.twig', id: 'frontend', label: 'Frontend', priority: 300 }
 
   webprofiler.theme:
     class: Drupal\webprofiler\DataCollector\ThemeDataCollector
