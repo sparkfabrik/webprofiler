@@ -32,12 +32,7 @@
 
 {% block panel %}
   {{ attach_library('webprofiler/database')}}
-
-  {% if collector.querycount <= 200 %}
-    {{ attach_library('webprofiler/database.highlight')}}
-  {% else %}
-    <p>{{ 'Too many queries, highlighting has been disabled.'|t }}</p>
-  {% endif %}
+  {{ attach_library('webprofiler/database.highlight')}}
 
   {% for query in collector.queries %}
     {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
@@ -47,50 +42,22 @@
 {% macro query(query, token, qid, queryHighlightThreshold) %}
   {% set slow_query = query.time > (queryHighlightThreshold/10) %}
   <div
-    data-webprofiler-caller="{% if query.caller.class is not null %}{{ query.caller.class|lower }}{% endif %}"
-    data-webprofiler-database="{{ query.database }}"
-    data-webprofiler-type="{{ query_type(query.query) }}"
-    data-webprofiler-slow="{% if slow_query %}1{% else %}0{% endif %}"
-    class="{% if slow_query %}slow-query{% endif %}"
+    data-wp-caller="{% if query.caller.class is not null %}{{ query.caller.class|lower }}{% endif %}"
+    data-wp-database="{{ query.database }}"
+    data-wp-type="{{ query_type(query.query) }}"
+    data-wp-slow="{% if slow_query %}1{% else %}0{% endif %}"
+    data-wp-time="{{ query.time }}"
+    data-wp-class="{{ query.caller.class }}"
+    data-wp-db="{{ query.database }}"
+    data-wp-target="{{ query.target }}"
+    data-wp-has-args="{% if query.args %}1{% else %}0{% endif %}"
+    data-wp-qid="{{ qid }}"
+    data-wp-explain-path="{{ path('webprofiler.database.explain', {'token': token, 'qid': qid}) }}"
+    class="wp-db-query {% if slow_query %}slow-query{% endif %}"
   >
     <pre style="white-space: unset;">
-      <code data-webprofiler-placeholder-query="{{ qid }}" class="language-sql">{{ query.query }}</code>
-      {% if query.args %}<code data-webprofiler-executable-query="{{ qid }}" class="language-sql is-hidden">{{ query_executable(query) }}</code>{% endif %}
+      <code class="wp-query-placeholder language-sql">{{ query.query }}</code>
+      {% if query.args %}<code class="wp-query-executable language-sql is-hidden">{{ query_executable(query) }}</code>{% endif %}
     </pre>
-
-    <div>
-      <dl>
-        <dt>Time</dt>
-        <dd>{{ query.time }} ms</dd>
-        <dt>Caller</dt>
-        <dd>{{ query.caller.class }}</dd>
-        <dt>Database</dt>
-        <dd>{{ query.database }}</dd>
-        <dt>Target</dt>
-        <dd>{{ query.target }}</dd>
-      </dl>
-    </div>
-
-    {% if query.args %}<a data-webprofiler-executable-toggle data-webprofiler-qid="{{ qid }}">Swap placeholders</a>{% endif %}
-    {% if query.args %}<a data-webprofiler-placeholder-toggle data-webprofiler-qid="{{ qid }}">Show placeholders</a>{% endif %}
-    <a data-webprofiler-copy data-webprofiler-qid="{{ qid }}">Copy query</a>
-    {% if query_type(query.query) == 'SELECT' %}
-      <a href="{{ path('webprofiler.database.explain', {'token': token, 'qid': qid}) }}"
-        class="use-ajax">Explain
-      </a>
-    {% endif %}
-
-    <div class="js--explain-target-{{ qid }}"></div>
-
-    {% if query.args %}
-      <div data-webprofiler-placeholder-target="{{ qid }}" class="is-hidden">
-        <dl>
-          {% for key,placeholder in query.args %}
-            <dt>{{ key }}</dt>
-            <dd>{{ placeholder }}</dd>
-          {% endfor %}
-        </dl>
-      </div>
-    {% endif %}
   </div>
 {% endmacro %}
