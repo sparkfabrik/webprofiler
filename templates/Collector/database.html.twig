@@ -32,7 +32,6 @@
 
 {% block panel %}
   {{ attach_library('webprofiler/database')}}
-  {{ attach_library('webprofiler/database.highlight')}}
 
   {% for query in collector.queries %}
     {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}

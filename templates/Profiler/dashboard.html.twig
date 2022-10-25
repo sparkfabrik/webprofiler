@@ -1,6 +1,6 @@
 <div class="webprofiler">
   <div>
-    <div>{{ profile.url }}</div>
+    <div><a href="{{ profile.url }}">{{ profile.url }}</a></div>
     <div>{{ 'Method: @method HTTP Status: @status IP: @ip Profiled on: @time Token: @token'|t({'@method': profile.method, '@status': profile.statuscode, '@ip': profile.ip, '@time': profile.time|format_date('long'), '@token': profile.token}) }}</div>
   </div>
 

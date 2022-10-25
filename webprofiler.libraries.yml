@@ -15,11 +15,17 @@ database:
     js/database.js: {}
   dependencies:
     - core/once
+    - webprofiler/database.highlight
 
 database.highlight:
-  version: VERSION
+  remote: https://highlightjs.org
+  license:
+    name: BSD 3-Clause License
+    url: https://github.com/highlightjs/highlight.js/blob/main/LICENSE
+    gpl-compatible: true
+  version: "11.6.0"
   js:
-    js/database.highlight.js: {}
-  dependencies:
-    - core/once
-    - core/loadjs
+    https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js: { type: external }
+  css:
+    component:
+      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css: { type: external }

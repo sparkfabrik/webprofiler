@@ -29,6 +29,10 @@
 
   Drupal.behaviors.webprofiler_database = {
     attach: function (context) {
+      hljs.configure({
+        ignoreUnescapedHTML: true
+      });
+
       once('db', '.wp-db-query').forEach(function (element) {
         let result =
           queryTpl({
@@ -44,11 +48,17 @@
 
         element.innerHTML += result;
 
-        // Swap placeholders.
-        element.querySelector('.wp-executable-toggle').addEventListener('click', function (e) {
-          element.querySelector('.wp-query-placeholder').classList.toggle('is-hidden');
-          element.querySelector('.wp-query-executable').classList.toggle('is-hidden');
+        element.querySelectorAll('code').forEach(function (code) {
+          hljs.highlightElement(code);
         });
+
+        // Swap placeholders.
+        if (element.dataset.wpHasArgs === '1') {
+          element.querySelector('.wp-executable-toggle').addEventListener('click', function (e) {
+            element.querySelector('.wp-query-placeholder').classList.toggle('is-hidden');
+            element.querySelector('.wp-query-executable').classList.toggle('is-hidden');
+          });
+        }
 
         // Copy to clipboard.
         if (navigator.clipboard && window.isSecureContext) {
