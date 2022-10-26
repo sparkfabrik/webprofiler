@@ -58,3 +58,16 @@ webprofiler.frontend.save:
   methods:  [POST]
   requirements:
     _permission: 'view webprofiler toolbar'
+
+webprofiler.frontend.cwv:
+  path: '/admin/reports/profiler/frontend/{profile}/cwv'
+  defaults:
+    _controller: '\Drupal\webprofiler\Controller\FrontendController::saveCoreWebVitalsAction'
+    _title: 'Save CWV data'
+  options:
+    parameters:
+      profile:
+        type: 'webprofiler:token'
+  methods:  [POST]
+  requirements:
+    _permission: 'view webprofiler toolbar'

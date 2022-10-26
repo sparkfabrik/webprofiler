@@ -41,8 +41,18 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
    * @param array $data
    *   The performance data.
    */
-  public function setData(array $data) {
+  public function setPerformanceTiming(array $data) {
     $this->data['performance'] = $data;
+  }
+
+  /**
+   * Set Core Web Vitals data.
+   *
+   * @param array $data
+   *   The Core Web Vitals data.
+   */
+  public function setCwv(array $data) {
+    $this->data['cwv'] = $data;
   }
 
   /**
@@ -50,10 +60,19 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
    */
   public function getPanel(): array {
     return [
-      '#type' => 'inline_template',
-      '#template' => '{{ data|raw }}',
-      '#context' => [
-        'data' => $this->dumpData($this->cloneVar($this->data['performance'])),
+      [
+        '#type' => 'inline_template',
+        '#template' => '{{ data|raw }}',
+        '#context' => [
+          'data' => $this->dumpData($this->cloneVar($this->data['performance'])),
+        ],
+        [
+          '#type' => 'inline_template',
+          '#template' => '{{ data|raw }}',
+          '#context' => [
+            'data' => $this->dumpData($this->cloneVar($this->data['cwv'])),
+          ],
+        ],
       ],
     ];
   }

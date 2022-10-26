@@ -35,12 +35,12 @@
       data = navigation.responseEnd - navigation.responseStart,
       dom = navigation.loadEventStart - navigation.responseEnd;
 
-    document.getElementById('wp--frontend__toolbar').innerHTML = ttfb + ' ms';
-    document.getElementById('wp--frontend__dns').innerHTML = dns + ' ms';
-    document.getElementById('wp--frontend__tcp').innerHTML = tcp + ' ms';
-    document.getElementById('wp--frontend__ttfb').innerHTML = ttfb + ' ms';
-    document.getElementById('wp--frontend__data').innerHTML = data + ' ms';
-    document.getElementById('wp--frontend__dom').innerHTML = dom + ' ms';
+    document.getElementById('wp--frontend__toolbar').innerHTML = ttfb.toFixed(2) + ' ms';
+    document.getElementById('wp--frontend__dns').innerHTML = dns.toFixed(2) + ' ms';
+    document.getElementById('wp--frontend__tcp').innerHTML = tcp.toFixed(2) + ' ms';
+    document.getElementById('wp--frontend__ttfb').innerHTML = ttfb.toFixed(2) + ' ms';
+    document.getElementById('wp--frontend__data').innerHTML = data.toFixed(2) + ' ms';
+    document.getElementById('wp--frontend__dom').innerHTML = dom.toFixed(2) + ' ms';
 
     const payload = JSON.stringify(
       {
@@ -49,12 +49,48 @@
       }
     );
 
-    (
-      navigator.sendBeacon &&
-      navigator.sendBeacon('{{ url("webprofiler.frontend.save", {profile: token}) }}', payload)
-    ) ||
-    fetch('{{ url("webprofiler.frontend.save", {profile: token}) }}', {payload, method: 'POST', keepalive: true});
+    navigator.sendBeacon('{{ url("webprofiler.frontend.save", {profile: token}) }}', payload);
 
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/web-vitals@3/dist/web-vitals.attribution.iife.js';
+    script.onload = function () {
+      const queue = new Set();
+
+      function addToQueue(metric) {
+        queue.add(metric);
+      }
+
+      function flushQueue() {
+        if (queue.size > 0) {
+          // Replace with whatever serialization method you prefer.
+          // Note: JSON.stringify will likely include more data than you need.
+          const body = JSON.stringify([...queue]);
+
+          navigator.sendBeacon('{{ url("webprofiler.frontend.cwv", {profile: token}) }}', body)
+
+          queue.clear();
+        }
+      }
+
+      // When loading `web-vitals` using a classic script, all the public
+      // methods can be found on the `webVitals` global namespace.
+      webVitals.onCLS(addToQueue);
+      webVitals.onFID(addToQueue);
+      webVitals.onLCP(addToQueue);
+
+      // Report all available metrics whenever the page is backgrounded or unloaded.
+      addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          flushQueue();
+        }
+      });
+
+      // NOTE: Safari does not reliably fire the `visibilitychange` event when the
+      // page is being unloaded. If Safari support is needed, you should also flush
+      // the queue in the `pagehide` event.
+      addEventListener('pagehide', flushQueue);
+    }
+    document.head.appendChild(script);
   </script>
 
   {{ include('@webprofiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}

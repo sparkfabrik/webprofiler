@@ -53,7 +53,31 @@ class FrontendController extends ControllerBase {
 
     /** @var \Drupal\webprofiler\DataCollector\FrontendDataCollector $collector */
     $collector = $profile->getCollector('frontend');
-    $collector->setData($data);
+    $collector->setPerformanceTiming($data);
+    $this->profiler->updateProfile($profile);
+
+    return new JsonResponse(['success' => TRUE]);
+  }
+
+  /**
+   * Save the Core Web Vitals data to frontend collector.
+   *
+   * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
+   *   The profile.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The response.
+   */
+  public function saveCoreWebVitalsAction(Profile $profile, Request $request): JsonResponse {
+    $this->profiler->disable();
+
+    $data = Json::decode($request->getContent());
+
+    /** @var \Drupal\webprofiler\DataCollector\FrontendDataCollector $collector */
+    $collector = $profile->getCollector('frontend');
+    $collector->setCwv($data);
     $this->profiler->updateProfile($profile);
 
     return new JsonResponse(['success' => TRUE]);
