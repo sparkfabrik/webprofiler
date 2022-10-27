@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /**
- * Collects frontend performance data.
+ * Collects frontend navigation and CWV data.
  */
 class FrontendController extends ControllerBase {
 
@@ -36,7 +36,7 @@ class FrontendController extends ControllerBase {
   }
 
   /**
-   * Save the performance data to frontend collector.
+   * Save the navigation data to frontend collector.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profile $profile
    *   The profile.
@@ -46,14 +46,14 @@ class FrontendController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The response.
    */
-  public function savePerformanceTimingAction(Profile $profile, Request $request): JsonResponse {
+  public function saveNavigationDataAction(Profile $profile, Request $request): JsonResponse {
     $this->profiler->disable();
 
     $data = Json::decode($request->getContent());
 
     /** @var \Drupal\webprofiler\DataCollector\FrontendDataCollector $collector */
     $collector = $profile->getCollector('frontend');
-    $collector->setPerformanceTiming($data);
+    $collector->setNavigationData($data);
     $this->profiler->updateProfile($profile);
 
     return new JsonResponse(['success' => TRUE]);
@@ -70,14 +70,14 @@ class FrontendController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The response.
    */
-  public function saveCoreWebVitalsAction(Profile $profile, Request $request): JsonResponse {
+  public function saveCwvDataAction(Profile $profile, Request $request): JsonResponse {
     $this->profiler->disable();
 
     $data = Json::decode($request->getContent());
 
     /** @var \Drupal\webprofiler\DataCollector\FrontendDataCollector $collector */
     $collector = $profile->getCollector('frontend');
-    $collector->setCwv($data);
+    $collector->setCwvData($data);
     $this->profiler->updateProfile($profile);
 
     return new JsonResponse(['success' => TRUE]);

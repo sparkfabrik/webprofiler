@@ -36,12 +36,12 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * Set performance data.
+   * Set navigation data.
    *
    * @param array $data
    *   The performance data.
    */
-  public function setPerformanceTiming(array $data) {
+  public function setNavigationData(array $data) {
     $this->data['performance'] = $data;
   }
 
@@ -51,7 +51,7 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
    * @param array $data
    *   The Core Web Vitals data.
    */
-  public function setCwv(array $data) {
+  public function setCwvData(array $data) {
     $this->data['cwv'] = $data;
   }
 

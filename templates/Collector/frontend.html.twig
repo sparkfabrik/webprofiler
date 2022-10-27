@@ -25,6 +25,18 @@
       <b>{{ 'DOM building'|t }}</b>
       <span id="wp--frontend__dom"></span>
     </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'CLS'|t }}</b>
+      <span id="wp--frontend__cls">{{ 'n/a'|t }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'FID'|t }}</b>
+      <span id="wp--frontend__fid">{{ 'n/a'|t }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+      <b>{{ 'LCP'|t }}</b>
+      <span id="wp--frontend__lcp">{{ 'n/a'|t }}</span>
+    </div>
   {% endset %}
 
   <script>
@@ -49,7 +61,7 @@
       }
     );
 
-    navigator.sendBeacon('{{ url("webprofiler.frontend.save", {profile: token}) }}', payload);
+    navigator.sendBeacon('{{ url("webprofiler.frontend.navigation", {profile: token}) }}', payload);
 
     const script = document.createElement('script');
     script.src = 'https://unpkg.com/web-vitals@3/dist/web-vitals.attribution.iife.js';
@@ -57,6 +69,17 @@
       const queue = new Set();
 
       function addToQueue(metric) {
+        switch(metric.name) {
+          case 'CLS':
+            document.getElementById('wp--frontend__cls').innerHTML = metric.value.toFixed(4);
+            break;
+          case 'FID':
+            document.getElementById('wp--frontend__fid').innerHTML = metric.value.toFixed(2) + ' ms';
+            break;
+          case 'LCP':
+            document.getElementById('wp--frontend__lcp').innerHTML = metric.value.toFixed(2) + ' ms';
+            break;
+        }
         queue.add(metric);
       }
 
@@ -72,8 +95,6 @@
         }
       }
 
-      // When loading `web-vitals` using a classic script, all the public
-      // methods can be found on the `webVitals` global namespace.
       webVitals.onCLS(addToQueue);
       webVitals.onFID(addToQueue);
       webVitals.onLCP(addToQueue);
