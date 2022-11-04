@@ -29,14 +29,14 @@ webprofiler.database.explain:
   requirements:
     _permission: 'access webprofiler'
 
-#webprofiler.admin_list:
-#  path: '/admin/reports/profiler/list'
-#  defaults:
-#    _controller: '\Drupal\webprofiler\Controller\ReportController::list'
-#    _title: 'Webprofiler'
-#  requirements:
-#    _permission: 'access webprofiler'
-#
+webprofiler.admin_list:
+  path: '/admin/reports/profiler/list'
+  defaults:
+    _controller: '\Drupal\webprofiler\Controller\ReportController::list'
+    _title: 'Webprofiler'
+  requirements:
+    _permission: 'access webprofiler'
+
 webprofiler.settings:
   path: '/admin/config/development/devel/webprofiler'
   defaults:

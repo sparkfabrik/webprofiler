@@ -125,7 +125,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    *   The list of access checks.
    */
   public function getAccessChecks(): ParameterBag {
-    return new ParameterBag($this->data['access_checks']->getValue());
+    return isset($this->data['access_checks']) ? new ParameterBag($this->data['access_checks']->getValue()) : new ParameterBag();
   }
 
   /**
