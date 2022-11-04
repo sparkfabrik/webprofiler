@@ -143,7 +143,7 @@ class SettingsForm extends ConfigFormBase {
         'source' => $this->t('by source'),
         'duration' => $this->t('by duration'),
       ],
-      '#description' => $this->t('The query table can be sorted in the order that the queries were executed or by descending duration.'),
+      '#description' => $this->t('The query table can be sorted in the order that the queries were executed or by ascending duration.'),
       '#default_value' => $config->get('query_sort'),
     ];
 

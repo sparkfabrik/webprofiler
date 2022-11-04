@@ -132,19 +132,16 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
     // When a profile is loaded from storage this object is deserialized and
     // no constructor is called, so we cannot use dependency injection.
     // phpcs:disable
-    $querySort = \Drupal::configFactory()
-      ->get('webprofiler.config')
+    $query_sort = \Drupal::configFactory()
+      ->get('webprofiler.settings')
       ->get('query_sort') ?: '';
     // phpcs:enable
 
     $queries = $this->data['queries'];
-    if ('duration' === $querySort) {
-      usort(
-        $queries, [
-          "Drupal\\webprofiler\\DataCollector\\DatabaseDataCollector",
-          "orderQueryByTime",
-        ]
-      );
+    if ('duration' === $query_sort) {
+      usort($queries, function (array $a, array $b): int {
+        return $a['time'] <=> $b['time'];
+      });
     }
 
     return $queries;
