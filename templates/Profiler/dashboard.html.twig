@@ -9,7 +9,7 @@
       <h4>{{ 'Collectors'|t }}</h4>
       <div class="webprofiler_collectors_list">
         {% for collector in collectors %}
-          <div class="webprofiler__collector"><a
+          <div class="webprofiler__collector webprofiler__collector-{{ collector.name }}"><a
               href="{{ path('webprofiler.panel', {'token': token, 'name': collector.name}) }}"
               class="use-ajax" data-collector-name="{{ collector.name }}">{{ collector.name|capitalize }}</a></div>
         {% endfor %}

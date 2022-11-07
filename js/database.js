@@ -7,23 +7,30 @@
   "use strict";
 
   const queryTpl = _.template(`
-    <div>
-        <dl>
-            <dt>Time</dt>
-            <dd><% print(time); %> ms</dd>
-            <dt>Caller</dt>
-            <dd><% print(caller); %></dd>
-            <dt>Database</dt>
-            <dd><% print(db); %></dd>
-            <dt>Target</dt>
-            <dd><% print(target); %></dd>
-        </dl>
+    <table class="webprofiler__table responsive-enabled" data-striping="1">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Caller</th>
+                <th>Database</th>
+                <th>Target</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td class="webprofiler__key"><% print(time); %> ms</td>
+                <td class="webprofiler__key"><% print(caller); %></td>
+                <td class="webprofiler__key"><% print(db); %></td>
+                <td class="webprofiler__key"><% print(target); %></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="wp-executable-actions">
+      <% if (hasArgs == 1) {%><a class="wp-executable-toggle">Swap placeholders</a><%}%>
+      <a class="wp-query-copy">Copy query</a>
+      <% if (type == "SELECT") {%><a href="<% print(explainPath); %>" class="use-ajax wp-query-explain">Explain</a><%}%>
     </div>
-
-    <% if (hasArgs == 1) {%><a class="wp-executable-toggle">Swap placeholders</a><%}%>
-    <a class="wp-query-copy">Copy query</a>
-    <% if (type == "SELECT") {%><a href="<% print(explainPath); %>" class="use-ajax">Explain</a><%}%>
-
     <div class="js--explain-target-<% print(qid); %>"></div>
   `);
 

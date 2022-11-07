@@ -6,6 +6,7 @@ namespace Drupal\webprofiler\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\webprofiler\DataCollector\HasPanelInterface;
 use Drupal\webprofiler\Profiler\TemplateManager;
@@ -134,6 +135,8 @@ class DashboardController extends ControllerBase {
         '#profile' => $profile,
       ])
     );
+    $response->addCommand(new InvokeCommand('.webprofiler__collector', 'removeClass', ['active']));
+    $response->addCommand(new InvokeCommand('.webprofiler__collector-' . $name, 'addClass', ['active']));
 
     return $response;
   }

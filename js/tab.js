@@ -3,6 +3,9 @@
  * Tab panel app.
  */
 (function (Drupal) {
+
+  "use strict";
+
   function openTab(name) {
     const contents = document.getElementsByClassName('webprofiler__tabs__content');
     for (let i = 0; i < contents.length; i++) {

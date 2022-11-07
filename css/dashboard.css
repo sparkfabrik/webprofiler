@@ -24,12 +24,21 @@
   color: #55565b;
   font-size: 14px;
   font-weight: bold;
-  padding: 11px 22px;
+  padding: 11px 42px 11px 22px;
+}
+
+.webprofiler__collector.active {
+  background: #f3f4f9;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.webprofiler__collector.active a {
+  color: #003ecc;
 }
 
 .webprofiler__collector:hover {
   border: 1px solid #d4d4d8;
-  padding: 10px 21px;
+  padding: 10px 41px 10px 21px;
 }
 
 .webprofiler__collector a {
@@ -66,6 +75,37 @@
 
 .webprofiler__panel .is-hidden {
   display: none;
+}
+
+.wp-executable-actions {
+  border-bottom: 1px solid #d4d4d8;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+}
+
+.wp-executable-toggle,
+.wp-query-copy,
+.wp-query-explain {
+  background-color: #003ecc;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  padding: 14px 24px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.wp-executable-toggle:hover,
+.wp-query-copy:hover,
+.wp-query-explain:hover {
+  background-color: #002e9a;
+  color: #fff;
+}
+
+.wp-query-explain {
+  text-decoration: none;
 }
 
 #twig-dump pre {

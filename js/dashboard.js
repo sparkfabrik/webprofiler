@@ -16,6 +16,7 @@
           const panel = path.currentQuery['panel'];
           const panel_link = document.querySelector(".webprofiler__collectors [data-collector-name='" + panel + "']");
           panel_link.click();
+          panel_link.parentNode.className += ' active';
         }
       });
     }
