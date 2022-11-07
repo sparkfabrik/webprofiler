@@ -103,7 +103,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return int
    *   The total amount of requested cache CIDS.
    */
-  public function getCacheCidsCount(string $type) {
+  public function getCacheCidsCount(string $type): int {
     return $this->data['total'][$type];
   }
 
@@ -113,7 +113,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return int
    *   The total amount of hit cache CIDS.
    */
-  public function getCacheHitsCount() {
+  public function getCacheHitsCount(): int {
     return $this->getCacheCidsCount(CacheDataCollector::WEBPROFILER_CACHE_HIT);
   }
 
@@ -123,7 +123,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return int
    *   The total amount of miss cache CIDS.
    */
-  public function getCacheMissesCount() {
+  public function getCacheMissesCount(): int {
     return $this->getCacheCidsCount(CacheDataCollector::WEBPROFILER_CACHE_MISS);
   }
 
@@ -136,7 +136,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return array
    *   The total amount of hit cache CIDs keyed by bin.
    */
-  public function cacheCids(string $type) {
+  public function cacheCids(string $type): array {
     $hits = [];
     foreach ($this->data['cache'] as $bin => $caches) {
       $hits[$bin] = 0;
@@ -154,7 +154,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return array
    *   Hit cache CIDs keyed by bin.
    */
-  public function getCacheHits() {
+  public function getCacheHits(): array {
     return $this->cacheCids(CacheDataCollector::WEBPROFILER_CACHE_HIT);
   }
 
@@ -164,7 +164,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @return array
    *   Miss cache CIDs keyed by bin.
    */
-  public function getCacheMisses() {
+  public function getCacheMisses(): array {
     return $this->cacheCids(CacheDataCollector::WEBPROFILER_CACHE_MISS);
   }
 

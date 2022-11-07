@@ -52,9 +52,9 @@
     data-wp-has-args="{% if query.args %}1{% else %}0{% endif %}"
     data-wp-qid="{{ qid }}"
     data-wp-explain-path="{{ path('webprofiler.database.explain', {'token': token, 'qid': qid}) }}"
-    class="wp-db-query {% if slow_query %}slow-query{% endif %}"
+    class="wp-db-query"
   >
-    <pre style="white-space: unset;">
+    <pre style="white-space: unset; border-left: 8px solid {% if slow_query %}darkgoldenrod{% else %}green{% endif %};">
       <code class="wp-query-placeholder language-sql">{{ query.query }}</code>
       {% if query.args %}<code class="wp-query-executable language-sql is-hidden">{{ query_executable(query) }}</code>{% endif %}
     </pre>

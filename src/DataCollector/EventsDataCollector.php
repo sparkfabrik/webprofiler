@@ -136,11 +136,11 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
    */
   public function getPanel(): array {
     $tabs = [
-      'called' => [
+      [
         'label' => 'Called listeners',
         'content' => $this->renderListeners($this->getCalledListeners(), 'Called listeners', TRUE),
       ],
-      'not-called' => [
+      [
         'label' => 'Not called listeners',
         'content' => $this->renderListeners($this->getNotCalledListeners(), 'Not called listeners', FALSE),
       ],

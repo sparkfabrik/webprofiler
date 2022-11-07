@@ -1,17 +1,55 @@
 .webprofiler__dashboard {
-  display: grid;
-  grid-template-columns: 1fr 10fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 10px;
-  grid-row-gap: 0;
+  display: flex;
 }
 
-.webprofiler__collectors {
-  grid-area: 1 / 1 / 2 / 2;
+.webprofiler__info {
+  border: 1px solid #dedfe4;
+  box-shadow: 0 4px 10px 0 #0000001a;
+  font-size: 18px;
+  margin-bottom: 24px;
+  padding: 22px;
+}
+
+.webprofiler__collectors h4 {
+  font-size: 22px;
+}
+
+.webprofiler_collectors_list {
+  display: flex;
+  flex-direction: column;
+  background-color: #fafbfd;
+}
+
+.webprofiler__collector {
+  color: #55565b;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 11px 22px;
+}
+
+.webprofiler__collector:hover {
+  border: 1px solid #d4d4d8;
+  padding: 10px 21px;
+}
+
+.webprofiler__collector a {
+  color: #55565b;
+  text-decoration: none;
 }
 
 .webprofiler__panels {
-  grid-area: 1 / 2 / 2 / 3;
+  margin-left: 44px;
+  flex-grow: 1;
+}
+
+.webprofiler__panels h2 {
+  color: #232429;
+  font-size: 28px;
+}
+
+.webprofiler__panels h3 {
+  color: #232429;
+  font-size: 22px;
 }
 
 .webprofiler__key {
@@ -20,6 +58,10 @@
 
 .webprofiler__value {
   width: 80%;
+}
+
+.webprofiler__panel hr {
+  margin-bottom: 40px;
 }
 
 .webprofiler__panel .is-hidden {

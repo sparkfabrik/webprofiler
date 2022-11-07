@@ -29,3 +29,13 @@ database.highlight:
   css:
     component:
       https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css: { type: external }
+
+tab:
+  version: VERSION
+  css:
+    component:
+      css/tab.css: {}
+  js:
+    js/tab.js: {}
+  dependencies:
+    - core/once

@@ -108,10 +108,21 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
    * {@inheritdoc}
    */
   public function getPanel(): array {
-    return array_merge(
-      $this->renderBlocks($this->getLoadedBlocks(), 'Loaded'),
-      $this->renderBlocks($this->getRenderedBlocks(), 'Rendered'),
-    );
+    $tabs = [
+      [
+        'label' => 'Loaded',
+        'content' => $this->renderBlocks($this->getLoadedBlocks(), 'Loaded'),
+      ],
+      [
+        'label' => 'Rendered',
+        'content' => $this->renderBlocks($this->getRenderedBlocks(), 'Rendered'),
+      ],
+    ];
+
+    return [
+      '#theme' => 'webprofiler_dashboard_tabs',
+      '#tabs' => $tabs,
+    ];
   }
 
   /**
@@ -193,7 +204,6 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
     return [
       $label => [
         '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $label,
         '#data' => [
           '#type' => 'table',
           '#header' => [
@@ -201,15 +211,9 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
             $this->t('Label'),
             $this->t('Region'),
             $this->t('Source'),
-            [
-              'data' => $this->t('Theme'),
-              'class' => [RESPONSIVE_PRIORITY_LOW],
-            ],
+            $this->t('Theme'),
             $this->t('Status'),
-            [
-              'data' => $this->t('Plugin'),
-              'class' => [RESPONSIVE_PRIORITY_LOW],
-            ],
+            $this->t('Plugin'),
           ],
           '#rows' => $rows,
           '#attributes' => [
