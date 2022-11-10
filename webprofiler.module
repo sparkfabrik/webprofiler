@@ -67,6 +67,13 @@ function webprofiler_theme() {
         'tabs' => [],
       ],
     ],
+    'webprofiler_dashboard_frontend' => [
+      'template' => 'Profiler/frontend',
+      'variables' => [
+        'performance' => [],
+        'cwv' => [],
+      ],
+    ],
   ];
 }
 

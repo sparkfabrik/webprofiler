@@ -70,14 +70,14 @@
 
       function addToQueue(metric) {
         switch(metric.name) {
-          case 'CLS':
-            document.getElementById('wp--frontend__cls').innerHTML = metric.value.toFixed(4);
+          case 'LCP':
+            document.getElementById('wp--frontend__lcp').innerHTML = metric.value.toFixed(2) + ' ms';
             break;
           case 'FID':
             document.getElementById('wp--frontend__fid').innerHTML = metric.value.toFixed(2) + ' ms';
             break;
-          case 'LCP':
-            document.getElementById('wp--frontend__lcp').innerHTML = metric.value.toFixed(2) + ' ms';
+          case 'CLS':
+            document.getElementById('wp--frontend__cls').innerHTML = metric.value.toFixed(4);
             break;
         }
         queue.add(metric);
@@ -95,9 +95,9 @@
         }
       }
 
-      webVitals.onCLS(addToQueue);
-      webVitals.onFID(addToQueue);
       webVitals.onLCP(addToQueue);
+      webVitals.onFID(addToQueue);
+      webVitals.onCLS(addToQueue);
 
       // Report all available metrics whenever the page is backgrounded or unloaded.
       addEventListener('visibilitychange', () => {

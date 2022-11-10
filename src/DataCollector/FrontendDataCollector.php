@@ -59,22 +59,12 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
    * {@inheritdoc}
    */
   public function getPanel(): array {
-    return [
+    return
       [
-        '#type' => 'inline_template',
-        '#template' => '{{ data|raw }}',
-        '#context' => [
-          'data' => $this->dumpData($this->cloneVar($this->data['performance'])),
-        ],
-        [
-          '#type' => 'inline_template',
-          '#template' => '{{ data|raw }}',
-          '#context' => [
-            'data' => $this->dumpData($this->cloneVar($this->data['cwv'])),
-          ],
-        ],
-      ],
-    ];
+        '#theme' => 'webprofiler_dashboard_frontend',
+        '#cwv' => $this->data['cwv'],
+        '#performance' => $this->data['performance'],
+      ];
   }
 
 }
