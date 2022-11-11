@@ -5,53 +5,15 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\webprofiler\DumpTrait;
 use Drupal\webprofiler\MethodData;
-use Symfony\Component\VarDumper\Cloner\Data;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Base class for dashboard panels.
  */
 trait PanelTrait {
 
-  use StringTranslationTrait;
-
-  /**
-   * Internal resource to store dumped data.
-   *
-   * @var resource
-   */
-  private $output;
-
-  /**
-   * Dump data using a dumper.
-   *
-   * @param \Symfony\Component\VarDumper\Cloner\Data $data
-   *   The data to dump.
-   * @param int $maxDepth
-   *   The max depth to dump for complex data.
-   *
-   * @return string|string[]
-   *   The string representation of dumped data.
-   */
-  public function dumpData(Data $data, int $maxDepth = 0): array|string {
-    $dumper = new HtmlDumper();
-    $dumper->setOutput($this->output = fopen('php://memory', 'r+b'));
-    $dumper->setTheme('light');
-
-    $file_link_formatter = \Drupal::service('webprofiler.file_link_formatter');
-    $dumper->setDisplayOptions(['fileLinkFormat' => $file_link_formatter]);
-
-    $dumper->dump($data, NULL, [
-      'maxDepth' => $maxDepth,
-    ]);
-
-    $dump = stream_get_contents($this->output, -1, 0);
-    rewind($this->output);
-    ftruncate($this->output, 0);
-
-    return str_replace("\n</pre", '</pre', rtrim($dump));
-  }
+  use StringTranslationTrait, DumpTrait;
 
   /**
    * Render data in an array as HTML table.

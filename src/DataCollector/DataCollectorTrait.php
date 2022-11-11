@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\webprofiler\MethodData;
-use Symfony\Component\VarDumper\Caster\Caster;
-use Symfony\Component\VarDumper\Caster\LinkStub;
-use Symfony\Component\VarDumper\Cloner\Stub;
 
 /**
  * Trait with common code for data collectors.
@@ -81,20 +78,6 @@ trait DataCollectorTrait {
     };
 
     return $max;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected function getCasters(): array {
-    return parent::getCasters() + [
-      MethodData::class => function (MethodData $md, array $a, Stub $stub) {
-          $a[Caster::PREFIX_DYNAMIC . 'link'] = new LinkStub($md->getClass() . '::' . $md->getMethod(),
-            $md->getLine(), 'file://' . $md->getFile());
-
-          return $a;
-      },
-    ];
   }
 
 }

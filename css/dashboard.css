@@ -77,6 +77,12 @@
   display: none;
 }
 
+.webprofiler__cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .webprofiler__card {
   width: 32%;
   display: flex;
@@ -90,11 +96,6 @@
   box-shadow: var(--card-box-shadow);
 }
 
-.webprofiler__cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
 
 .webprofiler__card__title {
   padding: 5px 10px;

@@ -27,6 +27,13 @@
   {% set value = '' %}
   {% set description = '' %}
   {% set unit = '' %}
+  {% set color = 'green' %}
+
+  {% if metric.rating == 'needs-improvement' %}
+    {% set color = 'yellow' %}
+  {% elseif metric.name == 'poor' %}
+    {% set color = 'red' %}
+  {% endif %}
 
   {% if metric.name == 'LCP' %}
     {% set title = 'Largest Contentful Paint' %}
@@ -48,8 +55,12 @@
   <div class="webprofiler__card">
     <div class="webprofiler__card__title">{{ title }}</div>
     <div class="webprofiler__card_content">
-      <div class="webprofiler__cwv_metric__value">{{ value }} {{ unit }}</div>
+      <div class="webprofiler__cwv_metric__value webprofiler__cwv_metric__value--{{ color }}">{{ value }} {{ unit }}</div>
       <div class="webprofiler__cwv_metric__description">{{ description }}</div>
+      <div class="webprofiler__cwv_metric__attribution">
+        <p>Attribution:</p>
+        {{ wp_dump(metric.attribution)|raw }}
+      </div>
     </div>
   </div>
 {% endmacro %}

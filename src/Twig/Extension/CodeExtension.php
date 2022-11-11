@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Twig\Extension;
 
+use Drupal\webprofiler\DumpTrait;
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Twig extension relate to PHP code and used by Webprofiler.
  */
 class CodeExtension extends AbstractExtension {
+
+  use DumpTrait;
 
   /**
    * Formats debug file links.
@@ -37,6 +41,16 @@ class CodeExtension extends AbstractExtension {
     return [
       new TwigFilter('abbr_class', $this->abbrClass(...), ['is_safe' => ['html']]),
       new TwigFilter('file_link', $this->getFileLink(...)),
+
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFunctions(): array {
+    return [
+      new TwigFunction('wp_dump', $this->dump(...)),
     ];
   }
 
@@ -76,6 +90,24 @@ class CodeExtension extends AbstractExtension {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Dump a value.
+   *
+   * @param mixed $value
+   *   The value to dump.
+   *
+   * @return string
+   *   The dumped value.
+   */
+  public function dump(mixed $value): string {
+    try {
+      return $this->dumpData($this->cloneVar($value));
+    }
+    catch (\ErrorException $e) {
+      return '';
+    }
   }
 
 }
