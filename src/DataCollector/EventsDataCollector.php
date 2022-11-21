@@ -65,22 +65,19 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
         }
       }
 
+      $this->data['called_listeners'] = $called_listeners;
+      $this->data['called_listeners_count'] = $count_called;
+
       $count_not_called = 0;
       $not_called_listeners = $this->eventDispatcher->getNotCalledListeners();
       foreach ($not_called_listeners as $not_called_events) {
-        foreach ($not_called_events as $priority) {
-          foreach ($priority as $listener) {
-            $count_not_called++;
-          }
+        foreach ($not_called_events as $not_priority) {
+          $count_not_called += count($not_priority);
         }
       }
 
-      $this->data = [
-        'called_listeners' => $called_listeners,
-        'called_listeners_count' => $count_called,
-        'not_called_listeners' => $not_called_listeners,
-        'not_called_listeners_count' => $count_not_called,
-      ];
+      $this->data['not_called_listeners'] = $not_called_listeners;
+      $this->data['not_called_listeners_count'] = $count_not_called;
     }
   }
 
