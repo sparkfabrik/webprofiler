@@ -455,10 +455,16 @@
             document.getElementById('sfToolbarMainContent-' + token).style.display = 'none';
             document.getElementById('sfToolbarClearer-' + token).style.display = 'none';
             document.getElementById('sfMiniToolbar-' + token).style.display = 'block';
+
+            /* Added by Drupal */
+            document.body.classList.add('webprofiler-closed');
           } else {
             document.getElementById('sfToolbarMainContent-' + token).style.display = 'block';
             document.getElementById('sfToolbarClearer-' + token).style.display = 'block';
             document.getElementById('sfMiniToolbar-' + token).style.display = 'none';
+
+            /* Added by Drupal */
+            document.body.classList.add('webprofiler-open');
           }
         },
 
@@ -482,6 +488,10 @@
             (p.previousElementSibling || p.previousSibling).style.display = 'none';
             document.getElementById('sfMiniToolbar-' + token).style.display = 'block';
             setPreference('toolbar/displayState', 'none');
+
+            /* Added by Drupal */
+            document.body.classList.remove('webprofiler-open');
+            document.body.classList.add('webprofiler-closed');
           });
 
           var showButton = document.getElementById('sfToolbarMiniToggler-' + token);
@@ -503,6 +513,10 @@
             }
 
             setPreference('toolbar/displayState', 'block');
+
+            /* Added by Drupal */
+            document.body.classList.add('webprofiler-open');
+            document.body.classList.remove('webprofiler-closed');
           });
         },
 
@@ -611,6 +625,9 @@
                   dumpInfo.style.minHeight = '';
                 });
               }
+
+              /* Added by Drupal */
+              document.body.classList.add('webprofiler');
             },
             function(xhr) {
               if (xhr.status !== 0 && !options.stop) {
