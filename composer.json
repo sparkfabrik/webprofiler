@@ -1,11 +1,11 @@
 {
     "name": "drupal/webprofiler",
-    "description": "Drupal Webprofiler.",
+    "description": "Extract, collect, store and display profiling information for Drupal.",
     "type": "drupal-module",
     "support": {
-        "issues": "https://www.drupal.org/project/issues/webprofiler",
+        "issues": "https://gitlab.com/drupalspoons/webprofiler/-/issues",
         "slack": "https://app.slack.com/client/T06GX3JTS/C034XBTCHV0",
-        "source": "https://git.drupalcode.org/project/webprofiler"
+        "source": "https://gitlab.com/drupalspoons/webprofiler"
     },
     "license": "GPL-2.0-or-later",
     "authors": [

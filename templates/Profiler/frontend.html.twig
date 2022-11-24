@@ -43,12 +43,12 @@
   {% elseif metric.name == 'FID' %}
     {% set title = 'First Input Delay' %}
     {% set value = (metric.value/1000)|round(3, 'floor') %}
-    {% set description = 'Largest Contentful Paint marks the time at which the largest text or image is painted.' %}
+    {% set description = 'First Input Delay measures the time from when a user first interacts with your site to when the browser is able to respond to that interaction' %}
     {% set unit = 's' %}
   {% elseif metric.name == 'CLS' %}
     {% set title = 'Cumulative Layout Shift' %}
     {% set value = metric.value|round(3, 'floor') %}
-    {% set description = 'Largest Contentful Paint marks the time at which the largest text or image is painted.' %}
+    {% set description = 'Cumulative Layout Shift measures the movement of visible elements within the viewport.' %}
     {% set unit = '' %}
   {% endif %}
 
