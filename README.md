@@ -15,6 +15,18 @@ can lead to some performance issues. For this reason, WebProfiler must not be us
 
 WebProfiler can be downloaded and installed like any other Drupal module.
 
+#### Collect time metrics
+
+To enable the collection of time metrics you need to add this line to the `settings.php` file:
+
+```php
+$settings['tracer_plugin'] = 'stopwatch_tracer';
+```
+
+Anyway a better solution to trace Drupal internals is to use the `tracer` plugin to send
+data to an external trace database like [Grafana Tempo](https://grafana.com/oss/tempo/). You can
+find more information on [this](https://www.youtube.com/watch?v=6UKIbbbflAs) YouTube video.
+
 #### Configuration
 
 After enabling the module, only some widgets are displayed, you can enable all the others in the
