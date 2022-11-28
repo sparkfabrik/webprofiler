@@ -1,6 +1,6 @@
 exclude_paths: "/contextual/*\r\n/toolbar/*\r\n/edit/*\r\n*.js\r\n*.css"
 intercept_redirects: false
-purge_on_cache_clear: 1
+purge_on_cache_clear: true
 active_toolbar_items:
   ajax: ajax
   blocks: blocks
