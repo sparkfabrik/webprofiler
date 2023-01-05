@@ -44,6 +44,70 @@ trait DataCollectorTrait {
   }
 
   /**
+   * Retrieve the context of callable for debugging purposes.
+   *
+   * @param callable $callable
+   *   The callable to retrieve the context for.
+   * 
+   * @return string
+   *   The context of the callable.
+   */
+  private function getCallableContext(callable $callable): string {
+    switch (true) {
+      case \is_string($callable) && \strpos($callable, '::'):
+        $parts = explode('::', $callable);
+        return sprintf('class: %s, static method: %s', $parts[0], $parts[1]);
+      case \is_string($callable):
+        return sprintf('function: %s', $callable);
+      case \is_array($callable) && \is_object($callable[0]):
+        return sprintf('class: %s, method: %s', \get_class($callable[0]), $callable[1]);
+      case \is_array($callable):
+        return sprintf('class: %s, static method: %s', $callable[0], $callable[1]);
+      case $callable instanceof \Closure:
+        try {
+          $reflectedFunction = new \ReflectionFunction($callable);
+          $closureClass = $reflectedFunction->getClosureScopeClass();
+          $closureThis = $reflectedFunction->getClosureThis();
+        } catch (\ReflectionException $e) {
+          return 'closure';
+        }
+
+        return
+          sprintf(
+            'closure this: %s, closure scope: %s, static variables: %s',
+            $closureThis ? \get_class($closureThis) : $reflectedFunction->name,
+            $closureClass ? $closureClass->getName() : $reflectedFunction->name,
+            $this->formatVariablesArray($reflectedFunction->getStaticVariables())
+          );
+      case \is_object($callable):
+        return sprintf('invokable: %s', \get_class($callable));
+      default:
+        return 'unknown';
+    }
+  }
+
+  /**
+   * Format variables array for debugging purposes in order to avoid huge objects dumping.
+   *
+   * @param array $data
+   *   The array to format.
+   * 
+   * @return string
+   *   The formatted array.
+   */
+  private function formatVariablesArray(array $data): string {
+    foreach ($data as $key => $value) {
+      if (\is_object($value)) {
+        $data[$key] = \get_class($value);
+      } elseif (\is_array($value)) {
+        $data[$key] = $this->formatVariablesArray($value);
+      }
+    }
+
+    return implode(', ', $data);
+  }
+
+  /**
    * Convert a numeric value to a human-readable string.
    *
    * @param string $value
