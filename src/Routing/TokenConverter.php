@@ -22,7 +22,7 @@ class TokenConverter implements ParamConverterInterface {
     // more information.
     // phpcs:disable
     /** @var \Drupal\webprofiler\Profiler\Profiler $profiler */
-    $profiler = \Drupal::service('webprofiler.profiler');
+    $profiler = \Drupal::service('webprofiler.profiler'); /** @phpstan-ignore-line */
     // phpcs:enable
 
     if (NULL == $profiler) {

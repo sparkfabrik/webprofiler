@@ -132,7 +132,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
     // When a profile is loaded from storage this object is deserialized and
     // no constructor is called, so we cannot use dependency injection.
     // phpcs:disable
-    $query_sort = \Drupal::configFactory()
+    $query_sort = \Drupal::configFactory() /** @phpstan-ignore-line */
       ->get('webprofiler.settings')
       ->get('query_sort') ?: '';
     // phpcs:enable
@@ -173,7 +173,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
     // When a profile is loaded from storage this object is deserialized and
     // no constructor is called, so we cannot use dependency injection.
     // phpcs:disable
-    return \Drupal::config('webprofiler.settings')->get('query_highlight');
+    return \Drupal::config('webprofiler.settings')->get('query_highlight'); /** @phpstan-ignore-line */
     // php:enable
   }
 

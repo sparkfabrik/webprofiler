@@ -14,12 +14,17 @@ use Drupal\Core\Render\Element;
 class FormBuilderWrapper extends FormBuilder {
 
   /**
+   * List of build forms.
+   *
    * @var array
    */
   private array $buildForms = [];
 
   /**
+   * Return the list of build forms.
+   *
    * @return array
+   *   The list of build forms.
    */
   public function getBuildForm(): array {
     return $this->buildForms;

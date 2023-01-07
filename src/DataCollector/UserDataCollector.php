@@ -79,35 +79,50 @@ class UserDataCollector extends DataCollector {
   }
 
   /**
+   * Return the user name.
+   *
    * @return string
+   *   The user name.
    */
   public function getUserName(): string {
     return $this->data['name'];
   }
 
   /**
+   * Return if the user is authenticated.
+   *
    * @return bool
+   *   TRUE if the user is authenticated.
    */
   public function getAuthenticated(): bool {
     return $this->data['authenticated'];
   }
 
   /**
+   * Return the user roles.
+   *
    * @return array
+   *   The user roles.
    */
   public function getRoles(): array {
     return $this->data['roles'];
   }
 
   /**
+   * Return the user provider.
+   *
    * @return string
+   *   The user provider.
    */
   public function getProvider(): string {
     return $this->data['provider'];
   }
 
   /**
+   * Return the anonymous user name.
+   *
    * @return string
+   *   The anonymous user name.
    */
   public function getAnonymous(): string {
     return $this->data['anonymous'];

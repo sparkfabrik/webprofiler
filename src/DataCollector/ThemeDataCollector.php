@@ -308,7 +308,10 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    *   The twig profile, deserialized from data, if needed.
    */
   private function getProfile(): Profile {
-    return $this->profile ??= unserialize($this->data['twig'], ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]]);
+    return $this->profile ??= unserialize(
+      $this->data['twig'],
+      ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]]
+    );
   }
 
   /**

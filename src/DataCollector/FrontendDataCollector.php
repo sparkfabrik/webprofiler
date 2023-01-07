@@ -60,10 +60,10 @@ class FrontendDataCollector extends DataCollector implements HasPanelInterface {
    */
   public function getPanel(): array {
     return [
-        '#theme' => 'webprofiler_dashboard_frontend',
-        '#cwv' => $this->data['cwv'],
-        '#performance' => $this->data['performance'],
-      ];
+      '#theme' => 'webprofiler_dashboard_frontend',
+      '#cwv' => $this->data['cwv'],
+      '#performance' => $this->data['performance'],
+    ];
   }
 
 }
