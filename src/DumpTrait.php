@@ -16,6 +16,8 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 trait DumpTrait {
 
   /**
+   * Clone a variable into a Data object.
+   *
    * @var \Symfony\Component\VarDumper\Cloner\AbstractCloner
    */
   protected AbstractCloner $cloner;
@@ -89,18 +91,18 @@ trait DumpTrait {
    */
   protected function getCasters(): array {
     return [
-        '*' => function ($v, array $a, Stub $s, $isNested) {
-          if (!$v instanceof Stub) {
-            foreach ($a as $k => $v) {
-              if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
-                $a[$k] = new CutStub($v);
-              }
+      '*' => function ($v, array $a, Stub $s, $isNested) {
+        if (!$v instanceof Stub) {
+          foreach ($a as $k => $v) {
+            if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
+              $a[$k] = new CutStub($v);
             }
           }
+        }
 
           return $a;
-        },
-      ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
+      },
+    ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
   }
 
 }

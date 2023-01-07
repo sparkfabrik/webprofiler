@@ -36,9 +36,9 @@ class TranslationManagerWrapper extends TranslationManager {
 
     // Merge in options defaults.
     $options = $options + [
-        'langcode' => $this->defaultLangcode,
-        'context' => '',
-      ];
+      'langcode' => $this->defaultLangcode,
+      'context' => '',
+    ];
     $translation = $this->getStringTranslation($options['langcode'], $string, $options['context']);
 
     if ($translation) {

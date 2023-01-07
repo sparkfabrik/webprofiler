@@ -82,7 +82,7 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
 
     if (count($forms) == 0) {
       return [
-          '#markup' => '<p>' . $this->t('No forms collected') . '</p>',
+        '#markup' => '<p>' . $this->t('No forms collected') . '</p>',
       ];
     }
 

@@ -42,7 +42,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
       $this->data['routing'][] = [
         'name' => $route_name,
         'path' => $route->getPath(),
-        ];
+      ];
     }
   }
 
@@ -57,6 +57,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
    * Return the number of routes.
    *
    * @return int
+   *   The number of routes.
    */
   public function getRoutesCount(): int {
     return count($this->routing());
@@ -78,25 +79,25 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
     return [
       '#theme' => 'webprofiler_dashboard_section',
       '#data' => [
-      '#type' => 'table',
-      '#header' => [
-        $this->t('Name'),
-        $this->t('Path'),
-      ],
-      '#rows' => array_map(
+        '#type' => 'table',
+        '#header' => [
+          $this->t('Name'),
+          $this->t('Path'),
+        ],
+        '#rows' => array_map(
           function ($data) {
               return [
-              $data['name'],
-              $data['path'],
+                $data['name'],
+                $data['path'],
               ];
           }, $data
-      ),
-      '#attributes' => [
-        'class' => [
-          'webprofiler__table',
+        ),
+        '#attributes' => [
+          'class' => [
+            'webprofiler__table',
+          ],
         ],
-      ],
-      '#sticky' => TRUE,
+        '#sticky' => TRUE,
       ],
     ];
   }

@@ -39,7 +39,7 @@ class StateDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Add a state to the collected data.
    *
-   * @param $key
+   * @param string $key
    *   The state key.
    */
   public function addState($key) {
@@ -50,6 +50,7 @@ class StateDataCollector extends DataCollector implements HasPanelInterface {
    * Twig callback to show all requested state keys.
    *
    * @return int
+   *   The number of state keys.
    */
   public function getStateKeysCount(): int {
     return count($this->data['state_get']);

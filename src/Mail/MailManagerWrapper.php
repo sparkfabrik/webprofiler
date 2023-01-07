@@ -19,6 +19,9 @@ use Drupal\webprofiler\DataCollector\MailDataCollector;
  */
 class MailManagerWrapper extends MailManager {
 
+  /**
+   * MailManagerWrapper constructor.
+   */
   public function __construct(
     \Traversable $namespaces,
     CacheBackendInterface $cache_backend,
@@ -39,7 +42,9 @@ class MailManagerWrapper extends MailManager {
   public function mail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
     $message = $this->mailManager->mail($module, $key, $to, $langcode, $params, $reply, $send);
 
-    $instance = $this->mailManager->getInstance(['module' => $module, 'key' => $key]);
+    $instance = $this->mailManager->getInstance(
+      ['module' => $module, 'key' => $key]
+    );
     $this->mailDataCollector->addMessage($message, $instance);
 
     return $message;

@@ -41,12 +41,12 @@ class MailDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Add a message to the collector.
    *
-   * @param $message
+   * @param array $message
    *   The message to add.
    * @param \Drupal\Core\Mail\MailInterface $mail
    *   The mail plugin used to send the message.
    */
-  public function addMessage($message, MailInterface $mail) {
+  public function addMessage(array $message, MailInterface $mail) {
     $class = get_class($mail);
     $method = $this->getMethodData($class, 'mail');
 
