@@ -40,7 +40,11 @@ class ReportFilterForm extends FormBase {
     $form['method'] = [
       '#type' => 'select',
       '#title' => $this->t('Method'),
-      '#options' => ['- any -' => $this->t('All'), 'GET' => 'GET', 'POST' => 'POST'],
+      '#options' => [
+        '- any -' => $this->t('All'),
+        'GET' => $this->t('GET'),
+        'POST' => $this->t('POST'),
+      ],
       '#default_value' => $this->getRequest()->query->get('method'),
     ];
 

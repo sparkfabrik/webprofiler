@@ -13,8 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
- * ProfilerListener collects data for the current request by listening to the
- * kernel events.
+ * ProfilerListener collects data for the current request.
  */
 class ProfilerListener implements EventSubscriberInterface {
 
@@ -42,7 +41,7 @@ class ProfilerListener implements EventSubscriberInterface {
   /**
    * Collected profiles.
    *
-   * @var \SplObjectStorage<\Symfony\Component\HttpFoundation\Request, \Symfony\Component\HttpKernel\Profiler\Profile>
+   * @var \SplObjectStorage
    */
   private \SplObjectStorage $profiles;
 
@@ -56,7 +55,7 @@ class ProfilerListener implements EventSubscriberInterface {
   /**
    * Store the parents of the current request.
    *
-   * @var \SplObjectStorage<\Symfony\Component\HttpFoundation\Request, \Symfony\Component\HttpFoundation\Request|null>
+   * @var \SplObjectStorage
    */
   private \SplObjectStorage $parents;
 
@@ -149,7 +148,7 @@ class ProfilerListener implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onKernelTerminate(TerminateEvent $event) {
-    // attach children to parents
+    // Attach children to parents.
     foreach ($this->profiles as $request) {
       if (NULL !== $parentRequest = $this->parents[$request]) {
         if (isset($this->profiles[$parentRequest])) {
@@ -158,7 +157,7 @@ class ProfilerListener implements EventSubscriberInterface {
       }
     }
 
-    // save profiles
+    // Save profiles.
     foreach ($this->profiles as $request) {
       $this->profiler->saveProfile($this->profiles[$request]);
     }

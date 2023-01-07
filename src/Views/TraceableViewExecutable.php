@@ -16,7 +16,7 @@ class TraceableViewExecutable extends ViewExecutable {
    *
    * @var float
    */
-  protected float $render_time = -1;
+  protected float $renderTime = -1;
 
   /**
    * Gets the build time.
@@ -45,7 +45,7 @@ class TraceableViewExecutable extends ViewExecutable {
    *   The render time.
    */
   public function getRenderTime(): float {
-    return $this->render_time;
+    return $this->renderTime;
   }
 
   /**
@@ -56,7 +56,7 @@ class TraceableViewExecutable extends ViewExecutable {
 
     $output = parent::render($display_id);
 
-    $this->render_time = microtime(TRUE) - $start;
+    $this->renderTime = microtime(TRUE) - $start;
 
     return $output;
   }

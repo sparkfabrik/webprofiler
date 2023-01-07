@@ -125,28 +125,40 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Returns the number of completed requests.
+   *
    * @return int
+   *   The number of completed requests.
    */
   public function getCompletedRequestsCount(): int {
     return count($this->getCompletedRequests());
   }
 
   /**
+   * Returns the completed requests.
+   *
    * @return array
+   *   The completed requests.
    */
   public function getCompletedRequests(): array {
     return $this->data['completed'];
   }
 
   /**
+   * The number of failed requests.
+   *
    * @return int
+   *   The number of failed requests.
    */
   public function getFailedRequestsCount(): int {
     return count($this->getFailedRequests());
   }
 
   /**
+   * Returns the failed requests.
+   *
    * @return array
+   *   The failed requests.
    */
   public function getFailedRequests(): array {
     return $this->data['failed'];
