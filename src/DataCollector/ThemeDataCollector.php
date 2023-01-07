@@ -94,13 +94,13 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     ];
 
     $this->data['twig_extensions'] = [
-      'filters' => array_map(function(TwigFilter $filter) {
+      'filters' => array_map(function (TwigFilter $filter) {
         return [
           'name' => $filter->getName(),
           'callable' => $this->getCallableContext($filter->getCallable()),
         ];
       }, $this->twig->getFilters()),
-      'functions' => array_map(function(TwigFunction $function) {
+      'functions' => array_map(function (TwigFunction $function) {
         return [
           'name' => $function->getName(),
           'callable' => $this->getCallableContext($function->getCallable()),
