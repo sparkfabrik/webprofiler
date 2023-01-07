@@ -211,7 +211,7 @@ services:
 
   webprofiler.theme:
     class: Drupal\webprofiler\DataCollector\ThemeDataCollector
-    arguments: ['@theme.manager', '@theme.negotiator', '@tracer.twig_profile']
+    arguments: ['@theme.manager', '@theme.negotiator', '@twig', '@tracer.twig_profile']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 250 }
 

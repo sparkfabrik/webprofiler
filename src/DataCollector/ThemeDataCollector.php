@@ -7,6 +7,7 @@ namespace Drupal\webprofiler\DataCollector;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Template\TwigEnvironment;
 use Drupal\webprofiler\Theme\ThemeNegotiatorWrapper;
 use Twig\Markup;
 use Twig\Profiler\Dumper\HtmlDumper;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Twig\Profiler\Profile;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Collects theme data.
@@ -44,12 +47,15 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    *   The theme manager.
    * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $themeNegotiator
    *   The theme negotiator.
+   * @param \Drupal\Core\Template\TwigEnvironment $twig
+   *   The Twig service.
    * @param \Twig\Profiler\Profile $profile
    *   The twig profile.
    */
   public function __construct(
     private readonly ThemeManagerInterface $themeManager,
     private readonly ThemeNegotiatorInterface $themeNegotiator,
+    private readonly TwigEnvironment $twig,
     Profile $profile
   ) {
     $this->profile = $profile;
@@ -85,6 +91,22 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
       'styleSheetsRemove' => $activeTheme->getLibrariesOverride(),
       'libraries' => $activeTheme->getLibraries(),
       'regions' => $activeTheme->getRegions(),
+    ];
+
+    $this->data['twig_extensions'] = [
+      'filters' => array_map(function (TwigFilter $filter) {
+        return [
+          'name' => $filter->getName(),
+          'callable' => $this->getCallableContext($filter->getCallable()),
+        ];
+      }, $this->twig->getFilters()),
+      'functions' => array_map(function (TwigFunction $function) {
+        return [
+          'name' => $function->getName(),
+          'callable' => $this->getCallableContext($function->getCallable()),
+        ];
+      }, $this->twig->getFunctions()),
+      'globals' => $this->twig->getGlobals(),
     ];
 
     if ($this->themeNegotiator instanceof ThemeNegotiatorWrapper) {
@@ -162,15 +184,95 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   }
 
   /**
+   * Return the number of twig filters.
+   *
+   * @return int
+   *   The number of twig filters.
+   */
+  public function getTwigFiltersCount(): int {
+    return count($this->data['twig_extensions']['filters']);
+  }
+
+  /**
+   * Return the number of twig functions.
+   *
+   * @return int
+   *   The number of twig functions.
+   */
+  public function getTwigFunctionsCount(): int {
+    return count($this->data['twig_extensions']['functions']);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getPanel(): array {
+    $filters = $this->data['twig_extensions']['filters'];
+    ksort($filters);
+
+    $functions = $this->data['twig_extensions']['functions'];
+    ksort($functions);
+
     return [
       [
         '#type' => 'inline_template',
         '#template' => '{{ data|raw }}',
         '#context' => [
           'data' => $this->dumpData($this->cloneVar($this->data['activeTheme'])),
+        ],
+      ],
+      [
+        '#theme' => 'webprofiler_dashboard_section',
+        '#title' => $this->t('Twig filters'),
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [
+            $this->t('Name'),
+            $this->t('Callable'),
+          ],
+          '#rows' => $filters,
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+          '#sticky' => TRUE,
+        ],
+      ],
+      [
+        '#theme' => 'webprofiler_dashboard_section',
+        '#title' => $this->t('Twig functions'),
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [
+            $this->t('Name'),
+            $this->t('Callable'),
+          ],
+          '#rows' => $functions,
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+          '#sticky' => TRUE,
+        ],
+      ],
+      [
+        '#theme' => 'webprofiler_dashboard_section',
+        '#title' => $this->t('Twig globals'),
+        '#data' => [
+          '#type' => 'table',
+          '#header' => [
+            $this->t('Name'),
+          ],
+          '#rows' => $this->data['twig_extensions']['globals'],
+          '#attributes' => [
+            'class' => [
+              'webprofiler__table',
+            ],
+          ],
+          '#sticky' => TRUE,
+          '#empty' => $this->t('No Twig globals defined'),
         ],
       ],
       [
@@ -206,7 +308,10 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    *   The twig profile, deserialized from data, if needed.
    */
   private function getProfile(): Profile {
-    return $this->profile ??= unserialize($this->data['twig'], ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]]);
+    return $this->profile ??= unserialize(
+      $this->data['twig'],
+      ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]]
+    );
   }
 
   /**
