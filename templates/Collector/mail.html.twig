@@ -1,14 +1,14 @@
 {% block toolbar %}
 
   {% set icon %}
-    {{ include('@webprofiler/Icon/013--mail.svg') }}
+    {{ include('@webprofiler/Icon/mailer.svg') }}
     <span class="sf-toolbar-value">{{ collector.getMailSent }}</span>
   {% endset %}
 
   {% set text %}
     <div class="sf-toolbar-info-piece">
       <b>{{ 'Mail sent'|t }}</b>
-      <span>{{ collector.getMailSent }}</span>
+      <span class="sf-toolbar-status">{{ collector.getMailSent }}</span>
     </div>
   {% endset %}
 

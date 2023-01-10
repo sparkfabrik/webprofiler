@@ -8,11 +8,11 @@
   {% set text %}
     <div class="sf-toolbar-info-piece">
       <b>{{ 'Modules'|t }}</b>
-      <span>{{ collector.getModulesCount }}</span>
+      <span class="sf-toolbar-status">{{ collector.getModulesCount }}</span>
     </div>
     <div class="sf-toolbar-info-piece">
       <b>{{ 'Themes'|t }}</b>
-      <span>{{ collector.getThemesCount }}</span>
+      <span class="sf-toolbar-status">{{ collector.getThemesCount }}</span>
     </div>
   {% endset %}
 

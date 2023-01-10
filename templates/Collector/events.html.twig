@@ -1,18 +1,18 @@
 {% block toolbar %}
 
   {% set icon %}
-    {{ include('@webprofiler/Icon/009--events.svg') }}
+    {{ include('@webprofiler/Icon/event.svg') }}
     <span class="sf-toolbar-value">{{ collector.getCalledListenersCount }}</span>
   {% endset %}
 
   {% set text %}
     <div class="sf-toolbar-info-piece">
       <b>{{ 'Called'|t }}</b>
-      <span>{{ collector.getCalledListenersCount }}</span>
+      <span class="sf-toolbar-status">{{ collector.getCalledListenersCount }}</span>
     </div>
     <div class="sf-toolbar-info-piece">
       <b>{{ 'Not called'|t }}</b>
-      <span>{{ collector.getNotCalledListenersCount }}</span>
+      <span class="sf-toolbar-status">{{ collector.getNotCalledListenersCount }}</span>
     </div>
   {% endset %}
 

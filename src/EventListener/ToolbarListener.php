@@ -83,7 +83,7 @@ class ToolbarListener implements EventSubscriberInterface {
         );
       }
       catch (\Exception $e) {
-        $response->headers->set('X-Debug-Error', \get_class($e) . ': ' . preg_replace('/\s+/', ' ', $e->getMessage()));
+        $response->headers->set('X-Debug-Error', $e::class . ': ' . preg_replace('/\s+/', ' ', $e->getMessage()));
       }
     }
 

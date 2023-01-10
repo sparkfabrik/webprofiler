@@ -8,11 +8,11 @@
   {% set text %}
     <div class="sf-toolbar-info-piece">
       <b>Loaded blocks</b>
-      <span>{{ collector.getLoadedBlocksCount }} {% if collector.getLoadedBlocksCount == 0 %}({{ 'Maybe some are cached'|t }}){% endif %}</span>
+      <span class="sf-toolbar-status">{{ collector.getLoadedBlocksCount }} {% if collector.getLoadedBlocksCount == 0 %}({{ 'Maybe some are cached'|t }}){% endif %}</span>
     </div>
     <div class="sf-toolbar-info-piece">
       <b>Rendered blocks</b>
-      <span>{{ collector.getRenderedBlocksCount }} {% if collector.getRenderedBlocksCount == 0 %}({{ 'Maybe some are cached'|t }}){% endif %}</span>
+      <span class="sf-toolbar-status">{{ collector.getRenderedBlocksCount }} {% if collector.getRenderedBlocksCount == 0 %}({{ 'Maybe some are cached'|t }}){% endif %}</span>
     </div>
   {% endset %}
 
