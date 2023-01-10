@@ -21,7 +21,7 @@ class ConfigDataCollector extends DataCollector implements HasPanelInterface {
    * {@inheritdoc}
    */
   public function getName(): string {
-    return 'config';
+    return 'configs';
   }
 
   /**

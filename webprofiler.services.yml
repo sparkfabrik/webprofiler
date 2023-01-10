@@ -178,64 +178,64 @@ services:
   webprofiler.config:
     class: Drupal\webprofiler\DataCollector\ConfigDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'config', label: 'Config', priority: 550 }
+      - { name: data_collector, template: '@webprofiler/Collector/config.html.twig', id: 'configs', label: 'Config', priority: 550 }
+
+  webprofiler.state:
+    class: Drupal\webprofiler\DataCollector\StateDataCollector
+    tags:
+      - { name: data_collector, template: '@webprofiler/Collector/state.html.twig', id: 'state', label: 'State', priority: 500 }
 
   webprofiler.events:
     class: Drupal\webprofiler\DataCollector\EventsDataCollector
     arguments: ['@event_dispatcher']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 500 }
+      - { name: data_collector, template: '@webprofiler/Collector/events.html.twig', id: 'events', label: 'Events', priority: 450 }
 
   webprofiler.extensions:
     class: Drupal\webprofiler\DataCollector\ExtensionsDataCollector
     arguments: ['@module_handler', '@theme_handler', '%app.root%']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 450 }
+      - { name: data_collector, template: '@webprofiler/Collector/extensions.html.twig', id: 'extensions', label: 'Extensions', priority: 400 }
 
   webprofiler.forms:
     class: Drupal\webprofiler\DataCollector\FormsDataCollector
     arguments: ['@form_builder']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/forms.html.twig', id: 'forms', label: 'Forms', priority: 400 }
+      - { name: data_collector, template: '@webprofiler/Collector/forms.html.twig', id: 'forms', label: 'Forms', priority: 350 }
 
   webprofiler.http:
     class: Drupal\webprofiler\DataCollector\HttpDataCollector
     arguments: ['@http_client_middleware.webprofiler']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 350 }
+      - { name: data_collector, template: '@webprofiler/Collector/http.html.twig', id: 'http', label: 'Http', priority: 300 }
 
   webprofiler.frontend:
     class: Drupal\webprofiler\DataCollector\FrontendDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/frontend.html.twig', id: 'frontend', label: 'Frontend', priority: 300 }
+      - { name: data_collector, template: '@webprofiler/Collector/frontend.html.twig', id: 'frontend', label: 'Frontend', priority: 250 }
 
   webprofiler.theme:
     class: Drupal\webprofiler\DataCollector\ThemeDataCollector
     arguments: ['@theme.manager', '@theme.negotiator', '@twig', '@tracer.twig_profile']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 250 }
+      - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 200 }
 
   webprofiler.routing:
     class: Drupal\webprofiler\DataCollector\RoutingDataCollector
     arguments: ['@router.route_provider']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/routing.html.twig', id: 'routing', label: 'Routing', priority: 200 }
-
-  webprofiler.state:
-    class: Drupal\webprofiler\DataCollector\StateDataCollector
-    tags:
-      - { name: data_collector, template: '@webprofiler/Collector/state.html.twig', id: 'state', label: 'State', priority: 150 }
+      - { name: data_collector, template: '@webprofiler/Collector/routing.html.twig', id: 'routing', label: 'Routing', priority: 100 }
 
   webprofiler.translations:
     class: Drupal\webprofiler\DataCollector\TranslationsDataCollector
     arguments: ['@string_translation']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/translations.html.twig', id: 'translations', label: 'Translations', priority: 100 }
+      - { name: data_collector, template: '@webprofiler/Collector/translations.html.twig', id: 'translations', label: 'Translations', priority: 50 }
 
   webprofiler.mail:
     class: Drupal\webprofiler\DataCollector\MailDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/mail.html.twig', id: 'mail', label: 'Mail', priority: 50 }
+      - { name: data_collector, template: '@webprofiler/Collector/mail.html.twig', id: 'mail', label: 'Mail', priority: 0 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector
