@@ -8,11 +8,11 @@
   {% set text %}
     <div class="sf-toolbar-info-piece">
       <b>Initialized</b>
-      <span>{{ collector.getInitializedServicesCount }} ({{ collector.getInitializedServicesWithoutWebprofilerCount }})</span>
+      <span class="sf-toolbar-status">{{ collector.getInitializedServicesCount }} ({{ collector.getInitializedServicesWithoutWebprofilerCount }})</span>
     </div>
     <div class="sf-toolbar-info-piece">
       <b>Available</b>
-      <span>{{ collector.getServicesCount }}</span>
+      <span class="sf-toolbar-status">{{ collector.getServicesCount }}</span>
     </div>
   {% endset %}
 
