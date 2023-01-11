@@ -73,31 +73,100 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    * {@inheritdoc}
    */
   public function getPanel(): array {
-    return array_merge(
-      $this->renderBigPipe($this->data['big_pipe']),
-      $this->renderTable(
-        $this->getRequestQuery()->all(), 'GET parameters'),
-      $this->renderTable(
-        $this->getRequestRequest()->all(), 'POST parameters'),
-      $this->renderTable(
-        $this->getRequestAttributes()->all(), 'Request attributes'),
-      $this->renderAccessChecks(
-        $this->getAccessChecks()->all(), 'Access check'),
-      $this->renderTable(
-        $this->getRequestCookies()->all(), 'Cookies'),
-      $this->renderTable(
-        $this->getSessionMetadata(), 'Session Metadata'),
-      $this->renderTable(
-        $this->getSessionAttributes(), 'Session Attributes'),
-      $this->renderTable(
-        $this->getRequestHeaders()->all(), 'Request headers'),
-      $this->renderContent(
-        $this->getContent(), 'Raw content'),
-      $this->renderTable(
-        $this->getRequestServer()->all(), 'Server Parameters'),
-      $this->renderTable(
-        $this->getResponseHeaders()->all(), 'Response headers')
-    );
+    $tabs = [];
+
+    if ($this->data['big_pipe']) {
+      $tabs[] = [
+        'label' => 'Big Pipe',
+        'content' => $this->renderBigPipe($this->data['big_pipe']),
+      ];
+    }
+
+    $tabs[] = [
+      'label' => 'Request attributes',
+      'content' => $this->renderTable(
+        $this->getRequestAttributes()->all()),
+    ];
+
+    if ($this->getRequestQuery()->count() > 0) {
+      $tabs[] = [
+        'label' => 'GET',
+        'content' => $this->renderTable(
+          $this->getRequestQuery()->all()),
+      ];
+    }
+
+    if ($this->getRequestRequest()->count() > 0) {
+      $tabs[] = [
+        'label' => 'POST',
+        'content' => $this->renderTable(
+          $this->getRequestRequest()->all()),
+      ];
+    }
+
+    if ($this->getContent()) {
+      $tabs[] = [
+        'label' => 'Raw content',
+        'content' => $this->renderContent($this->getContent()),
+      ];
+    }
+
+    if ($this->getAccessChecks()->count() > 0) {
+      $tabs[] = [
+        'label' => 'Access check',
+        'content' => $this->renderTable(
+          $this->getAccessChecks()->all()),
+      ];
+    }
+
+    if ($this->getRequestCookies()->count() > 0) {
+      $tabs[] = [
+        'label' => 'Cookies',
+        'content' => $this->renderTable(
+          $this->getRequestCookies()->all()),
+      ];
+    }
+
+    $tabs[] = [
+      'label' => 'Session Metadata',
+      'content' => $this->renderTable(
+        $this->getSessionMetadata()),
+    ];
+
+    $tabs[] = [
+      'label' => 'Session Attributes',
+      'content' => $this->renderTable(
+        $this->getSessionAttributes()),
+    ];
+
+    if ($this->getRequestCookies()->count() > 0) {
+      $tabs[] = [
+        'label' => 'Request headers',
+        'content' => $this->renderTable(
+          $this->getRequestHeaders()->all()),
+      ];
+    }
+
+    if ($this->getRequestCookies()->count() > 0) {
+      $tabs[] = [
+        'label' => 'Server Parameters',
+        'content' => $this->renderTable(
+          $this->getRequestServer()->all()),
+      ];
+    }
+
+    if ($this->getRequestCookies()->count() > 0) {
+      $tabs[] = [
+        'label' => 'Response headers',
+        'content' => $this->renderTable(
+          $this->getResponseHeaders()->all()),
+      ];
+    }
+
+    return [
+      '#theme' => 'webprofiler_dashboard_tabs',
+      '#tabs' => $tabs,
+    ];
   }
 
   /**
@@ -110,7 +179,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    */
   public function addAccessCheck(
     string $service_id,
-    array $callable
+    array  $callable
   ) {
     $this->accessChecks[] = [
       self::SERVICE_ID => $service_id,
@@ -159,79 +228,16 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    *
    * @param string $content
    *   The content of a POST request.
-   * @param string $label
-   *   The section's label.
    *
    * @return array
    *   The render array of the content.
    */
-  private function renderContent(string $content, string $label): array {
+  private function renderContent(string $content): array {
     return [
-      $label => [
-        '#type' => 'inline_template',
-        '#template' => '<h3>{{ title }}</h3> {% if data %}{{ data|raw }}{% else %}<em>{{ "No data"|t }}</em>{% endif %}',
-        '#context' => [
-          'title' => $label,
-          'data' => $content,
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * Render the list of access checks.
-   *
-   * @param array $accessChecks
-   *   The list of access checks.
-   * @param string $label
-   *   The section label.
-   *
-   * @return array
-   *   The render array of the list of access checks.
-   */
-  private function renderAccessChecks(array $accessChecks, $label): array {
-    if (count($accessChecks) == 0) {
-      return [];
-    }
-
-    $rows = [];
-    /** @var \Symfony\Component\VarDumper\Cloner\Data $el */
-    foreach ($accessChecks as $el) {
-      $service_id = $el->getValue()[RequestDataCollector::SERVICE_ID];
-      $callable = $el->getValue()[RequestDataCollector::CALLABLE];
-
-      $rows[] = [
-        [
-          'data' => $service_id->getValue(),
-          'class' => 'webprofiler__key',
-        ],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($callable),
-            ],
-          ],
-          'class' => 'webprofiler__value',
-        ],
-      ];
-    }
-
-    return [
-      $label => [
-        '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $label,
-        '#data' => [
-          '#type' => 'table',
-          '#header' => [$this->t('Name'), $this->t('Value')],
-          '#rows' => $rows,
-          '#attributes' => [
-            'class' => [
-              'webprofiler__table',
-            ],
-          ],
-        ],
+      '#type' => 'inline_template',
+      '#template' => '<h3>{{ title }}</h3> {% if data %}{{ data|raw }}{% else %}<em>{{ "No data"|t }}</em>{% endif %}',
+      '#context' => [
+        'data' => $content,
       ],
     ];
   }

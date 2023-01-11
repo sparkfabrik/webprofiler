@@ -20,7 +20,7 @@ trait PanelTrait {
    *
    * @param array $data
    *   The data to render.
-   * @param string $label
+   * @param string|null $label
    *   The table label.
    * @param callable|null $element_converter
    *   An optional function to convert all elements of data before rendering.
@@ -31,7 +31,7 @@ trait PanelTrait {
    */
   protected function renderTable(
     array $data,
-    string $label,
+    ?string $label = NULL,
     callable $element_converter = NULL
   ): array {
     if (count($data) == 0) {
@@ -62,22 +62,26 @@ trait PanelTrait {
       ];
     }
 
-    return [
-      $label => [
-        '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $label,
-        '#data' => [
-          '#type' => 'table',
-          '#header' => [$this->t('Name'), $this->t('Value')],
-          '#rows' => $rows,
-          '#attributes' => [
-            'class' => [
-              'webprofiler__table',
-            ],
+    $section = [
+      '#theme' => 'webprofiler_dashboard_section',
+      '#title' => $label,
+      '#data' => [
+        '#type' => 'table',
+        '#header' => [$this->t('Name'), $this->t('Value')],
+        '#rows' => $rows,
+        '#attributes' => [
+          'class' => [
+            'webprofiler__table',
           ],
         ],
       ],
     ];
+
+    if ($label != NULL) {
+      $section['#title'] = $label;
+    }
+
+    return $section;
   }
 
   /**
