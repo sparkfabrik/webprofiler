@@ -242,3 +242,13 @@ services:
     arguments: ['@redirect.destination', '%install_profile%']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }
+
+  webprofiler.error_handler:
+    class: Symfony\Component\HttpKernel\EventListener\ErrorListener
+    arguments: ['\Drupal\webprofiler\Controller\ErrorController', '@logger.channel.webprofiler', true]
+    tags:
+      - { name: event_subscriber }
+
+  webprofiler.error_renderer:
+    class: Drupal\webprofiler\ErrorRenderer\HtmlErrorRenderer
+    arguments: [true, null, '@webprofiler.file_link_formatter']
