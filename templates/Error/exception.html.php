@@ -21,8 +21,16 @@
             <div class="exception-illustration hidden-xs-down">
                 <?= $this->include('assets/images/symfony-ghost.svg.php'); ?>
             </div>
+
+          <div class="exception-toggle-theme">
+            <div class="toggle">
+              <input type="checkbox" id="toggle" checked />
+              <label for="toggle"></label>
+            </div>
+          </div>
         </div>
     </div>
+
 </div>
 
 <div class="container">

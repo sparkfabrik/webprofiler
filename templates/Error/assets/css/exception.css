@@ -138,11 +138,20 @@ thead.sf-toggle-content.sf-toggle-visible, tbody.sf-toggle-content.sf-toggle-vis
 .tab-navigation li.disabled { background: var(--tab-disabled-background); color: var(--tab-disabled-color); }
 .tab-navigation li.active { background: var(--tab-active-background); color: var(--tab-active-color); z-index: 1100; }
 .tab-navigation li.active .badge { background-color: var(--base-5); color: var(--base-2); }
+.tab-content { position: relative; }
 .tab-content > *:first-child { margin-top: 0; }
+
+.exception-toggle-theme { position: relative; width: 0; top: 100px; right: 60px; display: flex; align-items: center; }
+.exception-toggle-theme .label { margin-right: 10px; }
+.toggle input[type=checkbox] { display: none; }
+.toggle label { background-color: #777; border: 2px solid #555; border-radius: 50px; cursor: pointer; display: inline-block; position: relative; transition: all ease-in-out 0.3s; width: 50px;height: 25px; }
+.toggle label::after {  background-color: #555;  border-radius: 50%;  content: ' ';  cursor: pointer;  display: inline-block;  position: absolute;  left: 2px;  top: 2px;  transition: all ease-in-out 0.3s;  width: 21px;  height: 21px; }
+.toggle input[type=checkbox]:checked ~ label {  background-color: #0678be;  border-color: #006dc9; }
+.toggle input[type=checkbox]:checked ~ label::after {  background-color: #0054B0;  transform: translateX(25px); }
+
 .tab-navigation li .badge.status-warning { background: var(--color-warning); color: #FFF; }
 .tab-navigation li .badge.status-error { background: var(--background-error); color: #FFF; }
 .sf-tabs .tab:not(:first-child) { display: none; }
-
 [data-filters] { position: relative; }
 [data-filtered] { cursor: pointer; }
 [data-filtered]:after { content: '\00a0\25BE'; }

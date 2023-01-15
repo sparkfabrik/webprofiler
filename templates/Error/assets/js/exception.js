@@ -293,5 +293,20 @@ if (typeof Sfjs === 'undefined') {
         Sfjs.createToggles();
         Sfjs.createFilters();
     });
+
+  const toggle = document.getElementById('toggle');
+  const body = document.body;
+
+  toggle.addEventListener('input', (e) => {
+    const isChecked = e.target.checked;
+
+    if(isChecked) {
+      body.classList.add('theme-dark');
+      body.classList.remove('theme-light');
+    } else {
+      body.classList.add('theme-light');
+      body.classList.remove('theme-dark');
+    }
+  });
 }
 /*]]>*/
