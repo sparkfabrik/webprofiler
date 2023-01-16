@@ -2,6 +2,7 @@
 
 namespace Drupal\webprofiler\ErrorRenderer;
 
+use Drupal\monolog\Logger\LoggerInterfacesAdapter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -10,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
+/**
+ *
+ */
 class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer {
 
   private const GHOST_ADDONS = [
@@ -128,12 +132,17 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
 
     $exceptionMessage = $this->escape($exception->getMessage());
 
+    $logger = $this->logger;
+    if ($this->logger instanceof LoggerInterfacesAdapter) {
+      $logger = $this->logger->getAdaptedLogger();
+    }
+
     return $this->include($debugTemplate, [
       'exception' => $exception,
       'exceptionMessage' => $exceptionMessage,
       'statusText' => $statusText,
       'statusCode' => $statusCode,
-      'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : NULL,
+      'logger' => $logger instanceof DebugLoggerInterface ? $logger : NULL,
       'currentContent' => \is_string($this->outputBuffer) ? $this->outputBuffer : ($this->outputBuffer)(),
     ]);
   }

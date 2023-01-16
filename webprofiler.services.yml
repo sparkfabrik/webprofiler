@@ -4,6 +4,11 @@ services:
     factory: logger.factory:get
     arguments: ['webprofiler']
 
+  logger.channel.debug:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: [ 'debug' ]
+
   webprofiler.config_entity_storage_decorator_generator:
     class: Drupal\webprofiler\Entity\ConfigEntityStorageDecoratorGenerator
     arguments: ['@entity_type.manager']
@@ -243,12 +248,18 @@ services:
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }
 
+  # Error handler
   webprofiler.error_handler:
     class: Symfony\Component\HttpKernel\EventListener\ErrorListener
-    arguments: ['\Drupal\webprofiler\Controller\ErrorController', '@logger.channel.webprofiler', true]
+    arguments: ['\Drupal\webprofiler\Controller\ErrorController', '@logger.channel.debug', true]
     tags:
       - { name: event_subscriber }
 
   webprofiler.error_renderer:
     class: Drupal\webprofiler\ErrorRenderer\HtmlErrorRenderer
-    arguments: [true, null, '@webprofiler.file_link_formatter']
+    arguments: [true, null, '@webprofiler.file_link_formatter', null, '', '@logger.channel.debug']
+
+  # Monolog processors.
+  monolog.processor.debug:
+    class: Drupal\webprofiler\Monolog\Processor\DebugProcessor
+    arguments: ['@request_stack']
