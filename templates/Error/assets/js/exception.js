@@ -297,14 +297,17 @@ if (typeof Sfjs === 'undefined') {
   const toggle = document.getElementById('toggle');
   const body = document.body;
 
+  toggle.checked = localStorage.getItem('symfony/profiler/theme') == 'theme-dark';
   toggle.addEventListener('input', (e) => {
     const isChecked = e.target.checked;
 
     if(isChecked) {
       body.classList.add('theme-dark');
+      localStorage.setItem('symfony/profiler/theme', 'theme-dark');
       body.classList.remove('theme-light');
     } else {
       body.classList.add('theme-light');
+      localStorage.setItem('symfony/profiler/theme', 'theme-light');
       body.classList.remove('theme-dark');
     }
   });

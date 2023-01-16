@@ -24,7 +24,7 @@
 
           <div class="exception-toggle-theme">
             <div class="toggle">
-              <input type="checkbox" id="toggle" checked />
+              <input type="checkbox" id="toggle" />
               <label for="toggle"></label>
             </div>
           </div>
