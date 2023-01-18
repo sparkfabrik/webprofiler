@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
+use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
@@ -228,7 +229,7 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
       $process->mustRun();
       $data['abbr_git_commit'] = $process->getOutput();
     }
-    catch (ProcessFailedException | RuntimeException $e) {
+    catch (ProcessFailedException | RuntimeException | LogicException $e) {
       $data['git_commit'] = $data['git_commit_abbr'] = NULL;
     }
   }
