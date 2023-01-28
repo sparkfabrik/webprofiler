@@ -42,7 +42,7 @@ class DatabaseProfilerStorage implements ProfilerStorageInterface {
       $end = time();
     }
 
-    if ($ip = preg_replace('/[^\d\.]/', '', $ip)) {
+    if ($ip != NULL && $ip = preg_replace('/[^\d\.]/', '', $ip)) {
       $select->condition('ip', '%' . $this->database->escapeLike($ip) . '%', 'LIKE');
     }
 
