@@ -37,6 +37,7 @@ class TraceableEventDispatcher extends ContainerAwareEventDispatcher implements 
   public function __construct(ContainerInterface $container, array $listeners = []) {
     parent::__construct($container, $listeners);
     $this->notCalledListeners = $listeners;
+    $this->calledListeners = [];
   }
 
   /**
@@ -95,7 +96,7 @@ class TraceableEventDispatcher extends ContainerAwareEventDispatcher implements 
       }
 
       // Invoke listeners and resolve callables if necessary.
-      foreach ($this->listeners[$event_name] as &$definitions) {
+      foreach ($this->listeners[$event_name] as $priority => &$definitions) {
         foreach ($definitions as &$definition) {
           if (!isset($definition['callable'])) {
             $definition['callable'] = [
@@ -106,6 +107,8 @@ class TraceableEventDispatcher extends ContainerAwareEventDispatcher implements 
           if (is_array($definition['callable']) && isset($definition['callable'][0]) && $definition['callable'][0] instanceof \Closure) {
             $definition['callable'][0] = $definition['callable'][0]();
           }
+
+          $this->addCalledListener($definition, $event_name, $priority);
 
           call_user_func($definition['callable'], $event, $event_name, $this);
           if ($event->isPropagationStopped()) {
