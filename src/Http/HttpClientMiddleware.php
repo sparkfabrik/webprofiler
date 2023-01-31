@@ -30,6 +30,13 @@ class HttpClientMiddleware {
   private array $failedRequests;
 
   /**
+   * Store the transfer stats of the current request.
+   *
+   * @var \GuzzleHttp\TransferStats
+   */
+  private TransferStats $stats;
+
+  /**
    * HttpClientMiddleware constructor.
    */
   public function __construct() {
@@ -53,8 +60,7 @@ class HttpClientMiddleware {
         };
 
         $options['on_stats'] = function (TransferStats $stats) use ($request, $next) {
-          // @phpstan-ignore-next-line
-          $request->stats = $stats;
+          $this->stats = $stats;
           $next($stats);
         };
 
@@ -64,6 +70,7 @@ class HttpClientMiddleware {
             $this->completedRequests[] = [
               'request' => $request,
               'response' => $response,
+              'stats' => $this->stats,
             ];
 
             return $response;

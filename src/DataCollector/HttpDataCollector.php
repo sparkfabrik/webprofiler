@@ -55,8 +55,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $data['response'];
       /** @var \GuzzleHttp\TransferStats $stats */
-      // @phpstan-ignore-next-line
-      $stats = $request->stats;
+      $stats = $data['stats'];
 
       $uri = $request->getUri();
       $this->data['completed'][] = [
