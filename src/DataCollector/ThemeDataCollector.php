@@ -56,7 +56,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     private readonly ThemeManagerInterface $themeManager,
     private readonly ThemeNegotiatorInterface $themeNegotiator,
     private readonly TwigEnvironment $twig,
-    Profile $profile
+    Profile $profile,
   ) {
     $this->profile = $profile;
   }
@@ -213,17 +213,23 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     $functions = $this->data['twig_extensions']['functions'];
     ksort($functions);
 
-    return [
-      [
+    $tabs = [];
+
+    $tabs[] = [
+      'label' => 'Theme data',
+      'content' => [
         '#type' => 'inline_template',
         '#template' => '{{ data|raw }}',
         '#context' => [
           'data' => $this->dumpData($this->cloneVar($this->data['activeTheme'])),
         ],
       ],
-      [
+    ];
+
+    $tabs[] = [
+      'label' => 'Twig filters',
+      'content' => [
         '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $this->t('Twig filters'),
         '#data' => [
           '#type' => 'table',
           '#header' => [
@@ -239,9 +245,12 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
           '#sticky' => TRUE,
         ],
       ],
-      [
+    ];
+
+    $tabs[] = [
+      'label' => 'Twig functions',
+      'content' => [
         '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $this->t('Twig functions'),
         '#data' => [
           '#type' => 'table',
           '#header' => [
@@ -257,13 +266,17 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
           '#sticky' => TRUE,
         ],
       ],
-      [
+    ];
+
+    $tabs[] = [
+      'label' => 'Twig globals',
+      'content' => [
         '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $this->t('Twig globals'),
         '#data' => [
           '#type' => 'table',
           '#header' => [
             $this->t('Name'),
+            $this->t('Callable'),
           ],
           '#rows' => $this->data['twig_extensions']['globals'],
           '#attributes' => [
@@ -272,12 +285,14 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
             ],
           ],
           '#sticky' => TRUE,
-          '#empty' => $this->t('No Twig globals defined'),
         ],
       ],
-      [
+    ];
+
+    $tabs[] = [
+      'label' => 'Rendering Call Graph',
+      'content' => [
         '#theme' => 'webprofiler_dashboard_section',
-        '#title' => $this->t('Rendering Call Graph'),
         '#data' => [
           '#type' => 'inline_template',
           '#template' => '<div id="twig-dump">{{ data|raw }}</div>',
@@ -286,6 +301,11 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
           ],
         ],
       ],
+    ];
+
+    return [
+      '#theme' => 'webprofiler_dashboard_tabs',
+      '#tabs' => $tabs,
     ];
   }
 

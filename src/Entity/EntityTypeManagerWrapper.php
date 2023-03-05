@@ -137,6 +137,16 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
   }
 
   /**
+   * Prevents the service container from being serialized.
+   *
+   * @return string[]
+   *   The properties to serialize.
+   */
+  public function __sleep() {
+    return ['loaded', 'rendered'];
+  }
+
+  /**
    * Return a decorator for the storage handler.
    *
    * @param string $entity_type
