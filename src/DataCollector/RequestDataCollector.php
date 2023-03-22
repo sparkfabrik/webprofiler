@@ -60,9 +60,14 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
     $this->data['big_pipe'] = $response->headers->get('X-Drupal-BigPipe-Placeholder');
 
     if ($controller = $this->controllerResolver->getController($request)) {
-      $this->data['controller'] = $this->getMethodData(
-        $controller[0], $controller[1]
-      ) ?? 'no controller';
+      if (is_object($controller)) {
+        $this->data['controller'] = get_class($controller);
+      }
+      else {
+        $this->data['controller'] = $this->getMethodData(
+          $controller[0], $controller[1]
+        ) ?? 'no controller';
+      }
       $this->data['access_checks'] = $this->accessChecks;
     }
 
