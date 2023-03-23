@@ -68,6 +68,15 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
       $timestampRfc3339 = (new \DateTimeImmutable($record['datetime']))->format(\DateTimeInterface::RFC3339_EXTENDED);
     }
 
+    // Convert the record to an array if it is a LogRecord.
+    if ($record instanceof LogRecord) {
+      $record = $record->toArray();
+    }
+
+    // Remove the exception and backtrace from the context.
+    $record['context']['exception'] = [];
+    $record['context']['backtrace'] = [];
+
     $this->records[$key][] = [
       'timestamp' => $timestamp,
       'timestamp_rfc3339' => $timestampRfc3339,
@@ -82,12 +91,20 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
       $this->errorCount[$key] = 0;
     }
 
-    match($record->level) {
+    match($record['level']) {
       Level::Error, Level::Critical, Level::Alert, Level::Emergency => ++$this->errorCount[$key],
       default => NULL,
     };
 
-    return $record;
+    // Convert the record back to a LogRecord.
+    return new LogRecord(
+      $record['datetime'],
+      $record['channel'],
+      Level::fromValue($record['level']),
+      $record['message'],
+      $record['context'],
+      $record['extra'],
+    );
   }
 
   /**

@@ -231,18 +231,18 @@ services:
     class: Drupal\webprofiler\DataCollector\RoutingDataCollector
     arguments: ['@router.route_provider']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/routing.html.twig', id: 'routing', label: 'Routing', priority: 100 }
+      - { name: data_collector, template: '@webprofiler/Collector/routing.html.twig', id: 'routing', label: 'Routing', priority: 150 }
 
   webprofiler.translations:
     class: Drupal\webprofiler\DataCollector\TranslationsDataCollector
     arguments: ['@string_translation']
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/translations.html.twig', id: 'translations', label: 'Translations', priority: 50 }
+      - { name: data_collector, template: '@webprofiler/Collector/translations.html.twig', id: 'translations', label: 'Translations', priority: 100 }
 
   webprofiler.mail:
     class: Drupal\webprofiler\DataCollector\MailDataCollector
     tags:
-      - { name: data_collector, template: '@webprofiler/Collector/mail.html.twig', id: 'mail', label: 'Mail', priority: 0 }
+      - { name: data_collector, template: '@webprofiler/Collector/mail.html.twig', id: 'mail', label: 'Mail', priority: 50 }
 
   webprofiler.drupal:
     class: Drupal\webprofiler\DataCollector\DrupalDataCollector

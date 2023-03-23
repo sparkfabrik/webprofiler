@@ -52,9 +52,20 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'priority' => 450,
         ]);
     }
+
+    if (isset($modules['monolog'])) {
+      $container->register('webprofiler.logs', 'Drupal\webprofiler\DataCollector\LogsDataCollector')
+        ->addArgument(new Reference(('logger.channel.debug')))
+        ->addTag('data_collector', [
+          'template' => '@webprofiler/Collector/logs.html.twig',
+          'id' => 'logs',
+          'label' => 'Logs',
+          'priority' => 25,
+        ]);
+    }
   }
 
-  /**
+/**
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
