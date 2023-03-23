@@ -86,8 +86,8 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
       ];
     }
 
-    foreach ($forms as $form) {
-      $build[] = $this->renderForm($form);
+    foreach ($forms as $id => $form) {
+      $build[] = $this->renderForm($form, $id);
     }
 
     return $build;
@@ -98,16 +98,18 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param array $form
    *   The form.
+   * @param string $form_id
+   *   The form id.
    *
    * @return array
    *   The render array for the form.
    */
-  public function renderForm(array $form): array {
+  public function renderForm(array $form, string $form_id): array {
     $rows = $this->renderElement($form['elements']);
 
     return [
       '#theme' => 'webprofiler_dashboard_section',
-      '#title' => '',
+      '#title' => sprintf('%s (%s:%s)', $form_id, $form['class']['class'], $form['class']['method']),
       '#data' => [
         '#type' => 'table',
         '#header' => [
