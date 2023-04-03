@@ -75,7 +75,7 @@ class ReportController extends ControllerBase {
     $method = $request->query->get('method');
     $method = $method != '- any -' ? $method : NULL;
 
-    $profiles = $this->profiler->find($ip, $url, $limit . '', $method, '', '');
+    $profiles = $this->profiler->find($ip, $url, $limit, $method, '', '');
 
     $rows = [];
     if (count($profiles)) {

@@ -74,8 +74,13 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
     }
 
     // Remove the exception and backtrace from the context.
-    $record['context']['exception'] = [];
-    $record['context']['backtrace'] = [];
+    if(isset($record['context']['exception'])) {
+      $record['context']['exception'];
+    }
+
+    if(isset($record['context']['backtrace'])) {
+      $record['context']['backtrace'];
+    }
 
     $this->records[$key][] = [
       'timestamp' => $timestamp,
