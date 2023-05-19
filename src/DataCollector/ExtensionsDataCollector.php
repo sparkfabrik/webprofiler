@@ -48,7 +48,7 @@ class ExtensionsDataCollector extends DataCollector implements HasPanelInterface
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $modules = $this->moduleHandler->getModuleList();
     $themes = $this->themeHandler->listInfo();
 

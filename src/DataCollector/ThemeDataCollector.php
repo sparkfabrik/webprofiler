@@ -78,7 +78,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $activeTheme = $this->themeManager->getActiveTheme();
 
     $this->data['activeTheme'] = [

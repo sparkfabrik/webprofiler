@@ -55,7 +55,7 @@ class UserDataCollector extends DataCollector {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $this->data['name'] = $this->currentUser->getDisplayName();
     $this->data['authenticated'] = $this->currentUser->isAuthenticated();
 

@@ -45,7 +45,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $completed = $this->middleware->getCompletedRequests();
     $failed = $this->middleware->getFailedRequests();
 

@@ -38,7 +38,7 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $this->data['forms'] = [];
 
     if ($this->formBuilder instanceof FormBuilderWrapper) {

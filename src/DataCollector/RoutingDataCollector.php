@@ -36,7 +36,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $this->data['routing'] = [];
     foreach ($this->routeProvider->getAllRoutes() as $route_name => $route) {
       $this->data['routing'][] = [

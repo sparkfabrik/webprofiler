@@ -41,7 +41,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL) {
+  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
     $storage = $this->entityManager->getStorage('block');
 
     assert($this->entityManager instanceof EntityTypeManagerWrapper);
