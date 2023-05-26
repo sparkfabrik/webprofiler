@@ -48,7 +48,15 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
    */
   public function lateCollect() {
     if ($this->logger->getAdaptedLogger() instanceof DebugLoggerInterface) {
-      $this->data['logs'] = $this->logger->getAdaptedLogger()->getLogs();
+      $this->data['logs'] = array_map(
+        function ($log) {
+          unset($log['context']['exception']);
+          unset($log['context']['backtrace']);
+
+          return $log;
+        },
+        $this->logger->getAdaptedLogger()->getLogs()
+      );
     }
   }
 
