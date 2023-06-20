@@ -88,7 +88,8 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
       'owner' => $activeTheme->getOwner(),
       'baseThemes' => $activeTheme->getBaseThemeExtensions(),
       'extension' => $activeTheme->getExtension(),
-      'styleSheetsRemove' => $activeTheme->getLibrariesOverride(),
+      'librariesOverride' => $activeTheme->getLibrariesOverride(),
+      'librariesExtend' => $activeTheme->getLibrariesExtend(),
       'libraries' => $activeTheme->getLibraries(),
       'regions' => $activeTheme->getRegions(),
     ];
