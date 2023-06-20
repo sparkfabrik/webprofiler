@@ -18,13 +18,6 @@ use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
 class Profiler extends SymfonyProfiler {
 
   /**
-   * List of items to show in the toolbar.
-   *
-   * @var string[]
-   */
-  private array $activeToolbarItems;
-
-  /**
    * The profiler storage.
    *
    * @var \Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface
@@ -53,21 +46,23 @@ class Profiler extends SymfonyProfiler {
 
     $this->localStorage = $storage;
     $this->localLogger = $logger;
-
-    $this->activeToolbarItems = $this->config->get('webprofiler.settings')
-      ->get('active_toolbar_items');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function add(DataCollectorInterface $collector) {
+  public function add(DataCollectorInterface $collector): void {
+    $activeToolbarItems = $this
+      ->config
+      ->get('webprofiler.settings')
+      ->get('active_toolbar_items');
+
     // Drupal collector should not be disabled.
     if ($collector->getName() == 'drupal') {
       parent::add($collector);
     }
     else {
-      if ($this->activeToolbarItems && array_key_exists($collector->getName(), $this->activeToolbarItems) && $this->activeToolbarItems[$collector->getName()] !== '0') {
+      if ($activeToolbarItems && array_key_exists($collector->getName(), $activeToolbarItems) && $activeToolbarItems[$collector->getName()] !== '0') {
         parent::add($collector);
       }
     }
