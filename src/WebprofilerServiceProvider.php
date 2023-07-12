@@ -6,6 +6,7 @@ namespace Drupal\webprofiler;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Site\Settings;
 use Drupal\webprofiler\Compiler\ProfilerPass;
 use Drupal\webprofiler\Compiler\ServicePass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -62,6 +63,15 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'label' => 'Logs',
           'priority' => 25,
         ]);
+    }
+
+    // Allow exception page handler to be disabled.
+    if (!Settings::get('webprofiler_error_page_disabled', FALSE)) {
+      $container->register('webprofiler.error_handler', 'Symfony\Component\HttpKernel\EventListener\ErrorListener')
+        ->addArgument('\Drupal\webprofiler\Controller\ErrorController')
+        ->addArgument(new Reference('logger.channel.debug'))
+        ->addArgument(TRUE)
+        ->addTag('event_subscriber');
     }
   }
 

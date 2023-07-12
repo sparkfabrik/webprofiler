@@ -251,12 +251,6 @@ services:
       - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }
 
   # Error handler
-  webprofiler.error_handler:
-    class: Symfony\Component\HttpKernel\EventListener\ErrorListener
-    arguments: ['\Drupal\webprofiler\Controller\ErrorController', '@logger.channel.debug', true]
-    tags:
-      - { name: event_subscriber }
-
   webprofiler.error_renderer:
     class: Drupal\webprofiler\ErrorRenderer\HtmlErrorRenderer
     arguments: [true, null, '@webprofiler.file_link_formatter', null, '', '@logger.channel.debug']

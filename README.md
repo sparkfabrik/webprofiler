@@ -31,3 +31,17 @@ find more information on [this](https://www.youtube.com/watch?v=6UKIbbbflAs) You
 
 After enabling the module, only some widgets are displayed, you can enable all the others in the
 WebProfiler settings page (`/admin/config/development/devel/webprofiler`).
+
+#### Disable custom error handler
+
+WebProfiler use a custom error handler to collect errors and exceptions, like Symfony does. You may need to disable it
+if you are using a custom error handler in your project or if you are using a module that does it (like
+[Ignition Error Pages](https://www.drupal.org/project/ignition)).
+
+To disable the custom error handler you need to add this line to the `settings.php` file:
+
+```php
+$settings['webprofiler_error_page_disabled'] = TRUE;
+```
+
+Remember to clear the cache after adding this line.
