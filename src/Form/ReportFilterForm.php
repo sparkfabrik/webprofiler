@@ -2,6 +2,8 @@
 
 namespace Drupal\webprofiler\Form;
 
+use Drupal\webprofiler\Profiler\Profiler;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -10,6 +12,32 @@ use Drupal\Core\Url;
  * Form to filter the list of profiles.
  */
 class ReportFilterForm extends FormBase {
+
+  /**
+   * The Profiler service.
+   *
+   * @var \Drupal\webprofiler\Profiler\Profiler
+   */
+  private Profiler $profiler;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('webprofiler.profiler'),
+    );
+  }
+
+  /**
+   * ReportFilterForm constructor.
+   *
+   * @param \Drupal\webprofiler\Profiler\Profiler $profiler
+   *   The Profiler service.
+   */
+  final public function __construct(Profiler $profiler) {
+    $this->profiler = $profiler;
+  }
 
   /**
    * {@inheritdoc}
@@ -104,6 +132,8 @@ class ReportFilterForm extends FormBase {
    *   The current state of the form.
    */
   public function clear(array &$form, FormStateInterface $form_state): void {
+    $this->profiler->purge();
+
     $url = new Url('webprofiler.admin_list');
     $form_state->setRedirectUrl($url);
   }
