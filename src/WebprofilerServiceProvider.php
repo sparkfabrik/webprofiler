@@ -6,7 +6,6 @@ namespace Drupal\webprofiler;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use Drupal\Core\Site\Settings;
 use Drupal\webprofiler\Compiler\ProfilerPass;
 use Drupal\webprofiler\Compiler\ServicePass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -64,18 +63,9 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'priority' => 25,
         ]);
     }
-
-    // Allow exception page handler to be disabled.
-    if (!Settings::get('webprofiler_error_page_disabled', FALSE)) {
-      $container->register('webprofiler.error_handler', 'Symfony\Component\HttpKernel\EventListener\ErrorListener')
-        ->addArgument('\Drupal\webprofiler\Controller\ErrorController')
-        ->addArgument(new Reference('logger.channel.debug'))
-        ->addArgument(TRUE)
-        ->addTag('event_subscriber');
-    }
   }
 
-/**
+  /**
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
@@ -115,6 +105,12 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     // Replace the regular string_translation service with a traceable one.
     $container->getDefinition('string_translation')
       ->setClass('Drupal\webprofiler\StringTranslation\TranslationManagerWrapper');
+
+    // Replace the regular html_response.attachments_processor service with a traceable one.
+    $container->getDefinition('html_response.attachments_processor')
+      ->setClass('Drupal\webprofiler\Render\HtmlResponseAttachmentsProcessor')
+      ->addMethodCall('setDataCollector',
+        [new Reference('webprofiler.assets')]);
   }
 
 }

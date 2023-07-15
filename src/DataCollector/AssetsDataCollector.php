@@ -76,6 +76,25 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Set the libraries to collected data.
+   *
+   * @param array $libraries
+   */
+  public function setLibraries(array $libraries) {
+    sort($libraries);
+    $this->data['libraries'] = $libraries;
+  }
+
+  /**
+   * Set the placeholders to collected data.
+   *
+   * @param array $placeholders
+   */
+  public function setPlaceholders(array $placeholders) {
+    $this->data['placeholders'] = $placeholders;
+  }
+
+  /**
    * Return the number of css files used in page.
    *
    * @return int
@@ -107,12 +126,16 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
           'content' => $this->renderCss($this->data['css']),
         ],
         [
-          'label' => $this->t('Settings'),
-          'content' => $this->renderSettings($this->data['js'] ?? ['drupalSettings']),
-        ],
-        [
           'label' => $this->t('JS'),
           'content' => $this->renderJs($this->data['js']),
+        ],
+        [
+          'label' => $this->t('Settings'),
+          'content' => $this->renderSettings($this->data['js'] ?? ['DrupalSettings']),
+        ],
+        [
+          'label' => $this->t('Libraries'),
+          'content' => $this->renderLibraries($this->data['libraries']),
         ],
       ],
     ];
@@ -157,25 +180,6 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
-   * Render the DrupalSettings array.
-   *
-   * @param array $settings
-   *   The DrupalSettings array.
-   *
-   * @return array
-   *   The render array of the DrupalSettings array.
-   */
-  private function renderSettings(array $settings): array {
-    return [
-      '#type' => 'inline_template',
-      '#template' => '{{ data|raw }}',
-      '#context' => [
-        'data' => array_key_exists('drupalSettings', $settings) ? $this->dumpData($this->cloneVar($settings['drupalSettings'])) : 'n/a',
-      ],
-    ];
-  }
-
-  /**
    * Render a list of javascript files.
    *
    * @param array $data
@@ -205,6 +209,60 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
         }, array_filter($data, function ($asset) {
           return $asset['type'] !== 'setting';
         })),
+        '#attributes' => [
+          'class' => [
+            'webprofiler__table',
+          ],
+        ],
+        '#sticky' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Render the DrupalSettings array.
+   *
+   * @param array $settings
+   *   The DrupalSettings array.
+   *
+   * @return array
+   *   The render array of the DrupalSettings array.
+   */
+  private function renderSettings(array $settings): array {
+    return [
+      '#type' => 'inline_template',
+      '#template' => '{{ data|raw }}',
+      '#context' => [
+        'data' => array_key_exists('drupalSettings', $settings) ? $this->dumpData($this->cloneVar($settings['drupalSettings'])) : 'n/a',
+      ],
+    ];
+  }
+
+  /**
+   * Render the Libraries array.
+   *
+   * @param array $libraries
+   *   The Libraries array.
+   *
+   * @return array
+   *   The render array of the Libraries array.
+   */
+  private function renderLibraries(array $libraries): array {
+    $rows = [];
+    foreach ($libraries as $library) {
+      $rows[] = [
+        $library,
+      ];
+    }
+
+    return [
+      '#theme' => 'webprofiler_dashboard_section',
+      '#data' => [
+        '#type' => 'table',
+        '#header' => [
+          $this->t('Name'),
+        ],
+        '#rows' => $rows,
         '#attributes' => [
           'class' => [
             'webprofiler__table',
