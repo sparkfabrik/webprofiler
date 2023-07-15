@@ -173,7 +173,7 @@ services:
 
   webprofiler.assets:
     class: Drupal\webprofiler\DataCollector\AssetsDataCollector
-    arguments: ['%app.root%']
+    arguments: ['%app.root%', '@library.discovery']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/assets.html.twig', id: 'assets', label: 'Assets', priority: 650 }
 

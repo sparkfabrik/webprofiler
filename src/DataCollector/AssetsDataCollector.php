@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,10 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    * @param string $root
    *   The app root.
    */
-  public function __construct(private readonly string $root) {
+  public function __construct(
+    private readonly string $root,
+    private readonly LibraryDiscoveryInterface $libraryDiscovery
+  ) {
     $this->data['js'] = [];
     $this->data['css'] = [];
   }
@@ -82,7 +86,15 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   public function setLibraries(array $libraries) {
     sort($libraries);
-    $this->data['libraries'] = $libraries;
+
+    $data = [];
+    foreach ($libraries as $library) {
+      [$extension, $name] = explode('/', $library);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      $data[$library] = $definition;
+    }
+
+    $this->data['libraries'] = $data;
   }
 
   /**
@@ -249,9 +261,38 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    */
   private function renderLibraries(array $libraries): array {
     $rows = [];
-    foreach ($libraries as $library) {
+    foreach ($libraries as $name => $definition) {
       $rows[] = [
-        $library,
+        $name,
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($definition['dependencies'])),
+            ],
+          ],
+        ],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($definition['js'])),
+            ],
+          ],
+        ],
+        [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{{ data|raw }}',
+            '#context' => [
+              'data' => $this->dumpData($this->cloneVar($definition['css'])),
+            ],
+          ],
+        ],
+        $definition ? $definition['version'] ?? 'n/a' : 'n/a',
+        $definition ? $definition['license']['name'] : 'n/a',
       ];
     }
 
@@ -261,6 +302,11 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
         '#type' => 'table',
         '#header' => [
           $this->t('Name'),
+          $this->t('Dependencies'),
+          $this->t('JavaScript files'),
+          $this->t('CSS files'),
+          $this->t('Version'),
+          $this->t('License'),
         ],
         '#rows' => $rows,
         '#attributes' => [
