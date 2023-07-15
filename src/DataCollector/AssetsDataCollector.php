@@ -127,6 +127,16 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   }
 
   /**
+   * Return the number of libraries used in page.
+   *
+   * @return int
+   *   The number of libraries used in page.
+   */
+  public function getLibrariesCount(): int {
+    return count($this->data['libraries']);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getPanel(): array {
@@ -260,62 +270,9 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    *   The render array of the Libraries array.
    */
   private function renderLibraries(array $libraries): array {
-    $rows = [];
-    foreach ($libraries as $name => $definition) {
-      $rows[] = [
-        $name,
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($definition['dependencies'])),
-            ],
-          ],
-        ],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($definition['js'])),
-            ],
-          ],
-        ],
-        [
-          'data' => [
-            '#type' => 'inline_template',
-            '#template' => '{{ data|raw }}',
-            '#context' => [
-              'data' => $this->dumpData($this->cloneVar($definition['css'])),
-            ],
-          ],
-        ],
-        $definition ? $definition['version'] ?? 'n/a' : 'n/a',
-        $definition ? $definition['license']['name'] : 'n/a',
-      ];
-    }
-
     return [
-      '#theme' => 'webprofiler_dashboard_section',
-      '#data' => [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('Name'),
-          $this->t('Dependencies'),
-          $this->t('JavaScript files'),
-          $this->t('CSS files'),
-          $this->t('Version'),
-          $this->t('License'),
-        ],
-        '#rows' => $rows,
-        '#attributes' => [
-          'class' => [
-            'webprofiler__table',
-          ],
-        ],
-        '#sticky' => TRUE,
-      ],
+      '#theme' => 'webprofiler_dashboard_libraries',
+      '#libraries' => $libraries,
     ];
   }
 

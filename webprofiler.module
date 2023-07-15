@@ -74,6 +74,12 @@ function webprofiler_theme() {
         'cwv' => [],
       ],
     ],
+    'webprofiler_dashboard_libraries' => [
+      'template' => 'Profiler/libraries',
+      'variables' => [
+        'libraries' => [],
+      ],
+    ],
   ];
 }
 

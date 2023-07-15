@@ -43,3 +43,9 @@ cwv:
   css:
     component:
       css/cwv.css: {}
+
+libraries:
+  version: VERSION
+  css:
+    component:
+      css/libraries.css: {}
