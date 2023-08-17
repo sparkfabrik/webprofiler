@@ -19,7 +19,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     // Add a compiler pass to discover all data collector services.
     $container->addCompilerPass(new ProfilerPass());
 
@@ -31,7 +31,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     if (isset($modules['block'])) {
       $container->register('webprofiler.blocks',
         'Drupal\webprofiler\DataCollector\BlocksDataCollector')
-        ->addArgument(new Reference(('entity_type.manager')))
+        ->addArgument(new Reference('entity_type.manager'))
         ->addTag('data_collector', [
           'template' => '@webprofiler/Collector/blocks.html.twig',
           'id' => 'blocks',
@@ -43,8 +43,8 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     // Add ViewsDataCollector only if Views module is enabled.
     if (isset($modules['views'])) {
       $container->register('webprofiler.views', 'Drupal\webprofiler\DataCollector\ViewsDataCollector')
-        ->addArgument(new Reference(('views.executable')))
-        ->addArgument(new Reference(('entity_type.manager')))
+        ->addArgument(new Reference('views.executable'))
+        ->addArgument(new Reference('entity_type.manager'))
         ->addTag('data_collector', [
           'template' => '@webprofiler/Collector/views.html.twig',
           'id' => 'views',
@@ -55,7 +55,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
 
     if (isset($modules['monolog'])) {
       $container->register('webprofiler.logs', 'Drupal\webprofiler\DataCollector\LogsDataCollector')
-        ->addArgument(new Reference(('logger.channel.debug')))
+        ->addArgument(new Reference('logger.channel.debug'))
         ->addTag('data_collector', [
           'template' => '@webprofiler/Collector/logs.html.twig',
           'id' => 'logs',
@@ -63,12 +63,20 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'priority' => 25,
         ]);
     }
+
+    if (isset($modules['sdc'])) {
+      $container->register('webprofiler.twig.component_extension', 'Drupal\webprofiler\Twig\Extension\ComponentExtension')
+        ->addArgument(new Reference('plugin.manager.sdc'))
+        ->addTag('twig.extension', [
+          'priority' => 100,
+        ]);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     $modules = $container->getParameter('container.modules');
 
     // Alter the views.executable service only if Views module is enabled.

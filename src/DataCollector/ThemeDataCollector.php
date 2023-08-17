@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
+use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\TwigEnvironment;
+use Drupal\sdc\Plugin\Component;
 use Drupal\webprofiler\Theme\ThemeNegotiatorWrapper;
 use Twig\Markup;
 use Twig\Profiler\Dumper\HtmlDumper;
@@ -59,6 +62,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     Profile $profile,
   ) {
     $this->profile = $profile;
+    $this->data['components'] = [];
   }
 
   /**
@@ -122,6 +126,33 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    */
   public function lateCollect(): void {
     $this->data['twig'] = serialize($this->profile);
+  }
+
+  /**
+   * Add an SDC component to the data collector.
+   *
+   * @param \Drupal\sdc\Plugin\Component $component
+   */
+  public function addComponent(Component $component): void {
+    if (!isset($this->data['components'][$component->getPluginId()])) {
+      $this->data['components'][$component->getPluginId()] = [
+        'name' => $component->metadata->name,
+        'status' => $component->metadata->status,
+        'path' => $component->metadata->path,
+        'documentation' => $component->metadata->documentation,
+        'group' => $component->metadata->group,
+        'thumbnail' => $component->metadata->getThumbnailPath(),
+        'plugin_id' => $component->getPluginId(),
+        'provider' => $component->getPluginDefinition()['provider'],
+        'library' => $component->library,
+        'props' => isset($component->getPluginDefinition()['props']) ? $component->getPluginDefinition()['props'] : [],
+        'slots' => isset($component->getPluginDefinition()['slots']) ? $component->getPluginDefinition()['slots'] : [],
+        'count' => 1,
+      ];
+    }
+    else {
+      $this->data['components'][$component->getPluginId()]['count']++;
+    }
   }
 
   /**
@@ -202,6 +233,16 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    */
   public function getTwigFunctionsCount(): int {
     return count($this->data['twig_extensions']['functions']);
+  }
+
+  /**
+   * Return the number of SDC components.
+   *
+   * @return int
+   *   The number of SDC components.
+   */
+  public function getComponentsCount(): int {
+    return count($this->data['components']);
   }
 
   /**
@@ -304,6 +345,13 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
       ],
     ];
 
+    if(\Drupal::moduleHandler()->moduleExists('sdc')) {
+      $tabs[] = [
+        'label' => 'Components',
+        'content' => $this->renderComponents($this->data['components']),
+      ];
+    }
+
     return [
       '#theme' => 'webprofiler_dashboard_tabs',
       '#tabs' => $tabs,
@@ -320,6 +368,17 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     $dumper = new HtmlDumper();
 
     return new Markup($dumper->dump($this->getProfile()), 'UTF-8');
+  }
+
+  /**
+   * @param array $components
+   *
+   * @return array
+   */
+  private function renderComponents(array $components): array {
+    return [
+      '#markup' => $this->t('TODO'),
+    ];
   }
 
   /**
