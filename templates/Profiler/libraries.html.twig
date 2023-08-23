@@ -1,13 +1,11 @@
-{{ attach_library('webprofiler/libraries') }}
-
 {% for name,library in libraries %}
-  <div class="webprofiler__library">
+  <div class="webprofiler__card_large">
     <div class="webprofiler__card__title">{{ name }}</div>
     <div class="webprofiler__card_content">
-      <div>{{ 'Version'|t }}: {{ library.version|default('n/a') }}</div>
-      <div>{{ 'License'|t }}: <a href="{{ library.license.url }}">{{ library.license.name|default('n/a') }}</a></div>
+      <div><b>{{ 'Version'|t }}</b>: {{ library.version|default('n/a') }}</div>
+      <div><b>{{ 'License'|t }}</b>: <a href="{{ library.license.url }}">{{ library.license.name|default('n/a') }}</a></div>
       <div>
-        {{ 'Dependencies'|t }}:
+        <b>{{ 'Dependencies'|t }}</b>:
         {% if library.dependencies|length %}
           <ul>
             {% for dependency in library.dependencies %}
@@ -19,7 +17,7 @@
         {% endif %}
       </div>
       <div>
-        {{ 'CSS'|t }}:
+        <b>{{ 'CSS'|t }}</b>:
         {% if library.css|length %}
           <ul>
             {% for css in library.css %}
@@ -31,7 +29,7 @@
         {% endif %}
       </div>
       <div>
-        {{ 'JavaScript'|t }}:
+        <b>{{ 'JavaScript'|t }}</b>:
         {% if library.js|length %}
           <ul>
             {% for js in library.js %}

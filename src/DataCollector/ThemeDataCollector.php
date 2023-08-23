@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\sdc\Plugin\Component;
 use Drupal\webprofiler\Theme\ThemeNegotiatorWrapper;
+use League\CommonMark\CommonMarkConverter;
 use Twig\Markup;
 use Twig\Profiler\Dumper\HtmlDumper;
 use Symfony\Component\HttpFoundation\Request;
@@ -135,11 +136,13 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    */
   public function addComponent(Component $component): void {
     if (!isset($this->data['components'][$component->getPluginId()])) {
+      $converter = new CommonMarkConverter();
+
       $this->data['components'][$component->getPluginId()] = [
         'name' => $component->metadata->name,
         'status' => $component->metadata->status,
         'path' => $component->metadata->path,
-        'documentation' => $component->metadata->documentation,
+        'documentation' => $converter->convert($component->metadata->documentation),
         'group' => $component->metadata->group,
         'thumbnail' => $component->metadata->getThumbnailPath(),
         'plugin_id' => $component->getPluginId(),
@@ -377,7 +380,8 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    */
   private function renderComponents(array $components): array {
     return [
-      '#markup' => $this->t('TODO'),
+      '#theme' => 'webprofiler_dashboard_components',
+      '#components' => $components,
     ];
   }
 

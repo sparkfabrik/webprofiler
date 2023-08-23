@@ -80,6 +80,12 @@ function webprofiler_theme() {
         'libraries' => [],
       ],
     ],
+    'webprofiler_dashboard_components' => [
+      'template' => 'Profiler/components',
+      'variables' => [
+        'components' => [],
+      ],
+    ],
   ];
 }
 
