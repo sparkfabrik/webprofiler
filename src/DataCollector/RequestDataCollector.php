@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector as BaseRequestDataCollector;
 
 /**
@@ -184,7 +184,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
    */
   public function addAccessCheck(
     string $service_id,
-    array  $callable
+    array $callable
   ) {
     $this->accessChecks[] = [
       self::SERVICE_ID => $service_id,

@@ -2,14 +2,13 @@
 
 #### Introduction
 
-WebProfiler module extract, collect, store and display profiling information for Drupal.
+WebProfiler module extract, collect, store, and display profiling information for Drupal.
 
-For every request, WebProfiler create a profile file that contains all the collected information. This
-information are then rendered on a toolbar on every HTML response, and on a dedicated dashboard in the
-backoffice.
+WebProfiler creates a profile file for every request containing all the collected information.
+This information is then rendered on a toolbar on every HTML response and a dedicated back office dashboard.
 
-A lot of Drupal subsystems are replaced by WebProfiler to collect profiling information, and this
-can lead to some performance issues. For this reason, WebProfiler must not be used in production.
+WebProfiler replaces a lot of Drupal subsystems to collect profiling information, which can lead to some
+performance issues. For this reason, WebProfiler must not be used in production.
 
 #### Installation
 
@@ -17,31 +16,31 @@ WebProfiler can be downloaded and installed like any other Drupal module.
 
 #### Collect time metrics
 
-To enable the collection of time metrics you need to add this line to the `settings.php` file:
+To enable the collection of time metrics, you need to add this line to the `settings.php` file:
 
 ```php
 $settings['tracer_plugin'] = 'stopwatch_tracer';
 ```
 
-Anyway a better solution to trace Drupal internals is to use the `tracer` plugin to send
+A better solution to trace Drupal internals is to use the `tracer` plugin to send
 data to an external trace database like [Grafana Tempo](https://grafana.com/oss/tempo/). You can
 find more information on [this](https://www.youtube.com/watch?v=6UKIbbbflAs) YouTube video.
 
 #### Configuration
 
-After enabling the module, only some widgets are displayed, you can enable all the others in the
+After enabling the module, only some widgets are displayed; you can enable all the others on the
 WebProfiler settings page (`/admin/config/development/devel/webprofiler`).
 
 #### Disable custom error handler
 
-WebProfiler use a custom error handler to collect errors and exceptions, like Symfony does. You may need to disable it
-if you are using a custom error handler in your project or if you are using a module that does it (like
-[Ignition Error Pages](https://www.drupal.org/project/ignition)).
+WebProfiler uses a custom error handler to collect errors and exceptions like Symfony does. You may
+need to deactivate it if you are using a custom error handler in your project or if you are using a
+module that does it (like [Ignition Error Pages](https://www.drupal.org/project/ignition)).
 
-To disable the custom error handler you need to add this line to the `settings.php` file:
+To deactivate the custom error handler, you need to add this line to the `settings.php` file:
 
 ```php
 $settings['webprofiler_error_page_disabled'] = TRUE;
 ```
 
-Remember to clear the cache after adding this line.
+Remember to clear the cache.

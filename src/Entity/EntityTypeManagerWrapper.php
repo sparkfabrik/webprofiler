@@ -161,7 +161,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
     // Loaded this way to avoid circular references.
     // phpcs:disable
     /** @var \Drupal\webprofiler\DecoratorGeneratorInterface $decoratorGenerator */
-    $decoratorGenerator = \Drupal::service('webprofiler.config_entity_storage_decorator_generator'); /** @phpstan-ignore-line */
+    $decoratorGenerator = \Drupal::service('webprofiler.config_entity_storage_decorator_generator');
     // phpcs:enable
 
     $decorators = $decoratorGenerator->getDecorators();

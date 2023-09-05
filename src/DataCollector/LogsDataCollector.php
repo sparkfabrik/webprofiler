@@ -6,6 +6,7 @@ namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\monolog\Logger\LoggerInterfacesAdapter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,12 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
    * {@inheritdoc}
    */
   public function lateCollect() {
-    if ($this->logger->getAdaptedLogger() instanceof DebugLoggerInterface) {
+    $logger = $this->logger;
+
+    if (
+      $logger instanceof LoggerInterfacesAdapter and
+      ($adapted_logger = $logger->getAdaptedLogger()) instanceof DebugLoggerInterface
+    ) {
       $this->data['logs'] = array_map(
         function ($log) {
           unset($log['context']['exception']);
@@ -55,7 +61,7 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
 
           return $log;
         },
-        $this->logger->getAdaptedLogger()->getLogs()
+        $adapted_logger->getLogs()
       );
     }
   }

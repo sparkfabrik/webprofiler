@@ -59,7 +59,7 @@ class HttpClientMiddleware {
         $next = $options['on_stats'] ?? function (TransferStats $stats) {
         };
 
-        $options['on_stats'] = function (TransferStats $stats) use ($request, $next) {
+        $options['on_stats'] = function (TransferStats $stats) use ($next) {
           $this->stats = $stats;
           $next($stats);
         };

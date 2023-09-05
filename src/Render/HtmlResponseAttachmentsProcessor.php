@@ -37,4 +37,5 @@ class HtmlResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcessorB
   public function setDataCollector(AssetsDataCollector $data_collector): void {
     $this->dataCollector = $data_collector;
   }
+
 }

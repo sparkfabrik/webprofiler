@@ -81,9 +81,9 @@ class DevelDataCollector extends DataCollector {
     // no constructor is called, so we cannot use dependency injection.
     // phpcs:disable
     /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTreeService */
-    $menuLinkTreeService = \Drupal::service('menu.link_tree'); /** @phpstan-ignore-line */
+    $menuLinkTreeService = \Drupal::service('menu.link_tree');
     /** @var \Drupal\Core\Render\Renderer $rendererService */
-    $rendererService = \Drupal::service('renderer'); /** @phpstan-ignore-line */
+    $rendererService = \Drupal::service('renderer');
     // phpcs:enable
 
     $parameters = new MenuTreeParameters();

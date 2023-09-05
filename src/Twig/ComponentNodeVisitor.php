@@ -23,6 +23,8 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
    *
    * @param \Drupal\sdc\ComponentPluginManager $pluginManager
    *   The plugin manager for components.
+   * @param \Drupal\webprofiler\DataCollector\ThemeDataCollector $dataCollector
+   *   The data collector for theme data.
    */
   public function __construct(
     private readonly ComponentPluginManager $pluginManager,

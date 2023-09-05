@@ -2,6 +2,9 @@
 <ruleset>
   <arg name="extensions" value="inc,install,module,php,profile,test,theme,yml"/>
   <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*.html.php</exclude-pattern>
+  <exclude-pattern>*.svg.php</exclude-pattern>
+  <exclude-pattern>HtmlErrorRenderer.php</exclude-pattern>
   <rule ref="Drupal"/>
   <rule ref="DrupalPractice"/>
 </ruleset>

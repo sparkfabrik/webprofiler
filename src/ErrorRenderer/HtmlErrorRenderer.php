@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer as BaseHtmlErrorRenderer;
 
 /**
- *
+ * Render HTML for a given Exception.
  */
-class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer {
+class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
 
   private const GHOST_ADDONS = [
     '02-14' => self::GHOST_HEART,
@@ -43,10 +44,12 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
   private static string $template = 'error.html.php';
 
   /**
-   * @param bool|callable $debug The debugging mode as a boolean or a callable
-   *   that should return it
-   * @param string|callable $outputBuffer The output buffer as a string or a
-   *   callable that should return it
+   * @param bool|callable $debug
+   *   The debugging mode as a boolean or a callable
+   *   that should return it.
+   * @param string|callable $outputBuffer
+   *   The output buffer as a string or a
+   *   callable that should return it.
    */
   public function __construct(bool|callable $debug = FALSE, string $charset = NULL, string|FileLinkFormatter $fileLinkFormat = NULL, string $projectDir = NULL, string|callable $outputBuffer = '', LoggerInterface $logger = NULL) {
     $this->debug = \is_bool($debug) ? $debug : $debug(...);
@@ -60,6 +63,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     $this->logger = $logger;
   }
 
+  /**
+   *
+   */
   public function render(\Throwable $exception): FlattenException {
     $headers = ['Content-Type' => 'text/html; charset=' . $this->charset];
     if (\is_bool($this->debug) ? $this->debug : ($this->debug)($exception)) {
@@ -90,6 +96,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return $this->include('assets/css/exception.css');
   }
 
+  /**
+   *
+   */
   public static function isDebug(RequestStack $requestStack, bool $debug): \Closure {
     return static function () use ($requestStack, $debug): bool {
       if (!$request = $requestStack->getCurrentRequest()) {
@@ -100,6 +109,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     };
   }
 
+  /**
+   *
+   */
   public static function getAndCleanOutputBuffer(RequestStack $requestStack): \Closure {
     return static function () use ($requestStack): string {
       if (!$request = $requestStack->getCurrentRequest()) {
@@ -118,6 +130,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     };
   }
 
+  /**
+   *
+   */
   private function renderException(FlattenException $exception, string $debugTemplate = 'exception_full.html.php'): string {
     $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
     $statusText = $this->escape($exception->getStatusText());
@@ -147,6 +162,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     ]);
   }
 
+  /**
+   *
+   */
   private function formatArgs(array $args): string {
     $result = [];
     foreach ($args as $key => $item) {
@@ -175,14 +193,23 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return implode(', ', $result);
   }
 
+  /**
+   *
+   */
   private function formatArgsAsText(array $args) {
     return strip_tags($this->formatArgs($args));
   }
 
+  /**
+   *
+   */
   private function escape(string $string): string {
     return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
   }
 
+  /**
+   *
+   */
   private function abbrClass(string $class): string {
     $parts = explode('\\', $class);
     $short = array_pop($parts);
@@ -190,6 +217,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
   }
 
+  /**
+   *
+   */
   private function getFileRelative(string $file): ?string {
     $file = str_replace('\\', '/', $file);
 
@@ -200,6 +230,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return NULL;
   }
 
+  /**
+   *
+   */
   private function getFileLink(string $file, int $line): string|false {
     if ($fmt = $this->fileLinkFormat) {
       return \is_string($fmt) ? strtr($fmt, [
@@ -214,9 +247,12 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
   /**
    * Formats a file path.
    *
-   * @param string $file An absolute file path
-   * @param int $line The line number
-   * @param string $text Use this text for the link rather than the file path
+   * @param string $file
+   *   An absolute file path.
+   * @param int $line
+   *   The line number.
+   * @param string $text
+   *   Use this text for the link rather than the file path.
    */
   private function formatFile(string $file, int $line, string $text = NULL): string {
     $file = trim($file);
@@ -243,19 +279,22 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
   /**
    * Returns an excerpt of a code file around the given line number.
    *
-   * @param string $file A file path
-   * @param int $line The selected line number
-   * @param int $srcContext The number of displayed lines around or -1 for the
-   *   whole file
+   * @param string $file
+   *   A file path.
+   * @param int $line
+   *   The selected line number.
+   * @param int $srcContext
+   *   The number of displayed lines around or -1 for the
+   *   whole file.
    */
   private function fileExcerpt(string $file, int $line, int $srcContext = 3): string {
     if (is_file($file) && is_readable($file)) {
       // highlight_file could throw warnings
       // see https://bugs.php.net/25725
       $code = @highlight_file($file, TRUE);
-      // remove main code/span tags
+      // Remove main code/span tags.
       $code = preg_replace('#^<code.*?>\s*<span.*?>(.*)</span>\s*</code>#s', '\\1', $code);
-      // split multiline spans
+      // Split multiline spans.
       $code = preg_replace_callback('#<span ([^>]++)>((?:[^<]*+<br \/>)++[^<]*+)</span>#', function ($m) {
         return "<span $m[1]>" . str_replace('<br />', "</span><br /><span $m[1]>", $m[2]) . '</span>';
       }, $code);
@@ -276,6 +315,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return '';
   }
 
+  /**
+   *
+   */
   private function fixCodeMarkup(string $line) {
     // </span> ending tag from previous line
     $opening = strpos($line, '<span');
@@ -284,7 +326,7 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
       $line = substr_replace($line, '', $closing, 7);
     }
 
-    // missing </span> tag at the end of line
+    // Missing </span> tag at the end of line.
     $opening = strrpos($line, '<span');
     $closing = strrpos($line, '</span>');
     if (FALSE !== $opening && (FALSE === $closing || $closing < $opening)) {
@@ -294,12 +336,18 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return trim($line);
   }
 
+  /**
+   *
+   */
   private function formatFileFromText(string $text) {
     return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
       return 'in ' . $this->formatFile($match[2], $match[3]);
     }, $text);
   }
 
+  /**
+   *
+   */
   private function formatLogMessage(string $message, array $context) {
     if ($context && str_contains($message, '{')) {
       $replacements = [];
@@ -317,6 +365,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return $this->escape($message);
   }
 
+  /**
+   *
+   */
   private function addElementToGhost(): string {
     if (!isset(self::GHOST_ADDONS[date('m-d')])) {
       return '';
@@ -325,6 +376,9 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
     return '<path d="' . self::GHOST_ADDONS[date('m-d')] . '" fill="#fff" fill-opacity="0.6"></path>';
   }
 
+  /**
+   *
+   */
   private function include(string $name, array $context = []): string {
     extract($context, \EXTR_SKIP);
     ob_start();
@@ -338,7 +392,8 @@ class HtmlErrorRenderer extends \Symfony\Component\ErrorHandler\ErrorRenderer\Ht
   /**
    * Allows overriding the default non-debug template.
    *
-   * @param string $template path to the custom template file to render
+   * @param string $template
+   *   path to the custom template file to render.
    */
   public static function setTemplate(string $template): void {
     self::$template = $template;

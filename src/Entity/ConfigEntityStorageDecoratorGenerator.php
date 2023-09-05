@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Entity;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\webprofiler\DecoratorGeneratorInterface;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
-use PhpParser\Node\Stmt\ClassMethod;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\webprofiler\DecoratorGeneratorInterface;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;

@@ -38,7 +38,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
   /**
    * DebugProcessor constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|NULL $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack.
    */
   public function __construct(RequestStack $requestStack = NULL) {
@@ -74,12 +74,12 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
     }
 
     // Remove the exception and backtrace from the context.
-    if(isset($record['context']['exception'])) {
-      $record['context']['exception'];
+    if (isset($record['context']['exception'])) {
+      unset($record['context']['exception']);
     }
 
-    if(isset($record['context']['backtrace'])) {
-      $record['context']['backtrace'];
+    if (isset($record['context']['backtrace'])) {
+      unset($record['context']['backtrace']);
     }
 
     $this->records[$key][] = [

@@ -23,6 +23,8 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param string $root
    *   The app root.
+   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $libraryDiscovery
+   *   The library discovery service.
    */
   public function __construct(
     private readonly string $root,
@@ -83,6 +85,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    * Set the libraries to collected data.
    *
    * @param array $libraries
+   *   A list of libraries.
    */
   public function setLibraries(array $libraries) {
     sort($libraries);
@@ -101,6 +104,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
    * Set the placeholders to collected data.
    *
    * @param array $placeholders
+   *   A list of placeholders.
    */
   public function setPlaceholders(array $placeholders) {
     $this->data['placeholders'] = $placeholders;

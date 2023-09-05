@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Defines a service profiler for the webprofiler module.
+ * Defines a service profiler for the WebProfiler module.
  */
 class WebprofilerServiceProvider extends ServiceProviderBase {
 
@@ -114,7 +114,8 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     $container->getDefinition('string_translation')
       ->setClass('Drupal\webprofiler\StringTranslation\TranslationManagerWrapper');
 
-    // Replace the regular html_response.attachments_processor service with a traceable one.
+    // Replace the regular html_response.attachments_processor service with a
+    // traceable one.
     $container->getDefinition('html_response.attachments_processor')
       ->setClass('Drupal\webprofiler\Render\HtmlResponseAttachmentsProcessor')
       ->addMethodCall('setDataCollector',

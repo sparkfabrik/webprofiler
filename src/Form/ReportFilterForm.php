@@ -2,11 +2,11 @@
 
 namespace Drupal\webprofiler\Form;
 
-use Drupal\webprofiler\Profiler\Profiler;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\webprofiler\Profiler\Profiler;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to filter the list of profiles.

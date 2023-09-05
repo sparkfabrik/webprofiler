@@ -142,7 +142,7 @@ class ToolbarListener implements EventSubscriberInterface {
     if (FALSE === $content) {
       return;
     }
-    
+
     $pos = strripos($content, '</body>');
 
     if (FALSE !== $pos) {

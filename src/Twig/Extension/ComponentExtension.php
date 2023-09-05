@@ -13,6 +13,12 @@ use Twig\Extension\AbstractExtension;
  */
 class ComponentExtension extends AbstractExtension {
 
+  /**
+   * ComponentExtension constructor.
+   *
+   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   *   The component plugin manager.
+   */
   public function __construct(
     private readonly ComponentPluginManager $pluginManager,
   ) {}
