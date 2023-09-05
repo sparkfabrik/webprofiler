@@ -139,6 +139,10 @@ class ToolbarListener implements EventSubscriberInterface {
    */
   protected function injectToolbar(Response $response, Request $request, array $nonces) {
     $content = $response->getContent();
+    if (FALSE === $content) {
+      return;
+    }
+    
     $pos = strripos($content, '</body>');
 
     if (FALSE !== $pos) {
