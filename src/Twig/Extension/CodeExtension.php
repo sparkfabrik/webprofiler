@@ -39,7 +39,7 @@ class CodeExtension extends AbstractExtension {
    */
   public function getFilters(): array {
     return [
-      new TwigFilter('abbr_class', [$this, 'abbrClass'], ['is_safe' => ['html']]),
+      new TwigFilter('abbr_class', [$this, 'abbrClass'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
       new TwigFilter('file_link', [$this, 'getFileLink']),
     ];
   }
