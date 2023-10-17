@@ -17,6 +17,6 @@ parameters:
     scanFiles:
       - %currentWorkingDirectory%/web/core/includes/theme.inc
     excludePaths:
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/src/Render/TraceableBigPipe.php
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/templates/Error
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/src/ErrorRenderer/HtmlErrorRenderer.php
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/Render/TraceableBigPipe.php
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler/templates/Error
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/ErrorRenderer/HtmlErrorRenderer.php
