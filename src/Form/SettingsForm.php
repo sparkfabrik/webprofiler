@@ -18,8 +18,6 @@ class SettingsForm extends ConfigFormBase {
    * The Profiler service.
    *
    * @var \Symfony\Component\HttpKernel\Profiler\Profiler
-   *
-   * @phpstan-ignore-next-line
    */
   private Profiler $profiler;
 

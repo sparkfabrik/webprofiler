@@ -1,11 +1,6 @@
 parameters:
     ignoreErrors:
       - "#Unsafe usage of new static#"
-      - "#on an unknown class#"
-      - "#has unknown class#"
-      - "#has invalid type#"
-      - "#has invalid return type#"
-      - "#Caught class#"
     level: 5
     paths:
       - %currentWorkingDirectory%/web/modules/custom/webprofiler
