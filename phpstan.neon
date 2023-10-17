@@ -8,15 +8,15 @@ parameters:
       - "#Caught class#"
     level: 5
     paths:
-      - %currentWorkingDirectory%/web/modules/custom/webprofiler
+      - %currentWorkingDirectory%/web/modules/contrib/webprofiler
     scanDirectories:
-      - %currentWorkingDirectory%/web/modules/custom/devel
-      - %currentWorkingDirectory%/web/modules/custom/tracer
-      - %currentWorkingDirectory%/web/modules/custom/monolog
+      - %currentWorkingDirectory%/web/modules/contrib/devel
+      - %currentWorkingDirectory%/web/modules/contrib/tracer
+      - %currentWorkingDirectory%/web/modules/contrib/monolog
       - %currentWorkingDirectory%/web/core
     scanFiles:
       - %currentWorkingDirectory%/web/core/includes/theme.inc
     excludePaths:
-      - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/Render/TraceableBigPipe.php
-      - %currentWorkingDirectory%/web/modules/custom/webprofiler/templates/Error
-      - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/ErrorRenderer/HtmlErrorRenderer.php
+      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/src/Render/TraceableBigPipe.php
+      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/templates/Error
+      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/src/ErrorRenderer/HtmlErrorRenderer.php
