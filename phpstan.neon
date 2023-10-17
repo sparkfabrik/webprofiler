@@ -7,6 +7,8 @@ parameters:
       - "#has invalid return type#"
       - "#Caught class#"
     level: 5
+    paths:
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler
     scanDirectories:
       - %currentWorkingDirectory%/web/modules/contrib/devel
       - %currentWorkingDirectory%/web/modules/contrib/tracer
