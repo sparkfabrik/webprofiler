@@ -25,8 +25,6 @@ class SettingsForm extends ConfigFormBase {
    * A list of registered data collector templates.
    *
    * @var array
-   *
-   * @phpstan-ignore-next-line
    */
   private array $templates;
 
