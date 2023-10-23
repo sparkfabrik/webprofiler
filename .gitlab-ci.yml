@@ -36,8 +36,6 @@ include:
     ref: $_GITLAB_TEMPLATES_REF
     file:
       - '/includes/include.drupalci.main.yml'
-      # EXPERIMENTAL: For Drupal 7, remove the above line and uncomment the below.
-      # - '/includes/include.drupalci.main-d7.yml'
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
@@ -97,3 +95,44 @@ include:
 #                          .,(((((((((((((((((((((((((.
 #
 ###################################################################################
+
+phpstan:
+  stage: validate
+  rules:
+    - if: '$SKIP_PHPCS == "1"'
+      when: never
+    - when: on_success
+  needs:
+    - composer
+  script:
+    - |
+      export PHPSTAN_CONFIGURATION=""
+      [[ -f $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpstan.neon ]] && export PHPSTAN_CONFIGURATION="--configuration=$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpstan.neon"
+    - php vendor/bin/phpstan analyze $_WEB_ROOT/modules/custom $PHPSTAN_CONFIGURATION --error-format=gitlab > phpstan-quality-report.json
+  allow_failure: false
+  artifacts:
+    reports:
+      codequality: phpstan-quality-report.json
+
+# This replaces the job defined in https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.main.yml?ref_type=heads#L170
+phpcs:
+  stage: validate
+  rules:
+    - if: '$SKIP_PHPCS == "1"'
+      when: never
+    - when: on_success
+  script:
+    - vendor/bin/phpcs -s $_WEB_ROOT/modules/custom --report-junit=junit.xml --report-full --report-summary --report-source --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+  allow_failure: false
+  artifacts:
+    expose_as: junit
+    expire_in: 6 mos
+    when: always
+    # Custom:
+    untracked: true
+    paths:
+      - junit.xml
+    reports:
+      junit: junit.xml
+      # Custom:
+      codequality: phpcs-quality-report.json
