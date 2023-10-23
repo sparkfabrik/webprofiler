@@ -70,24 +70,21 @@ class ServicePass implements CompilerPassInterface {
         }
       }
 
-      if ($definition instanceof Definition) {
-        $file = NULL;
-
-        $class = $definition->getClass();
-        if ($class !== NULL) {
-          try {
-            $reflectedClass = new \ReflectionClass($class);
-            $file = $reflectedClass->getFileName();
-          }
-          catch (\ReflectionException $e) {
-            // Do nothing, consume $file null value default.
-          }
+      $file = NULL;
+      $class = $definition->getClass();
+      if ($class !== NULL) {
+        try {
+          $reflectedClass = new \ReflectionClass($class);
+          $file = $reflectedClass->getFileName();
         }
-
-        $tags = $definition->getTags();
-        $public = $definition->isPublic();
-        $synthetic = $definition->isSynthetic();
+        catch (\ReflectionException $e) {
+          $file = NULL;
+        }
       }
+
+      $tags = $definition->getTags();
+      $public = $definition->isPublic();
+      $synthetic = $definition->isSynthetic();
 
       $data[$id] = [
         'inEdges' => $inEdges,

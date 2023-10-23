@@ -31,7 +31,6 @@ class AccessManagerWrapper extends AccessManager {
   ): AccessResultInterface {
     $callable = $this->checkProvider->loadCheck($service_id);
     $arguments = $arguments_resolver->getArguments($callable);
-    /** @var \Drupal\Core\Access\AccessResultInterface $service_access */
     $service_access = call_user_func_array($callable, $arguments);
 
     if (!$service_access instanceof AccessResultInterface) {

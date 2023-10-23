@@ -60,7 +60,7 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
     $cache = $this->cacheBackend->getMultiple($cids, $allow_invalid);
 
     foreach ($cidsCopy as $cid) {
-      if (in_array($cid, $cids)) {
+      if (in_array($cid, $cids, TRUE)) {
         $this->cacheDataCollector->registerCacheMiss($this->bin, $cid);
       }
       else {
