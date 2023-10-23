@@ -15,3 +15,5 @@ parameters:
       - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/Render/TraceableBigPipe.php
       - %currentWorkingDirectory%/web/modules/custom/webprofiler/templates/Error
       - %currentWorkingDirectory%/web/modules/custom/webprofiler/src/ErrorRenderer/HtmlErrorRenderer.php
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler/expand_composer_json.php
+      - %currentWorkingDirectory%/web/modules/custom/webprofiler/symlink_project.php
