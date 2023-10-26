@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -18,21 +18,21 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 class FrontendController extends ControllerBase {
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): FrontendController {
-    return new static(
-      $container->get('webprofiler.profiler')
-    );
-  }
-
-  /**
    * FrontendController constructor.
    *
    * @param \Drupal\webprofiler\Profiler\Profiler $profiler
    *   The profiler.
    */
   final public function __construct(private readonly Profiler $profiler) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): FrontendController {
+    return new static(
+      $container->get('webprofiler.profiler'),
+    );
   }
 
   /**

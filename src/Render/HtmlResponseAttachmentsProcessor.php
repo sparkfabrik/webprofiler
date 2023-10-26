@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\Render;
 
 use Drupal\Core\Asset\AttachedAssetsInterface;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -52,7 +52,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -69,7 +69,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Twig callback for displaying the routes.
    */
-  public function routing() {
+  public function routing(): array {
     return $this->data['routing'];
   }
 
@@ -97,7 +97,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
               $data['defaults']['_title'] ?? '',
               $this->renderControllerData($data['defaults']),
             ];
-          }, $data
+          }, $data,
         ),
         '#attributes' => [
           'class' => [
@@ -114,8 +114,6 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param array $data
    *   The controller data.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    */
   private function renderControllerData(array $data): TranslatableMarkup|string {
     if (!empty($data['_controller'])) {

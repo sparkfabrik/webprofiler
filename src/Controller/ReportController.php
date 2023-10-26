@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -32,16 +32,6 @@ class ReportController extends ControllerBase {
   private DateFormatter $dateFormatter;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('webprofiler.profiler'),
-      $container->get('date.formatter'),
-    );
-  }
-
-  /**
    * DashboardController constructor.
    *
    * @param \Drupal\webprofiler\Profiler\Profiler $profiler
@@ -55,6 +45,16 @@ class ReportController extends ControllerBase {
   ) {
     $this->profiler = $profiler;
     $this->dateFormatter = $date_formatter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('webprofiler.profiler'),
+      $container->get('date.formatter'),
+    );
   }
 
   /**

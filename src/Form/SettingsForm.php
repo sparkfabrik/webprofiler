@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Form;
 
@@ -194,7 +194,7 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
-  public function purge(array &$form, FormStateInterface $form_state) {
+  public function purge(array &$form, FormStateInterface $form_state): void {
     $this->profiler->purge();
     $this->messenger()->addMessage($this->t('Profiles purged'));
   }
@@ -205,7 +205,7 @@ class SettingsForm extends ConfigFormBase {
    * @return array
    *   A list of defined collectors.
    */
-  private function getCollectors() {
+  private function getCollectors(): array {
     $options = [];
     foreach ($this->templates as $template) {
       // Drupal collector should not be disabled.
@@ -225,7 +225,7 @@ class SettingsForm extends ConfigFormBase {
    * @return array
    *   A list of IDE URL template for open files.
    */
-  private function getIdes() {
+  private function getIdes(): array {
     return [
       'txmt://open?url=file://%f&line=%l' => 'textmate',
       'mvim://open?url=file://%f&line=%l' => 'macvim',

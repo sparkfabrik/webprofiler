@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -64,7 +64,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
    * @param array $services
    *   Array of services.
    */
-  public function setServices(array $services) {
+  public function setServices(array $services): void {
     $this->data['services'] = $services;
   }
 
@@ -135,7 +135,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 

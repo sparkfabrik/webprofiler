@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler;
 
@@ -14,7 +14,7 @@ interface DecoratorGeneratorInterface {
    *
    * @throws \Exception
    */
-  public function generate();
+  public function generate(): void;
 
   /**
    * Return the list of all available decorators.

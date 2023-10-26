@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Csp;
 
@@ -75,7 +75,7 @@ class ContentSecurityPolicyHandler {
    *
    * All related headers will be removed.
    */
-  public function disableCsp() {
+  public function disableCsp(): void {
     $this->cspDisabled = TRUE;
   }
 
@@ -105,7 +105,7 @@ class ContentSecurityPolicyHandler {
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The Response object.
    */
-  private function cleanHeaders(Response $response) {
+  private function cleanHeaders(Response $response): void {
     $response->headers->remove('X-SymfonyProfiler-Script-Nonce');
     $response->headers->remove('X-SymfonyProfiler-Style-Nonce');
   }
@@ -116,7 +116,7 @@ class ContentSecurityPolicyHandler {
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The Response object.
    */
-  private function removeCspHeaders(Response $response) {
+  private function removeCspHeaders(Response $response): void {
     $response->headers->remove('X-Content-Security-Policy');
     $response->headers->remove('Content-Security-Policy');
     $response->headers->remove('Content-Security-Policy-Report-Only');
@@ -254,7 +254,7 @@ class ContentSecurityPolicyHandler {
   /**
    * Gets the fallback directive for a given directive set.
    */
-  private function getDirectiveFallback(array $directiveSet, string $type) {
+  private function getDirectiveFallback(array $directiveSet, string $type): array|null {
     if (\in_array($type, [
       'script-src-elem',
       'style-src-elem',

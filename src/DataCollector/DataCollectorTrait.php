@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -33,7 +33,7 @@ trait DataCollectorTrait {
         $class,
         $method,
         $reflectedMethod->getFilename(),
-        $reflectedMethod->getStartLine() ?: ''
+        $reflectedMethod->getStartLine() ?: '',
       );
     }
     catch (\ReflectionException $re) {
@@ -81,7 +81,7 @@ trait DataCollectorTrait {
             'closure this: %s, closure scope: %s, static variables: %s',
             $closureThis ? \get_class($closureThis) : $reflectedFunction->name,
             $closureClass ? $closureClass->getName() : $reflectedFunction->name,
-            $this->formatVariablesArray($reflectedFunction->getStaticVariables())
+            $this->formatVariablesArray($reflectedFunction->getStaticVariables()),
           );
 
       case \is_object($callable):

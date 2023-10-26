@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\EventListener;
 
@@ -71,7 +71,7 @@ class ToolbarListener implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   A response event.
    */
-  public function onKernelResponse(ResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event): void {
     $response = $event->getResponse();
     $request = $event->getRequest();
 
@@ -79,7 +79,7 @@ class ToolbarListener implements EventSubscriberInterface {
       try {
         $response->headers->set(
           'X-Debug-Token-Link',
-          $this->urlGenerator->generate('webprofiler.dashboard', ['token' => $response->headers->get('X-Debug-Token')], UrlGeneratorInterface::ABSOLUTE_URL)
+          $this->urlGenerator->generate('webprofiler.dashboard', ['token' => $response->headers->get('X-Debug-Token')], UrlGeneratorInterface::ABSOLUTE_URL),
         );
       }
       catch (\Exception $e) {
@@ -137,7 +137,7 @@ class ToolbarListener implements EventSubscriberInterface {
    * @param array $nonces
    *   Nonces used in Content-Security-Policy header.
    */
-  protected function injectToolbar(Response $response, Request $request, array $nonces) {
+  protected function injectToolbar(Response $response, Request $request, array $nonces): void {
     $content = $response->getContent();
     if (FALSE === $content) {
       return;

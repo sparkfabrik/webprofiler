@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Mail;
 
@@ -43,7 +43,7 @@ class MailManagerWrapper extends MailManager {
     $message = $this->mailManager->mail($module, $key, $to, $langcode, $params, $reply, $send);
 
     $instance = $this->mailManager->getInstance(
-      ['module' => $module, 'key' => $key]
+      ['module' => $module, 'key' => $key],
     );
     $this->mailDataCollector->addMessage($message, $instance);
 

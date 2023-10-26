@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -44,7 +44,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -56,7 +56,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @param object $cache
    *   The cache object.
    */
-  public function registerCacheHit(string $bin, object $cache) {
+  public function registerCacheHit(string $bin, object $cache): void {
     $current = $this->data['cache'][$bin][$cache->cid] ?? NULL;
 
     if (!$current) {
@@ -78,7 +78,7 @@ class CacheDataCollector extends DataCollector implements HasPanelInterface {
    * @param string $cid
    *   The cache cid.
    */
-  public function registerCacheMiss(string $bin, string $cid) {
+  public function registerCacheMiss(string $bin, string $cid): void {
     $current = $this->data['cache'][$bin][$cid] ?? NULL;
 
     if (!$current) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\Render;
 
 use Drupal\big_pipe\Render\BigPipe;
@@ -245,7 +247,7 @@ EOF;
    * @return string[]
    *   The resulting HTML fragments.
    */
-  private static function splitHtmlOnPlaceholders($html_string, array $html_placeholders) {
+  private static function splitHtmlOnPlaceholders($html_string, array $html_placeholders): array {
     $prepare_for_preg_split = function ($placeholder_string) {
       return '(' . preg_quote($placeholder_string, '/') . ')';
     };

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -51,7 +51,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -106,7 +106,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
   private function renderTranslated(array $translated): array {
     array_walk(
       $translated,
-      function (&$key, $data) {
+      function (&$key, $data): void {
         $key = [
           $data,
           $key,
@@ -121,7 +121,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
             ],
           ],
         ];
-      }
+      },
     );
 
     return [
@@ -156,7 +156,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
   private function renderUntranslated(array $untranslated): array {
     array_walk(
       $untranslated,
-      function (&$key, $data) {
+      function (&$key, $data): void {
         $key = [
           $data,
           [
@@ -170,7 +170,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
             ],
           ],
         ];
-      }
+      },
     );
 
     return [

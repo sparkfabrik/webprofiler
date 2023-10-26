@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Authentication\AuthenticationCollectorInterface;
@@ -47,7 +49,7 @@ class UserDataCollector extends DataCollector {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 

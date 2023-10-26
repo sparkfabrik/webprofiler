@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -21,15 +23,6 @@ class ReportFilterForm extends FormBase {
   private Profiler $profiler;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('webprofiler.profiler'),
-    );
-  }
-
-  /**
    * ReportFilterForm constructor.
    *
    * @param \Drupal\webprofiler\Profiler\Profiler $profiler
@@ -37,6 +30,15 @@ class ReportFilterForm extends FormBase {
    */
   final public function __construct(Profiler $profiler) {
     $this->profiler = $profiler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('webprofiler.profiler'),
+    );
   }
 
   /**

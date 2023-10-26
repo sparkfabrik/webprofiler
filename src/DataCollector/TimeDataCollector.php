@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -45,7 +45,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -62,7 +62,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
    * @param \Symfony\Component\Stopwatch\StopwatchEvent[] $events
    *   The request events.
    */
-  public function setEvents(array $events) {
+  public function setEvents(array $events): void {
     foreach ($events as $event) {
       $event->ensureStopped();
     }

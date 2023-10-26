@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Entity;
 
@@ -142,7 +142,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    * @return string[]
    *   The properties to serialize.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return ['loaded', 'rendered'];
   }
 

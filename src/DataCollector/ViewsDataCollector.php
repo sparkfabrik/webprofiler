@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -28,7 +28,6 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
   public function __construct(
     private readonly ViewExecutableFactoryWrapper $viewExecutableFactory,
     private readonly EntityTypeManagerInterface $entityManager) {
-
     $this->data['views'] = [];
   }
 
@@ -71,7 +70,7 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 

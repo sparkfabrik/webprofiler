@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -35,16 +35,6 @@ class DashboardController extends ControllerBase {
   private TemplateManager $templateManager;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('webprofiler.profiler'),
-      $container->get('webprofiler.template_manager')
-    );
-  }
-
-  /**
    * DashboardController constructor.
    *
    * @param \Symfony\Component\HttpKernel\Profiler\Profiler $profiler
@@ -58,6 +48,16 @@ class DashboardController extends ControllerBase {
   ) {
     $this->profiler = $profiler;
     $this->templateManager = $templateManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('webprofiler.profiler'),
+      $container->get('webprofiler.template_manager'),
+    );
   }
 
   /**
@@ -133,7 +133,7 @@ class DashboardController extends ControllerBase {
         '#name' => $name,
         '#template' => $this->templateManager->getName($profile, $name),
         '#profile' => $profile,
-      ])
+      ]),
     );
     $response->addCommand(new InvokeCommand('.webprofiler__collector', 'removeClass', ['active']));
     $response->addCommand(new InvokeCommand('.webprofiler__collector-' . $name, 'addClass', ['active']));

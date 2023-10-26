@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Entity;
 
@@ -91,7 +91,7 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
     assert($entity_type instanceof EntityViewBuilderInterface);
 
     return new static(
-      $entity_type
+      $entity_type,
     );
   }
 

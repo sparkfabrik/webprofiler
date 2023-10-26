@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Config;
 
@@ -47,7 +47,7 @@ class ConfigFactoryWrapper extends ConfigFactory {
    * @param \Drupal\webprofiler\DataCollector\ConfigDataCollector $dataCollector
    *   The data collector to store config data.
    */
-  public function setDataCollector(ConfigDataCollector $dataCollector) {
+  public function setDataCollector(ConfigDataCollector $dataCollector): void {
     $this->dataCollector = $dataCollector;
   }
 

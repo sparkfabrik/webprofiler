@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -77,7 +77,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -410,7 +410,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   private function getProfile(): Profile {
     return $this->profile ??= unserialize(
       $this->data['twig'],
-      ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]]
+      ['allowed_classes' => ['\Twig\Profiler\Profile', Profile::class]],
     );
   }
 

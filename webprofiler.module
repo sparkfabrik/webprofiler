@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * @file
  * Drupal Webprofiler.
@@ -8,7 +10,7 @@
 /**
  * Implements hook_theme().
  */
-function webprofiler_theme() {
+function webprofiler_theme(): array {
   return [
     'webprofiler_toolbar_js' => [
       'template' => 'Profiler/toolbar_js',
@@ -92,7 +94,7 @@ function webprofiler_theme() {
 /**
  * Implements hook_cache_flush().
  */
-function webprofiler_cache_flush() {
+function webprofiler_cache_flush(): void {
   $config = \Drupal::configFactory()->get('webprofiler.settings');
 
   if ($config->get('purge_on_cache_clear')) {

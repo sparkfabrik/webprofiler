@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -60,7 +60,7 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
 
           return $log;
         },
-        $adapted_logger->getLogs()
+        $adapted_logger->getLogs(),
       );
     }
   }
@@ -68,7 +68,7 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 

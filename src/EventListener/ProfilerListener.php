@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -83,7 +85,7 @@ class ProfilerListener implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function onKernelException(ExceptionEvent $event) {
+  public function onKernelException(ExceptionEvent $event): void {
     $this->exception = $event->getThrowable();
   }
 
@@ -93,7 +95,7 @@ class ProfilerListener implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onKernelResponse(ResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event): void {
     $request = $event->getRequest();
 
     $exception = $this->exception;
@@ -131,8 +133,8 @@ class ProfilerListener implements EventSubscriberInterface {
         NULL,
         array_merge(
           $request->attributes->all(),
-          ['big_pipe' => $response->headers->get('X-Drupal-BigPipe-Placeholder')]
-        )
+          ['big_pipe' => $response->headers->get('X-Drupal-BigPipe-Placeholder')],
+        ),
       );
     }
 
@@ -147,7 +149,7 @@ class ProfilerListener implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The event to process.
    */
-  public function onKernelTerminate(TerminateEvent $event) {
+  public function onKernelTerminate(TerminateEvent $event): void {
     // Attach children to parents.
     foreach ($this->profiles as $request) {
       if (NULL !== $parentRequest = $this->parents[$request]) {

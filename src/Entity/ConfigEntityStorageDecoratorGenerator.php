@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Entity;
 
@@ -38,7 +38,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
   /**
    * {@inheritdoc}
    */
-  public function generate() {
+  public function generate(): void {
     $classes = $this->getClasses();
 
     foreach ($classes as $class) {
@@ -248,7 +248,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
             array_map(function ($param) {
               return new Literal('$' . $param);
             }, $method['params']),
-          ]
+          ],
         );
     }
 
@@ -265,7 +265,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @param string $body
    *   The class body.
    */
-  private function writeDecorator(string $name, string $body) {
+  private function writeDecorator(string $name, string $body): void {
     $storage = PhpStorageFactory::get('webprofiler');
 
     if (!$storage->exists($name)) {

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Http;
 
@@ -53,20 +53,18 @@ class HttpClientMiddleware {
   public function __invoke(): \Closure {
     return function ($handler) {
       return function (RequestInterface $request, array $options) use ($handler): PromiseInterface {
-
         // If on_stats callback is already set then save it
         // and call it after ours.
-        $next = $options['on_stats'] ?? function (TransferStats $stats) {
+        $next = $options['on_stats'] ?? function (TransferStats $stats): void {
         };
 
-        $options['on_stats'] = function (TransferStats $stats) use ($next) {
+        $options['on_stats'] = function (TransferStats $stats) use ($next): void {
           $this->stats = $stats;
           $next($stats);
         };
 
         return $handler($request, $options)->then(
           function ($response) use ($request) {
-
             $this->completedRequests[] = [
               'request' => $request,
               'response' => $response,
@@ -87,7 +85,7 @@ class HttpClientMiddleware {
             ];
 
             return Create::rejectionFor($reason);
-          }
+          },
         );
       };
     };

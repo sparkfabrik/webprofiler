@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -55,19 +55,6 @@ class ProfilerController extends ControllerBase {
   private ContentSecurityPolicyHandler $cspHandler;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): ProfilerController {
-    return new static(
-      $container->get('url_generator'),
-      $container->get('webprofiler.profiler'),
-      $container->get('renderer'),
-      $container->get('webprofiler.template_manager'),
-      $container->get('webprofiler.csp')
-    );
-  }
-
-  /**
    * ProfilerController constructor.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $generator
@@ -87,6 +74,19 @@ class ProfilerController extends ControllerBase {
     $this->renderer = $renderer;
     $this->templateManager = $templateManager;
     $this->cspHandler = $cspHandler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): ProfilerController {
+    return new static(
+      $container->get('url_generator'),
+      $container->get('webprofiler.profiler'),
+      $container->get('renderer'),
+      $container->get('webprofiler.template_manager'),
+      $container->get('webprofiler.csp'),
+    );
   }
 
   /**

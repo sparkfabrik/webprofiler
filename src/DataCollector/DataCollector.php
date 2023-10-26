@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -55,18 +57,18 @@ abstract class DataCollector implements DataCollectorInterface {
    */
   protected function getCasters(): array {
     return [
-        '*' => function ($v, array $a, Stub $s, $isNested) {
-          if (!$v instanceof Stub) {
-            foreach ($a as $k => $v) {
-              if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
-                $a[$k] = new CutStub($v);
-              }
+      '*' => function ($v, array $a, Stub $s, $isNested) {
+        if (!$v instanceof Stub) {
+          foreach ($a as $k => $v) {
+            if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
+              $a[$k] = new CutStub($v);
             }
           }
+        }
 
           return $a;
-        },
-      ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
+      },
+    ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
   }
 
 }

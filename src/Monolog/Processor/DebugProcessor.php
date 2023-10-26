@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\webprofiler\Monolog\Processor;
 
 use Monolog\Level;
@@ -149,7 +151,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
   /**
    * Reset the error count and records.
    */
-  public function reset() {
+  public function reset(): void {
     $this->clear();
   }
 

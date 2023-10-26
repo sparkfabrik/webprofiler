@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -65,7 +65,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
       }
       else {
         $this->data['controller'] = $this->getMethodData(
-          $controller[0], $controller[1]
+          $controller[0], $controller[1],
         ) ?? 'no controller';
       }
       $this->data['access_checks'] = $this->accessChecks;
@@ -185,7 +185,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
   public function addAccessCheck(
     string $service_id,
     array $callable
-  ) {
+  ): void {
     $this->accessChecks[] = [
       self::SERVICE_ID => $service_id,
       self::CALLABLE => $this->getMethodData($callable[0], $callable[1]),

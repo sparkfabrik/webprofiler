@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -45,7 +45,7 @@ class MailDataCollector extends DataCollector implements HasPanelInterface {
    * @param \Drupal\Core\Mail\MailInterface $mail
    *   The mail plugin used to send the message.
    */
-  public function addMessage(array $message, MailInterface $mail) {
+  public function addMessage(array $message, MailInterface $mail): void {
     $class = get_class($mail);
     $method = $this->getMethodData($class, 'mail');
 
@@ -75,7 +75,7 @@ class MailDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * Reset the collected data.
    */
-  public function reset() {
+  public function reset(): void {
     $this->data = [];
   }
 
@@ -116,7 +116,7 @@ class MailDataCollector extends DataCollector implements HasPanelInterface {
               ],
             ];
           },
-          $data
+          $data,
         ),
         '#attributes' => [
           'class' => [
