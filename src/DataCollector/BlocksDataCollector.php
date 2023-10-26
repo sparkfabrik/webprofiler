@@ -11,7 +11,6 @@ use Drupal\webprofiler\Entity\EntityDecorator;
 use Drupal\webprofiler\Entity\EntityTypeManagerWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collects blocks data.

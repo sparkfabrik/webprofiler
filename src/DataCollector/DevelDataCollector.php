@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Link;
+use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Provides a toolbar item for Devel menu links.
@@ -23,9 +24,15 @@ class DevelDataCollector extends DataCollector {
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
+   *   The menu link tree.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
   public function __construct(
     private readonly RouteMatchInterface $routeMatch,
+    public MenuLinkTreeInterface $menuLinkTree,
+    public RendererInterface $renderer,
   ) {
   }
 
@@ -77,24 +84,15 @@ class DevelDataCollector extends DataCollector {
    *   Array containing Devel Menu links
    */
   protected function develMenuLinks(string $destination): array {
-    // When a profile is loaded from storage this object is deserialized and
-    // no constructor is called, so we cannot use dependency injection.
-    // phpcs:disable
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTreeService */
-    $menuLinkTreeService = \Drupal::service('menu.link_tree');
-    /** @var \Drupal\Core\Render\Renderer $rendererService */
-    $rendererService = \Drupal::service('renderer');
-    // phpcs:enable
-
     $parameters = new MenuTreeParameters();
     $parameters->setMaxDepth(1)->onlyEnabledLinks();
-    $tree = $menuLinkTreeService->load('devel', $parameters);
+    $tree = $this->menuLinkTree->load('devel', $parameters);
 
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
     ];
-    $tree = $menuLinkTreeService->transform($tree, $manipulators);
+    $tree = $this->menuLinkTree->transform($tree, $manipulators);
 
     $links = [];
     foreach ($tree as $item) {
@@ -109,7 +107,7 @@ class DevelDataCollector extends DataCollector {
       // Build and render the link.
       $link = Link::fromTextAndUrl($item_link->getTitle(), $url);
       $renderable = $link->toRenderable();
-      $rendered = $rendererService->renderPlain($renderable);
+      $rendered = $this->renderer->renderPlain($renderable);
 
       $links[] = Markup::create($rendered);
     }

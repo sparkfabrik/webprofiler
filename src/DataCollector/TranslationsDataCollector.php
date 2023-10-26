@@ -10,7 +10,6 @@ use Drupal\Core\Url;
 use Drupal\webprofiler\StringTranslation\TranslationManagerWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collects translations data.

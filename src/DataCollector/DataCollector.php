@@ -1,0 +1,72 @@
+<?php
+
+namespace Drupal\webprofiler\DataCollector;
+
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
+use Symfony\Component\VarDumper\Caster\CutStub;
+use Symfony\Component\VarDumper\Caster\ReflectionCaster;
+use Symfony\Component\VarDumper\Cloner\ClonerInterface;
+use Symfony\Component\VarDumper\Cloner\Data;
+use Symfony\Component\VarDumper\Cloner\Stub;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+
+/**
+ * An abstract DataCollector that supports dependency serialization.
+ *
+ * Most of this code is copied from
+ * Symfony\Component\HttpKernel\DataCollector\DataCollector.php, but without the
+ * __sleep() and __wakeup() methods, that are replaced by the
+ * DependencySerializationTrait.
+ */
+abstract class DataCollector implements DataCollectorInterface {
+
+  use DependencySerializationTrait;
+
+  /**
+   * @var array|Data
+   */
+  protected array|Data $data = [];
+
+  private ClonerInterface $cloner;
+
+  /**
+   * Converts the variable into a serializable Data instance.
+   *
+   * This array can be displayed in the template using
+   * the VarDumper component.
+   */
+  protected function cloneVar(mixed $var): Data {
+    if ($var instanceof Data) {
+      return $var;
+    }
+    if (!isset($this->cloner)) {
+      $this->cloner = new VarCloner();
+      $this->cloner->setMaxItems(-1);
+      $this->cloner->addCasters($this->getCasters());
+    }
+
+    return $this->cloner->cloneVar($var);
+  }
+
+  /**
+   * @return callable[]
+   *   The casters to add to the cloner.
+   */
+  protected function getCasters(): array {
+    return [
+        '*' => function ($v, array $a, Stub $s, $isNested) {
+          if (!$v instanceof Stub) {
+            foreach ($a as $k => $v) {
+              if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
+                $a[$k] = new CutStub($v);
+              }
+            }
+          }
+
+          return $a;
+        },
+      ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
+  }
+
+}

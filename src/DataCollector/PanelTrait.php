@@ -97,7 +97,7 @@ trait PanelTrait {
    * @return array
    *   A render array for the link.
    */
-  protected function renderClasslink(string|false $file, int $line, string $label): array {
+  protected function renderClassLink(string|false $file, int $line, string $label): array {
     $flf = \Drupal::service('webprofiler.file_link_formatter');
 
     return [
@@ -120,7 +120,7 @@ trait PanelTrait {
    *   A render array for the link.
    */
   protected function renderClassLinkFromMethodData(MethodData $method): array {
-    return $this->renderClasslink($method->getFile(), $method->getLine(), $method->getClass() . '::' . $method->getMethod());
+    return $this->renderClassLink($method->getFile(), $method->getLine(), $method->getClass() . '::' . $method->getMethod());
   }
 
   /**

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collects database data.
@@ -20,62 +20,48 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
    */
   public function __construct(
-    private readonly Connection $database
+    private readonly Connection $database,
+    public ConfigFactoryInterface $configFactory,
   ) {
+    $this->data['queries'] = [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
-    $connections = [];
-    foreach (Database::getAllConnectionInfo() as $key => $info) {
-      try {
-        $database = Database::getConnection('default', $key);
-
-        if ($database->getLogger()) {
-          $connections[$key] = $database->getLogger()->get('webprofiler');
-        }
-      }
-      catch (\Exception $e) {
-        // There was some error during database connection, maybe a stale
-        // configuration in settings.php or wrong values used for a migration.
-      }
-    }
-
-    $this->data['connections'] = array_keys($connections);
-
-    $data = [];
-    foreach ($connections as $key => $queries) {
-      foreach ($queries as $query) {
-        // Remove caller args.
-        unset($query['caller']['args']);
-
-        // Remove query args element if empty.
-        if (isset($query['args']) && empty($query['args'])) {
-          unset($query['args']);
-        }
-
-        // Save time in milliseconds.
-        $query['time'] = $query['time'] * 1000;
-        $query['database'] = $key;
-
-        $query['query'] = str_replace('"', '', $query['query']);
-
-        $data[] = $query;
-      }
-    }
-
-    $this->data['queries'] = $data;
-
     $options = $this->database->getConnectionOptions();
 
     // Remove password for security.
     unset($options['password']);
 
     $this->data['database'] = $options;
+  }
+
+  /**
+   * Add a statement to the list of executed queries.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionEndEvent $event
+   *   The statement execution end event.
+   */
+  public function addStatement(StatementExecutionEndEvent $event): void {
+    $this->data['queries'][] = [
+      'query' => $event->queryString,
+      'args' => $event->args,
+      'database' => $event->key,
+      'target' => $event->target,
+      'caller' =>
+        [
+          'class' => $event->caller['class'],
+          'function' => $event->caller['function'],
+        ],
+      'time' => $event->getElapsedTime(),
+      'start' => $event->startTime,
+    ];
   }
 
   /**
@@ -129,13 +115,10 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *   A list of execute queries.
    */
   public function getQueries(): array {
-    // When a profile is loaded from storage this object is deserialized and
-    // no constructor is called, so we cannot use dependency injection.
-    // phpcs:disable
-    $query_sort = \Drupal::configFactory()
+    $query_sort = $this
+      ->configFactory
       ->get('webprofiler.settings')
       ->get('query_sort') ?: '';
-    // phpcs:enable
 
     $queries = $this->data['queries'];
     if ('duration' === $query_sort) {
@@ -170,11 +153,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
    *   The configured query highlight threshold.
    */
   public function getQueryHighlightThreshold(): int {
-    // When a profile is loaded from storage this object is deserialized and
-    // no constructor is called, so we cannot use dependency injection.
-    // phpcs:disable
-    return \Drupal::config('webprofiler.settings')->get('query_highlight');
-    // php:enable
+    return $this->configFactory->get('webprofiler.settings')->get('query_highlight');
   }
 
 }

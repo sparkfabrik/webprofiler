@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -13,7 +14,6 @@ use Drupal\webprofiler\Theme\ThemeNegotiatorWrapper;
 use League\CommonMark\CommonMarkConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Twig\Markup;
 use Twig\Profiler\Dumper\HtmlDumper;
@@ -51,6 +51,8 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    *   The theme negotiator.
    * @param \Drupal\Core\Template\TwigEnvironment $twig
    *   The Twig service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    * @param \Twig\Profiler\Profile $profile
    *   The twig profile.
    */
@@ -58,6 +60,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     private readonly ThemeManagerInterface $themeManager,
     private readonly ThemeNegotiatorInterface $themeNegotiator,
     private readonly TwigEnvironment $twig,
+    public ModuleHandlerInterface $moduleHandler,
     Profile $profile,
   ) {
     $this->profile = $profile;
@@ -244,9 +247,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
    *   TRUE if the SDC module is enabled.
    */
   public function hasComponentsModule(): bool {
-    // phpcs:disable
-    return \Drupal::moduleHandler()->moduleExists('sdc');
-    // phpcs:enable
+    return $this->moduleHandler->moduleExists('sdc');
   }
 
   /**
@@ -359,14 +360,12 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
       ],
     ];
 
-    // phpcs:disable
-    if (\Drupal::moduleHandler()->moduleExists('sdc')) {
+    if ($this->moduleHandler->moduleExists('sdc')) {
       $tabs[] = [
         'label' => 'Components',
         'content' => $this->renderComponents($this->data['components']),
       ];
     }
-    // phpcs:enable
 
     return [
       '#theme' => 'webprofiler_dashboard_tabs',

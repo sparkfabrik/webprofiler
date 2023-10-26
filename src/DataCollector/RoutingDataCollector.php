@@ -6,9 +6,9 @@ namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collects routing data.
@@ -42,6 +42,9 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
       $this->data['routing'][] = [
         'name' => $route_name,
         'path' => $route->getPath(),
+        'defaults' => $route->getDefaults(),
+        'requirements' => $route->getRequirements(),
+        'options' => $route->getOptions(),
       ];
     }
   }
@@ -83,13 +86,17 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
         '#header' => [
           $this->t('Name'),
           $this->t('Path'),
+          $this->t('Title'),
+          $this->t('Controller'),
         ],
         '#rows' => array_map(
           function ($data) {
-              return [
-                $data['name'],
-                $data['path'],
-              ];
+            return [
+              $data['name'],
+              $data['path'],
+              $data['defaults']['_title'] ?? '',
+              $this->renderControllerData($data['defaults']),
+            ];
           }, $data
         ),
         '#attributes' => [
@@ -100,6 +107,38 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
         '#sticky' => TRUE,
       ],
     ];
+  }
+
+  /**
+   * Render the controller data.
+   *
+   * @param array $data
+   *   The controller data.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   */
+  private function renderControllerData(array $data): TranslatableMarkup|string {
+    if (!empty($data['_controller'])) {
+      return $this->t('Controller: %controller', ['%controller' => $data['_controller']]);
+    }
+
+    if (!empty($data['_form'])) {
+      return $this->t('Form: %form', ['%form' => $data['_form']]);
+    }
+
+    if (!empty($data['_entity_form'])) {
+      return $this->t('Entity form: %entity_form', ['%entity_form' => $data['_entity_form']]);
+    }
+
+    if (!empty($data['_entity_view'])) {
+      return $this->t('Entity view: %entity_view', ['%entity_view' => $data['_entity_view']]);
+    }
+
+    if (!empty($data['_entity_list'])) {
+      return $this->t('Entity list: %entity_list', ['%entity_list' => $data['_entity_list']]);
+    }
+
+    return '';
   }
 
 }

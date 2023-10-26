@@ -9,7 +9,6 @@ use Drupal\tracer\DependencyInjection\TraceableContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collects services data.
@@ -236,7 +235,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
     foreach ($data as $service) {
       $class_link = '';
       if (isset($service['value']['file'])) {
-        $class_link = $this->renderClasslink($service['value']['file'], 0, $service['value']['class']);
+        $class_link = $this->renderClassLink($service['value']['file'], 0, $service['value']['class']);
       }
 
       $rows[] = [

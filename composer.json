@@ -36,8 +36,6 @@
         "phpstan/phpstan-strict-rules": "^1.5",
         "phpunit/phpunit": ">=9",
         "previousnext/coding-standard": "^0.1.2"
-
-
     },
 
     "extra": {

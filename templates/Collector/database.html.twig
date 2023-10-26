@@ -33,8 +33,10 @@
 {% block panel %}
   {{ attach_library('webprofiler/database')}}
 
+  {% set queryHighlightThreshold = collector.queryHighlightThreshold %}
+
   {% for query in collector.queries %}
-    {{ _self.query(query, token, loop.index0, collector.queryHighlightThreshold) }}
+    {{ _self.query(query, token, loop.index0, queryHighlightThreshold) }}
   {% endfor %}
 {% endblock %}
 
@@ -46,7 +48,7 @@
     data-wp-type="{{ query_type(query.query) }}"
     data-wp-slow="{% if slow_query %}1{% else %}0{% endif %}"
     data-wp-time="{{ query.time }}"
-    data-wp-class="{{ query.caller.class }}"
+    data-wp-class="{{ query.caller.class }}->{{ query.caller.function }}()"
     data-wp-db="{{ query.database }}"
     data-wp-target="{{ query.target }}"
     data-wp-has-args="{% if query.args %}1{% else %}0{% endif %}"

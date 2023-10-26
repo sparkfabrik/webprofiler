@@ -139,7 +139,7 @@ services:
 
   webprofiler.devel:
     class: Drupal\webprofiler\DataCollector\DevelDataCollector
-    arguments: ['@current_route_match']
+    arguments: ['@current_route_match', '@menu.link_tree', '@renderer']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/devel.html.twig', id: 'devel', label: 'Devel', priority: 1000 }
 
@@ -161,7 +161,7 @@ services:
 
   webprofiler.database:
     class: Drupal\webprofiler\DataCollector\DatabaseDataCollector
-    arguments: ['@database']
+    arguments: ['@database', '@config.factory']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/database.html.twig', id: 'database', label: 'Database', priority: 750 }
 
@@ -223,7 +223,7 @@ services:
 
   webprofiler.theme:
     class: Drupal\webprofiler\DataCollector\ThemeDataCollector
-    arguments: ['@theme.manager', '@theme.negotiator', '@twig', '@tracer.twig_profile']
+    arguments: ['@theme.manager', '@theme.negotiator', '@twig', '@module_handler', '@tracer.twig_profile']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/theme.html.twig', id: 'theme', label: 'Theme', priority: 200 }
 
@@ -249,6 +249,12 @@ services:
     arguments: ['@redirect.destination', '%install_profile%']
     tags:
       - { name: data_collector, template: '@webprofiler/Collector/drupal.html.twig', id: 'drupal', label: 'Drupal', priority: 0 }
+
+  webprofiler.database_listener:
+    class: Drupal\webprofiler\EventListener\DatabaseListener
+    arguments: [ '@webprofiler.database' ]
+    tags:
+      - { name: event_subscriber }
 
   # Error handler
   webprofiler.error_renderer:

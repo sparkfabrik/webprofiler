@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\StackMiddleware;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -27,9 +29,13 @@ class WebprofilerMiddleware implements HttpKernelInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE): Response {
-    foreach (Database::getAllConnectionInfo() as $key => $info) {
-      Database::startLog('webprofiler', $key);
-    }
+    array_map(function(string $key) {
+      $connection = Database::getConnection($key);
+      $connection->enableEvents([
+        StatementExecutionStartEvent::class,
+        StatementExecutionEndEvent::class,
+      ]);
+    }, array_keys(Database::getAllConnectionInfo()));
 
     return $this->httpKernel->handle($request, $type, $catch);
   }
