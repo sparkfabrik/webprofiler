@@ -1,4 +1,6 @@
 parameters:
     ignoreErrors:
       - "#Unsafe usage of new static#"
-    level: 6
+    level: 5
+    excludePaths:
+      - templates/Error/*
