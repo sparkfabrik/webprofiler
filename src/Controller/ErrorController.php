@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -18,6 +18,7 @@ class ErrorController implements ContainerInjectionInterface {
    * ErrorController constructor.
    *
    * @param \Drupal\webprofiler\ErrorRenderer\HtmlErrorRenderer $htmlErrorRenderer
+   *   The error renderer.
    */
   final public function __construct(
     private readonly HtmlErrorRenderer $htmlErrorRenderer,

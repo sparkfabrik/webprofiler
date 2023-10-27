@@ -3,16 +3,12 @@ parameters:
       - "#Unsafe usage of new static#"
     level: 5
     paths:
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler
+      - src
     scanDirectories:
-      - %currentWorkingDirectory%/web/modules/contrib/devel
-      - %currentWorkingDirectory%/web/modules/contrib/tracer
-      - %currentWorkingDirectory%/web/modules/contrib/monolog
-      - %currentWorkingDirectory%/web/core
-    scanFiles:
-      - %currentWorkingDirectory%/web/core/includes/theme.inc
+      - web/modules/contrib/
+      - web/core
     excludePaths:
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/src/Render/TraceableBigPipe.php
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/templates/Error
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/expand_composer_json.php
-      - %currentWorkingDirectory%/web/modules/contrib/webprofiler/symlink_project.php
+      - src/Render/TraceableBigPipe.php
+      - templates/Error
+      - expand_composer_json.php
+      - symlink_project.php
