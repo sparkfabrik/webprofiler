@@ -115,7 +115,9 @@ class DashboardController extends ControllerBase {
       return new AjaxResponse('');
     }
 
-    if (!$profile = $this->profiler->loadProfile($token)) {
+    $profile = $this->profiler->loadProfile($token);
+
+    if ($profile == NULL) {
       return new AjaxResponse('');
     }
 

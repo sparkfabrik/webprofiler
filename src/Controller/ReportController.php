@@ -18,39 +18,23 @@ use Symfony\Component\HttpFoundation\Request;
 class ReportController extends ControllerBase {
 
   /**
-   * The Profiler service.
-   *
-   * @var \Drupal\webprofiler\Profiler\Profiler
-   */
-  private Profiler $profiler;
-
-  /**
-   * The Date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatter
-   */
-  private DateFormatter $dateFormatter;
-
-  /**
    * DashboardController constructor.
    *
    * @param \Drupal\webprofiler\Profiler\Profiler $profiler
    *   The Profiler service.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatter $dateFormatter
    *   The Date formatter service.
    */
   final public function __construct(
-    Profiler $profiler,
-    DateFormatter $date_formatter
+    private readonly Profiler $profiler,
+    private readonly DateFormatter $dateFormatter
   ) {
-    $this->profiler = $profiler;
-    $this->dateFormatter = $date_formatter;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): ReportController {
     return new static(
       $container->get('webprofiler.profiler'),
       $container->get('date.formatter'),

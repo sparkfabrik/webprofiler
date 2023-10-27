@@ -67,7 +67,9 @@ class DatabaseController extends ControllerBase {
    *   A table with the query explain results.
    */
   public function explainAction(string $token, int $qid): AjaxResponse {
-    if (!$profile = $this->profiler->loadProfile($token)) {
+    $profile = $this->profiler->loadProfile($token);
+
+    if ($profile == NULL) {
       return new AjaxResponse('');
     }
 
@@ -120,11 +122,13 @@ class DatabaseController extends ControllerBase {
     $this->profiler->disable();
     $token = $profile->getToken();
 
-    if (!$profile = $this->profiler->loadProfile($token)) {
+    $profile = $this->profiler->loadProfile($token);
+
+    if ($profile == NULL) {
       throw new NotFoundHttpException(sprintf('Token %s does not exist.', $token));
     }
 
-    /** @var \Drupal\webprofiler\DataCollector\DatabaseDependencySerializationDataCollector $databaseCollector */
+    /** @var \Drupal\webprofiler\DataCollector\DatabaseDataCollector $databaseCollector */
     $databaseCollector = $profile->getCollector('database');
 
     $queries = $databaseCollector->getQueries();

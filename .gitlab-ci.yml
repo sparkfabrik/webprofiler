@@ -105,10 +105,9 @@ phpstan:
   needs:
     - composer
   script:
-    - |
-      export PHPSTAN_CONFIGURATION=""
-      [[ -f $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpstan.neon ]] && export PHPSTAN_CONFIGURATION="--configuration=$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpstan.neon"
-    - php vendor/bin/phpstan analyze $_WEB_ROOT/modules/custom $PHPSTAN_CONFIGURATION --error-format=gitlab > phpstan-quality-report.json
+    - echo $_WEB_ROOT
+    - echo $CI_PROJECT_NAME
+    - php vendor/bin/phpstan analyze $_WEB_ROOT/modules/custom --configuration=$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpstan.neon --error-format=gitlab > phpstan-quality-report.json
   allow_failure: false
   artifacts:
     reports:
