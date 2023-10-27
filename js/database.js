@@ -2,7 +2,7 @@
  * @file
  * Database panel app.
  */
-(function (Drupal) {
+((Drupal) => {
   const queryTpl = _.template(`
     <table class="webprofiler__table responsive-enabled" data-striping="1">
         <thead>
@@ -32,12 +32,13 @@
   `);
 
   Drupal.behaviors.webprofiler_database = {
-    attach(context) {
+    attach() {
+      // eslint-disable-next-line no-undef
       hljs.configure({
         ignoreUnescapedHTML: true,
       });
 
-      once('db', '.wp-db-query').forEach(function (element) {
+      once('db', '.wp-db-query').forEach((element) => {
         const result = queryTpl({
           time: element.dataset.wpTime,
           caller: element.dataset.wpClass,
@@ -51,7 +52,8 @@
 
         element.innerHTML += result;
 
-        element.querySelectorAll('code').forEach(function (code) {
+        element.querySelectorAll('code').forEach((code) => {
+          // eslint-disable-next-line no-undef
           hljs.highlightElement(code);
         });
 
@@ -59,7 +61,7 @@
         if (element.dataset.wpHasArgs === '1') {
           element
             .querySelector('.wp-executable-toggle')
-            .addEventListener('click', function (e) {
+            .addEventListener('click', () => {
               element
                 .querySelector('.wp-query-placeholder')
                 .classList.toggle('is-hidden');
@@ -73,7 +75,7 @@
         if (navigator.clipboard && window.isSecureContext) {
           element
             .querySelector('.wp-query-copy')
-            .addEventListener('click', function (e) {
+            .addEventListener('click', () => {
               const query = element.querySelector(
                 '.wp-query-executable',
               ).innerText;

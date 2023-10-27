@@ -2,7 +2,7 @@
  * @file
  * Tab panel app.
  */
-(function (Drupal) {
+((Drupal) => {
   function openTab(name) {
     const contents = document.getElementsByClassName(
       'webprofiler__tabs__content',
@@ -26,8 +26,8 @@
     attach(context) {
       context
         .querySelectorAll('.webprofiler__tabs__label')
-        .forEach(function (element) {
-          element.addEventListener('click', function (event) {
+        .forEach((element) => {
+          element.addEventListener('click', (event) => {
             openTab(event.currentTarget.dataset.tabId);
           });
         });

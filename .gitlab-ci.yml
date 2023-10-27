@@ -14,3 +14,6 @@ phpstan:
 
 stylelint:
   allow_failure: false
+
+eslint:
+  allow_failure: false
