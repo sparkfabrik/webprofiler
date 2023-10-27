@@ -1,9 +1,9 @@
 /* This file is based on WebProfilerBundle/Resources/views/Profiler/base_js.html.twig.
    If you make any change in this file, verify the same change is needed in the other file. */
 /* <![CDATA[ */
-if (typeof Sfjs === "undefined") {
+if (typeof Sfjs === 'undefined') {
   Sfjs = (function () {
-    if ("classList" in document.documentElement) {
+    if ('classList' in document.documentElement) {
       var hasClass = function (el, cssClass) {
         return el.classList.contains(cssClass);
       };
@@ -23,7 +23,7 @@ if (typeof Sfjs === "undefined") {
       var removeClass = function (el, cssClass) {
         el.className = el.className.replace(
           new RegExp(`\\b${cssClass}\\b`),
-          " "
+          ' ',
         );
       };
       var addClass = function (el, cssClass) {
@@ -40,8 +40,8 @@ if (typeof Sfjs === "undefined") {
 
     let addEventListener;
 
-    const el = document.createElement("div");
-    if (!("addEventListener" in el)) {
+    const el = document.createElement('div');
+    if (!('addEventListener' in el)) {
       addEventListener = function (element, eventName, callback) {
         element.attachEvent(`on${eventName}`, callback);
       };
@@ -53,12 +53,12 @@ if (typeof Sfjs === "undefined") {
 
     if (navigator.clipboard) {
       document
-        .querySelectorAll("[data-clipboard-text]")
+        .querySelectorAll('[data-clipboard-text]')
         .forEach(function (element) {
-          removeClass(element, "hidden");
-          element.addEventListener("click", function () {
+          removeClass(element, 'hidden');
+          element.addEventListener('click', function () {
             navigator.clipboard.writeText(
-              element.getAttribute("data-clipboard-text")
+              element.getAttribute('data-clipboard-text'),
             );
           });
         });
@@ -69,115 +69,115 @@ if (typeof Sfjs === "undefined") {
 
       createTabs() {
         const tabGroups = document.querySelectorAll(
-          ".sf-tabs:not([data-processed=true])"
+          '.sf-tabs:not([data-processed=true])',
         );
 
         /* create the tab navigation for each group of tabs */
         for (var i = 0; i < tabGroups.length; i++) {
-          const tabs = tabGroups[i].querySelectorAll(":scope > .tab");
-          var tabNavigation = document.createElement("ul");
-          tabNavigation.className = "tab-navigation";
+          const tabs = tabGroups[i].querySelectorAll(':scope > .tab');
+          var tabNavigation = document.createElement('ul');
+          tabNavigation.className = 'tab-navigation';
 
           let selectedTabId = `tab-${i}-0`; /* select the first tab by default */
           for (var j = 0; j < tabs.length; j++) {
             var tabId = `tab-${i}-${j}`;
-            const tabTitle = tabs[j].querySelector(".tab-title").innerHTML;
+            const tabTitle = tabs[j].querySelector('.tab-title').innerHTML;
 
-            const tabNavigationItem = document.createElement("li");
-            tabNavigationItem.setAttribute("data-tab-id", tabId);
-            if (hasClass(tabs[j], "active")) {
+            const tabNavigationItem = document.createElement('li');
+            tabNavigationItem.setAttribute('data-tab-id', tabId);
+            if (hasClass(tabs[j], 'active')) {
               selectedTabId = tabId;
             }
-            if (hasClass(tabs[j], "disabled")) {
-              addClass(tabNavigationItem, "disabled");
+            if (hasClass(tabs[j], 'disabled')) {
+              addClass(tabNavigationItem, 'disabled');
             }
             tabNavigationItem.innerHTML = tabTitle;
             tabNavigation.appendChild(tabNavigationItem);
 
-            const tabContent = tabs[j].querySelector(".tab-content");
-            tabContent.parentElement.setAttribute("id", tabId);
+            const tabContent = tabs[j].querySelector('.tab-content');
+            tabContent.parentElement.setAttribute('id', tabId);
           }
 
           tabGroups[i].insertBefore(tabNavigation, tabGroups[i].firstChild);
           addClass(
             document.querySelector(`[data-tab-id="${selectedTabId}"]`),
-            "active"
+            'active',
           );
         }
 
         /* display the active tab and add the 'click' event listeners */
         for (i = 0; i < tabGroups.length; i++) {
           tabNavigation = tabGroups[i].querySelectorAll(
-            ":scope >.tab-navigation li"
+            ':scope >.tab-navigation li',
           );
 
           for (j = 0; j < tabNavigation.length; j++) {
-            tabId = tabNavigation[j].getAttribute("data-tab-id");
+            tabId = tabNavigation[j].getAttribute('data-tab-id');
             document
               .getElementById(tabId)
-              .querySelector(".tab-title").className = "hidden";
+              .querySelector('.tab-title').className = 'hidden';
 
-            if (hasClass(tabNavigation[j], "active")) {
-              document.getElementById(tabId).className = "block";
+            if (hasClass(tabNavigation[j], 'active')) {
+              document.getElementById(tabId).className = 'block';
             } else {
-              document.getElementById(tabId).className = "hidden";
+              document.getElementById(tabId).className = 'hidden';
             }
 
-            tabNavigation[j].addEventListener("click", function (e) {
+            tabNavigation[j].addEventListener('click', function (e) {
               let activeTab = e.target || e.srcElement;
 
               /* needed because when the tab contains HTML contents, user can click */
               /* on any of those elements instead of their parent '<li>' element */
-              while (activeTab.tagName.toLowerCase() !== "li") {
+              while (activeTab.tagName.toLowerCase() !== 'li') {
                 activeTab = activeTab.parentNode;
               }
 
               /* get the full list of tabs through the parent of the active tab element */
               const tabNavigation = activeTab.parentNode.children;
               for (let k = 0; k < tabNavigation.length; k++) {
-                const tabId = tabNavigation[k].getAttribute("data-tab-id");
-                document.getElementById(tabId).className = "hidden";
-                removeClass(tabNavigation[k], "active");
+                const tabId = tabNavigation[k].getAttribute('data-tab-id');
+                document.getElementById(tabId).className = 'hidden';
+                removeClass(tabNavigation[k], 'active');
               }
 
-              addClass(activeTab, "active");
-              const activeTabId = activeTab.getAttribute("data-tab-id");
-              document.getElementById(activeTabId).className = "block";
+              addClass(activeTab, 'active');
+              const activeTabId = activeTab.getAttribute('data-tab-id');
+              document.getElementById(activeTabId).className = 'block';
             });
           }
 
-          tabGroups[i].setAttribute("data-processed", "true");
+          tabGroups[i].setAttribute('data-processed', 'true');
         }
       },
 
       createToggles() {
         const toggles = document.querySelectorAll(
-          ".sf-toggle:not([data-processed=true])"
+          '.sf-toggle:not([data-processed=true])',
         );
 
         for (let i = 0; i < toggles.length; i++) {
           const elementSelector = toggles[i].getAttribute(
-            "data-toggle-selector"
+            'data-toggle-selector',
           );
           const element = document.querySelector(elementSelector);
 
-          addClass(element, "sf-toggle-content");
+          addClass(element, 'sf-toggle-content');
 
           if (
-            toggles[i].hasAttribute("data-toggle-initial") &&
-            toggles[i].getAttribute("data-toggle-initial") == "display"
+            toggles[i].hasAttribute('data-toggle-initial') &&
+            toggles[i].getAttribute('data-toggle-initial') == 'display'
           ) {
-            addClass(toggles[i], "sf-toggle-on");
-            addClass(element, "sf-toggle-visible");
+            addClass(toggles[i], 'sf-toggle-on');
+            addClass(element, 'sf-toggle-visible');
           } else {
-            addClass(toggles[i], "sf-toggle-off");
-            addClass(element, "sf-toggle-hidden");
+            addClass(toggles[i], 'sf-toggle-off');
+            addClass(element, 'sf-toggle-hidden');
           }
 
-          addEventListener(toggles[i], "click", function (e) {
+          addEventListener(toggles[i], 'click', function (e) {
             e.preventDefault();
 
-            if (window.getSelection().toString() !== "") {
+            if (window.getSelection().toString() !== '') {
               /* Don't do anything on text selection */
               return;
             }
@@ -186,71 +186,71 @@ if (typeof Sfjs === "undefined") {
 
             /* needed because when the toggle contains HTML contents, user can click */
             /* on any of those elements instead of their parent '.sf-toggle' element */
-            while (!hasClass(toggle, "sf-toggle")) {
+            while (!hasClass(toggle, 'sf-toggle')) {
               toggle = toggle.parentNode;
             }
 
             const element = document.querySelector(
-              toggle.getAttribute("data-toggle-selector")
+              toggle.getAttribute('data-toggle-selector'),
             );
 
-            toggleClass(toggle, "sf-toggle-on");
-            toggleClass(toggle, "sf-toggle-off");
-            toggleClass(element, "sf-toggle-hidden");
-            toggleClass(element, "sf-toggle-visible");
+            toggleClass(toggle, 'sf-toggle-on');
+            toggleClass(toggle, 'sf-toggle-off');
+            toggleClass(element, 'sf-toggle-hidden');
+            toggleClass(element, 'sf-toggle-visible');
 
             /* the toggle doesn't change its contents when clicking on it */
-            if (!toggle.hasAttribute("data-toggle-alt-content")) {
+            if (!toggle.hasAttribute('data-toggle-alt-content')) {
               return;
             }
 
-            if (!toggle.hasAttribute("data-toggle-original-content")) {
+            if (!toggle.hasAttribute('data-toggle-original-content')) {
               toggle.setAttribute(
-                "data-toggle-original-content",
-                toggle.innerHTML
+                'data-toggle-original-content',
+                toggle.innerHTML,
               );
             }
 
             const currentContent = toggle.innerHTML;
             const originalContent = toggle.getAttribute(
-              "data-toggle-original-content"
+              'data-toggle-original-content',
             );
-            const altContent = toggle.getAttribute("data-toggle-alt-content");
+            const altContent = toggle.getAttribute('data-toggle-alt-content');
             toggle.innerHTML =
               currentContent !== altContent ? altContent : originalContent;
           });
 
           /* Prevents from disallowing clicks on links inside toggles */
-          const toggleLinks = toggles[i].querySelectorAll("a");
+          const toggleLinks = toggles[i].querySelectorAll('a');
           for (let j = 0; j < toggleLinks.length; j++) {
-            addEventListener(toggleLinks[j], "click", function (e) {
+            addEventListener(toggleLinks[j], 'click', function (e) {
               e.stopPropagation();
             });
           }
 
           /* Prevents from disallowing clicks on "copy to clipboard" elements inside toggles */
           const copyToClipboardElements = toggles[i].querySelectorAll(
-            "span[data-clipboard-text]"
+            'span[data-clipboard-text]',
           );
           for (let k = 0; k < copyToClipboardElements.length; k++) {
-            addEventListener(copyToClipboardElements[k], "click", function (e) {
+            addEventListener(copyToClipboardElements[k], 'click', function (e) {
               e.stopPropagation();
             });
           }
 
-          toggles[i].setAttribute("data-processed", "true");
+          toggles[i].setAttribute('data-processed', 'true');
         }
       },
 
       createFilters() {
         document
-          .querySelectorAll("[data-filters] [data-filter]")
+          .querySelectorAll('[data-filters] [data-filter]')
           .forEach(function (filter) {
-            const filters = filter.closest("[data-filters]");
-            let type = "choice";
+            const filters = filter.closest('[data-filters]');
+            let type = 'choice';
             const name = filter.dataset.filter;
             const ucName = name.charAt(0).toUpperCase() + name.slice(1);
-            const list = document.createElement("ul");
+            const list = document.createElement('ul');
             let values =
               filters.dataset[`filter${ucName}`] ||
               filters.querySelectorAll(`[data-filter-${name}]`);
@@ -258,13 +258,13 @@ if (typeof Sfjs === "undefined") {
             let defaults = null;
             const indexed = {};
             const processed = {};
-            if (typeof values === "string") {
-              type = "level";
-              labels = values.split(",");
-              values = values.toLowerCase().split(",");
+            if (typeof values === 'string') {
+              type = 'level';
+              labels = values.split(',');
+              values = values.toLowerCase().split(',');
               defaults = values.length - 1;
             }
-            addClass(list, "filter-list");
+            addClass(list, 'filter-list');
             addClass(list, `filter-list-${type}`);
             values.forEach(function (value, i) {
               if (value instanceof HTMLElement) {
@@ -273,28 +273,28 @@ if (typeof Sfjs === "undefined") {
               if (value in processed) {
                 return;
               }
-              const option = document.createElement("li");
+              const option = document.createElement('li');
               const label = i in labels ? labels[i] : value;
               let active = false;
               let matches;
-              if (label === "") {
-                option.innerHTML = "<em>(none)</em>";
+              if (label === '') {
+                option.innerHTML = '<em>(none)</em>';
               } else {
                 option.innerText = label;
               }
               option.dataset.filter = value;
               option.setAttribute(
-                "title",
+                'title',
                 (matches = filters.querySelectorAll(
-                  `[data-filter-${name}="${value}"]`
+                  `[data-filter-${name}="${value}"]`,
                 ).length) === 1
-                  ? "Matches 1 row"
-                  : `Matches ${matches} rows`
+                  ? 'Matches 1 row'
+                  : `Matches ${matches} rows`,
               );
               indexed[value] = i;
               list.appendChild(option);
-              addEventListener(option, "click", function () {
-                if (type === "choice") {
+              addEventListener(option, 'click', function () {
+                if (type === 'choice') {
                   filters
                     .querySelectorAll(`[data-filter-${name}]`)
                     .forEach(function (row) {
@@ -304,27 +304,27 @@ if (typeof Sfjs === "undefined") {
                         toggleClass(row, `filter-hidden-${name}`);
                       }
                     });
-                  toggleClass(option, "active");
-                } else if (type === "level") {
+                  toggleClass(option, 'active');
+                } else if (type === 'level') {
                   if (
                     i ===
-                    this.parentNode.querySelectorAll(".active").length - 1
+                    this.parentNode.querySelectorAll('.active').length - 1
                   ) {
                     return;
                   }
                   this.parentNode
-                    .querySelectorAll("li")
+                    .querySelectorAll('li')
                     .forEach(function (currentOption, j) {
                       if (j <= i) {
-                        addClass(currentOption, "active");
+                        addClass(currentOption, 'active');
                         if (i === j) {
-                          addClass(currentOption, "last-active");
+                          addClass(currentOption, 'last-active');
                         } else {
-                          removeClass(currentOption, "last-active");
+                          removeClass(currentOption, 'last-active');
                         }
                       } else {
-                        removeClass(currentOption, "active");
-                        removeClass(currentOption, "last-active");
+                        removeClass(currentOption, 'active');
+                        removeClass(currentOption, 'last-active');
                       }
                     });
                   filters
@@ -338,16 +338,16 @@ if (typeof Sfjs === "undefined") {
                     });
                 }
               });
-              if (type === "choice") {
+              if (type === 'choice') {
                 active = defaults === null || defaults.indexOf(value) >= 0;
-              } else if (type === "level") {
+              } else if (type === 'level') {
                 active = i <= defaults;
                 if (active && i === defaults) {
-                  addClass(option, "last-active");
+                  addClass(option, 'last-active');
                 }
               }
               if (active) {
-                addClass(option, "active");
+                addClass(option, 'active');
               } else {
                 filters
                   .querySelectorAll(`[data-filter-${name}="${value}"]`)
@@ -360,35 +360,35 @@ if (typeof Sfjs === "undefined") {
 
             if (list.childNodes.length > 1) {
               filter.appendChild(list);
-              filter.dataset.filtered = "";
+              filter.dataset.filtered = '';
             }
           });
       },
     };
   })();
 
-  Sfjs.addEventListener(document, "DOMContentLoaded", function () {
+  Sfjs.addEventListener(document, 'DOMContentLoaded', function () {
     Sfjs.createTabs();
     Sfjs.createToggles();
     Sfjs.createFilters();
   });
 
-  const toggle = document.getElementById("toggle");
+  const toggle = document.getElementById('toggle');
   const { body } = document;
 
   toggle.checked =
-    localStorage.getItem("symfony/profiler/theme") == "theme-dark";
-  toggle.addEventListener("input", (e) => {
+    localStorage.getItem('symfony/profiler/theme') == 'theme-dark';
+  toggle.addEventListener('input', (e) => {
     const isChecked = e.target.checked;
 
     if (isChecked) {
-      body.classList.add("theme-dark");
-      localStorage.setItem("symfony/profiler/theme", "theme-dark");
-      body.classList.remove("theme-light");
+      body.classList.add('theme-dark');
+      localStorage.setItem('symfony/profiler/theme', 'theme-dark');
+      body.classList.remove('theme-light');
     } else {
-      body.classList.add("theme-light");
-      localStorage.setItem("symfony/profiler/theme", "theme-light");
-      body.classList.remove("theme-dark");
+      body.classList.add('theme-light');
+      localStorage.setItem('symfony/profiler/theme', 'theme-light');
+      body.classList.remove('theme-dark');
     }
   });
 }

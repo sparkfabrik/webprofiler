@@ -23,7 +23,7 @@ database.highlight:
     name: BSD 3-Clause License
     url: https://github.com/highlightjs/highlight.js/blob/main/LICENSE
     gpl-compatible: true
-  version: "11.6.0"
+  version: '11.6.0'
   js:
     https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js:
       { type: external }

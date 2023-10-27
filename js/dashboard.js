@@ -12,7 +12,7 @@
         if (path.currentQuery && 'panel' in path.currentQuery) {
           const { panel } = path.currentQuery;
           const panel_link = document.querySelector(
-            `.webprofiler__collectors [data-collector-name='${panel}']`
+            `.webprofiler__collectors [data-collector-name='${panel}']`,
           );
           panel_link.click();
           panel_link.parentNode.className += ' active';

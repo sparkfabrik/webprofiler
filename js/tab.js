@@ -5,34 +5,34 @@
 (function (Drupal) {
   function openTab(name) {
     const contents = document.getElementsByClassName(
-      "webprofiler__tabs__content"
+      'webprofiler__tabs__content',
     );
     for (let i = 0; i < contents.length; i++) {
-      contents[i].style.display = "none";
+      contents[i].style.display = 'none';
     }
 
-    const labels = document.getElementsByClassName("webprofiler__tabs__label");
+    const labels = document.getElementsByClassName('webprofiler__tabs__label');
     for (let i = 0; i < labels.length; i++) {
-      labels[i].className = labels[i].className.replace(" active", "");
+      labels[i].className = labels[i].className.replace(' active', '');
     }
 
     if (document.getElementById(name)) {
-      document.getElementById(name).style.display = "block";
-      document.querySelector(`[data-tab-id="${name}"]`).className += " active";
+      document.getElementById(name).style.display = 'block';
+      document.querySelector(`[data-tab-id="${name}"]`).className += ' active';
     }
   }
 
   Drupal.behaviors.webprofiler_tab = {
     attach(context) {
       context
-        .querySelectorAll(".webprofiler__tabs__label")
+        .querySelectorAll('.webprofiler__tabs__label')
         .forEach(function (element) {
-          element.addEventListener("click", function (event) {
+          element.addEventListener('click', function (event) {
             openTab(event.currentTarget.dataset.tabId);
           });
         });
 
-      openTab("js-webprofiler__tab-0");
+      openTab('js-webprofiler__tab-0');
     },
   };
 })(Drupal);
