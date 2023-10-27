@@ -341,6 +341,7 @@ class HtmlErrorRenderer {
     extract($context, \EXTR_SKIP);
     ob_start();
 
+    // @phpstan-ignore-next-line
     $root = \Drupal::moduleHandler()
         ->getModule('webprofiler')
         ->getPath() . '/templates/Error/';

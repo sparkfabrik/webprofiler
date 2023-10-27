@@ -97,7 +97,8 @@ function webprofiler_theme(): array {
 function webprofiler_cache_flush(): void {
   $config = \Drupal::configFactory()->get('webprofiler.settings');
 
-  if ($config->get('purge_on_cache_clear')) {
+  $purge_on_cache_clear = (bool) $config->get('purge_on_cache_clear');
+  if ($purge_on_cache_clear) {
     $profiler = \Drupal::service('webprofiler.profiler');
     $profiler->purge();
   }

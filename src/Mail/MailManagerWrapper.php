@@ -34,6 +34,9 @@ class MailManagerWrapper extends MailManager {
     private readonly MailDataCollector $mailDataCollector
   ) {
     parent::__construct($namespaces, $cache_backend, $module_handler, $config_factory, $logger_factory, $string_translation, $renderer);
+
+    $this->alterInfo('mail_backend_info');
+    $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
   }
 
   /**

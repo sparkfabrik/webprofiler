@@ -27,7 +27,9 @@ class ComponentExtension extends AbstractExtension {
    * {@inheritdoc}
    */
   public function getNodeVisitors(): array {
+    // "webprofiler.theme" service isn't injected to prevent circular reference.
     /** @var \Drupal\webprofiler\DataCollector\ThemeDataCollector $dataCollector */
+    // @phpstan-ignore-next-line
     $dataCollector = \Drupal::service('webprofiler.theme');
 
     return [new ComponentNodeVisitor($this->pluginManager, $dataCollector)];

@@ -20,10 +20,9 @@ class TokenConverter implements ParamConverterInterface {
     // more than one language is active and "Account administration pages" is
     // enabled on admin/config/regional/language/detection. See #2710787 for
     // more information.
-    // phpcs:disable
     /** @var \Drupal\webprofiler\Profiler\Profiler $profiler */
+    // @phpstan-ignore-next-line
     $profiler = \Drupal::service('webprofiler.profiler');
-    // phpcs:enable
 
     if (NULL == $profiler) {
       return NULL;
