@@ -59,7 +59,7 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
    *   The list of collected forms.
    */
   public function getForms(): array {
-    return (!empty($this->data['forms']) && is_array($this->data['forms'])) ? $this->data['forms'] : [];
+    return $this->data['forms'];
   }
 
   /**

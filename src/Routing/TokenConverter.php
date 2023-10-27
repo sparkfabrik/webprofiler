@@ -41,10 +41,11 @@ class TokenConverter implements ParamConverterInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies($definition, $name, Route $route) {
-    if (!empty($definition['type']) && $definition['type'] === 'webprofiler:token') {
+  public function applies($definition, $name, Route $route): bool {
+    if (array_key_exists('type', $definition) && $definition['type'] === 'webprofiler:token') {
       return TRUE;
     }
+
     return FALSE;
   }
 

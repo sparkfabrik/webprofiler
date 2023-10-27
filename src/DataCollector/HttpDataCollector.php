@@ -109,7 +109,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
         ],
       ];
 
-      if ($response) {
+      if ($response != NULL) {
         $failureData['response'] = [
           'phrase' => $response->getReasonPhrase(),
           'status' => $response->getStatusCode(),

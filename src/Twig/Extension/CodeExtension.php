@@ -20,18 +20,18 @@ class CodeExtension extends AbstractExtension {
   /**
    * Formats debug file links.
    *
-   * @var string|\Symfony\Component\HttpKernel\Debug\FileLinkFormatter|array|false
+   * @var \Symfony\Component\HttpKernel\Debug\FileLinkFormatter
    */
-  private string|FileLinkFormatter|array|false $fileLinkFormat;
+  private FileLinkFormatter $fileLinkFormat;
 
   /**
    * CodeExtension constructor.
    *
-   * @param string|\Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
+   * @param \Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
    *   Formats debug file links.
    */
-  public function __construct(string|FileLinkFormatter $fileLinkFormat) {
-    $this->fileLinkFormat = $fileLinkFormat ?: ini_get('xdebug.file_link_format') ?: get_cfg_var('xdebug.file_link_format');
+  public function __construct(FileLinkFormatter $fileLinkFormat) {
+    $this->fileLinkFormat = $fileLinkFormat;
   }
 
   /**
@@ -77,18 +77,11 @@ class CodeExtension extends AbstractExtension {
    * @param int $line
    *   LIne number inside the file.
    *
-   * @return string|false
+   * @return string
    *   A link to a source file, or FALSE if the link cannot be created.
    */
-  public function getFileLink(string $file, int $line): string|false {
-    if ($fmt = $this->fileLinkFormat) {
-      return \is_string($fmt) ? strtr($fmt, [
-        '%f' => $file,
-        '%l' => $line,
-      ]) : $fmt->format($file, $line);
-    }
-
-    return FALSE;
+  public function getFileLink(string $file, int $line): string {
+    return $this->fileLinkFormat->format($file, $line);
   }
 
   /**

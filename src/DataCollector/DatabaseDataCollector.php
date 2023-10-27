@@ -118,7 +118,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
     $query_sort = $this
       ->configFactory
       ->get('webprofiler.settings')
-      ->get('query_sort') ?: '';
+      ->get('query_sort') ?? '';
 
     $queries = $this->data['queries'];
     if ('duration' === $query_sort) {

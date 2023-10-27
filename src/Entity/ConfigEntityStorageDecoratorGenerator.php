@@ -96,7 +96,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
           $classes[$definition->id()] = [
             'id' => $definition->id(),
             'class' => $node->name->name,
-            'interface' => '\\' . implode('\\', $node->implements[0]->parts),
+            'interface' => '\\' . implode('\\', $node->implements[0]->getParts()),
             'decoratorClass' => '\\Drupal\\webprofiler\\Entity\\' . $node->name->name . 'Decorator',
           ];
         }
@@ -163,9 +163,9 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
 
     if ($node->extends !== NULL &&
       $node->implements !== NULL &&
-      $node->extends->parts[0] == 'ConfigEntityStorage' &&
+      $node->extends->getParts()[0] == 'ConfigEntityStorage' &&
       isset($node->implements[0]) &&
-      $node->implements[0]->parts[0] != ''
+      $node->implements[0]->getParts()[0] != ''
     ) {
       return TRUE;
     }

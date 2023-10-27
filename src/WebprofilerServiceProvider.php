@@ -66,7 +66,8 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     }
 
     // Allow exception page handler to be disabled.
-    if (!Settings::get('webprofiler_error_page_disabled', FALSE)) {
+    $webprofiler_error_page_disabled = (bool) Settings::get('webprofiler_error_page_disabled', FALSE);
+    if (!$webprofiler_error_page_disabled) {
       $container->register('webprofiler.error_handler', 'Symfony\Component\HttpKernel\EventListener\ErrorListener')
         ->addArgument('\Drupal\webprofiler\Controller\ErrorController')
         ->addArgument(new Reference('logger.channel.debug'))

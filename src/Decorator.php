@@ -108,6 +108,7 @@ class Decorator {
   public function __get(string $property): mixed {
     $object = $this->getOriginalObject();
     if (property_exists($object, $property)) {
+      // @phpstan-ignore-next-line
       return $object->$property;
     }
 

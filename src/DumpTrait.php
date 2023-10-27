@@ -69,8 +69,6 @@ trait DumpTrait {
    *
    * @return \Symfony\Component\VarDumper\Cloner\Data
    *   The converted variable.
-   *
-   * @throws \ErrorException
    */
   protected function cloneVar(mixed $var): Data {
     if ($var instanceof Data) {
@@ -88,16 +86,16 @@ trait DumpTrait {
   /**
    * Return a list of casters.
    *
-   * @return array
+   * @return callable[]
    *   The list of casters.
    */
   protected function getCasters(): array {
     return [
       '*' => function ($v, array $a, Stub $s, $isNested) {
         if (!$v instanceof Stub) {
-          foreach ($a as $k => $v) {
-            if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
-              $a[$k] = new CutStub($v);
+          foreach ($a as $k => $v2) {
+            if (\is_object($v2) && !$v2 instanceof \DateTimeInterface && !$v2 instanceof Stub) {
+              $a[$k] = new CutStub($v2);
             }
           }
         }

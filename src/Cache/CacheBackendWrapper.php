@@ -38,12 +38,12 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
     $cache = $this->cacheBackend->get($cid, $allow_invalid);
 
     if ($cache) {
-      $cacheCopy = new \stdClass();
-      $cacheCopy->cid = $cache->cid;
-      $cacheCopy->expire = $cache->expire;
-      $cacheCopy->tags = $cache->tags;
+      $cache_copy = new \stdClass();
+      $cache_copy->cid = $cache->cid;
+      $cache_copy->expire = $cache->expire;
+      $cache_copy->tags = $cache->tags;
 
-      $this->cacheDataCollector->registerCacheHit($this->bin, $cacheCopy);
+      $this->cacheDataCollector->registerCacheHit($this->bin, $cache_copy);
     }
     else {
       $this->cacheDataCollector->registerCacheMiss($this->bin, $cid);
@@ -56,20 +56,20 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE): array {
-    $cidsCopy = $cids;
+    $cids_copy = $cids;
     $cache = $this->cacheBackend->getMultiple($cids, $allow_invalid);
 
-    foreach ($cidsCopy as $cid) {
+    foreach ($cids_copy as $cid) {
       if (in_array($cid, $cids, TRUE)) {
         $this->cacheDataCollector->registerCacheMiss($this->bin, $cid);
       }
       else {
-        $cacheCopy = new \stdClass();
-        $cacheCopy->cid = $cid;
-        $cacheCopy->expire = $cache[$cid]->expire;
-        $cacheCopy->tags = $cache[$cid]->tags;
+        $cache_copy = new \stdClass();
+        $cache_copy->cid = $cid;
+        $cache_copy->expire = $cache[$cid]->expire;
+        $cache_copy->tags = $cache[$cid]->tags;
 
-        $this->cacheDataCollector->registerCacheHit($this->bin, $cacheCopy);
+        $this->cacheDataCollector->registerCacheHit($this->bin, $cache_copy);
       }
     }
 

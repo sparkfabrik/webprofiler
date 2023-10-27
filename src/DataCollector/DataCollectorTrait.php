@@ -32,8 +32,8 @@ trait DataCollectorTrait {
       $data = new MethodData(
         $class,
         $method,
-        $reflectedMethod->getFilename(),
-        $reflectedMethod->getStartLine() ?: '',
+        $reflectedMethod->getFileName(),
+        $reflectedMethod->getStartLine() ?? '',
       );
     }
     catch (\ReflectionException $re) {
@@ -80,7 +80,7 @@ trait DataCollectorTrait {
         return sprintf(
             'closure this: %s, closure scope: %s, static variables: %s',
             $closureThis ? \get_class($closureThis) : $reflectedFunction->name,
-            $closureClass ? $closureClass->getName() : $reflectedFunction->name,
+            $closureClass != NULL ? $closureClass->getName() : $reflectedFunction->name,
             $this->formatVariablesArray($reflectedFunction->getStaticVariables()),
           );
 

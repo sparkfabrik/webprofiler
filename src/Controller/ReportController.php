@@ -62,7 +62,7 @@ class ReportController extends ControllerBase {
     $profiles = $this->profiler->find($ip, $url, $limit, $method, '', '');
 
     $rows = [];
-    if (count($profiles)) {
+    if (count($profiles) > 0) {
       foreach ($profiles as $profile) {
         $row = [];
         $row[] = Link::fromTextAndUrl($profile['token'], new Url('webprofiler.dashboard', ['token' => $profile['token']]))
@@ -85,6 +85,7 @@ class ReportController extends ControllerBase {
       ];
     }
 
+    $build = [];
     $build['filters'] = $this->formBuilder()
       ->getForm('Drupal\\webprofiler\\Form\\ReportFilterForm');
 

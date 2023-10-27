@@ -113,7 +113,8 @@ class ProfilerListener implements EventSubscriberInterface {
     }
 
     try {
-      if (!$profile = $this->profiler->collect($request, $event->getResponse(), $exception)) {
+      $profile = $this->profiler->collect($request, $event->getResponse(), $exception);
+      if ($profile == NULL) {
         return;
       }
     }

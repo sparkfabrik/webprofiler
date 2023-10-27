@@ -64,7 +64,7 @@ class UserDataCollector extends DataCollector {
     $storage = $this->entityManager->getStorage('user_role');
     foreach ($this->currentUser->getRoles() as $role) {
       $entity = $storage->load($role);
-      if ($entity) {
+      if ($entity != NULL) {
         $this->data['roles'][] = $entity->label();
       }
     }

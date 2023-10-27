@@ -259,7 +259,7 @@ services:
   # Error handler
   webprofiler.error_renderer:
     class: Drupal\webprofiler\ErrorRenderer\HtmlErrorRenderer
-    arguments: [true, null, '@webprofiler.file_link_formatter', null, '', '@logger.channel.debug']
+    arguments: ['@webprofiler.file_link_formatter', '@logger.channel.debug']
 
   # Monolog processors.
   monolog.processor.debug:

@@ -116,23 +116,23 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
    *   The controller data.
    */
   private function renderControllerData(array $data): TranslatableMarkup|string {
-    if (!empty($data['_controller'])) {
+    if (array_key_exists('_controller', $data)) {
       return $this->t('Controller: %controller', ['%controller' => $data['_controller']]);
     }
 
-    if (!empty($data['_form'])) {
+    if (array_key_exists('_form', $data)) {
       return $this->t('Form: %form', ['%form' => $data['_form']]);
     }
 
-    if (!empty($data['_entity_form'])) {
+    if (array_key_exists('_entity_form', $data)) {
       return $this->t('Entity form: %entity_form', ['%entity_form' => $data['_entity_form']]);
     }
 
-    if (!empty($data['_entity_view'])) {
+    if (array_key_exists('_entity_view', $data)) {
       return $this->t('Entity view: %entity_view', ['%entity_view' => $data['_entity_view']]);
     }
 
-    if (!empty($data['_entity_list'])) {
+    if (array_key_exists('_entity_list', $data)) {
       return $this->t('Entity list: %entity_list', ['%entity_list' => $data['_entity_list']]);
     }
 

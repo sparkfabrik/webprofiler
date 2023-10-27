@@ -75,7 +75,7 @@ class ToolbarListener implements EventSubscriberInterface {
     $response = $event->getResponse();
     $request = $event->getRequest();
 
-    if ($response->headers->has('X-Debug-Token') && NULL !== $this->urlGenerator) {
+    if ($response->headers->has('X-Debug-Token') && NULL != $this->urlGenerator) {
       try {
         $response->headers->set(
           'X-Debug-Token-Link',
@@ -102,7 +102,8 @@ class ToolbarListener implements EventSubscriberInterface {
       return;
     }
 
-    if ($response->headers->has('X-Debug-Token') && $response->isRedirect() && $this->config->get('intercept_redirects') && 'html' === $request->getRequestFormat()) {
+    $intercept_redirects = (bool) $this->config->get('intercept_redirects');
+    if ($response->headers->has('X-Debug-Token') && $response->isRedirect() && $intercept_redirects && 'html' === $request->getRequestFormat()) {
       $toolbarRedirect = [
         '#theme' => 'webprofiler_toolbar_redirect',
         '#location' => $response->headers->get('Location'),

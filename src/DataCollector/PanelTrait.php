@@ -104,7 +104,7 @@ trait PanelTrait {
       '#type' => 'inline_template',
       '#template' => '<a href="{{ href }}">{{ label }}</a>',
       '#context' => [
-        'href' => $flf->format($file ?: '', $line),
+        'href' => $flf->format($file != NULL ? $file : '', $line),
         'label' => $label,
       ],
     ];

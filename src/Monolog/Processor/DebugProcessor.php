@@ -59,7 +59,8 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
    * @throws \Exception
    */
   public function __invoke(array|LogRecord $record): array|LogRecord {
-    $key = $this->requestStack && ($request = $this->requestStack->getCurrentRequest()) ? spl_object_id($request) : '';
+    $request = $this->requestStack?->getCurrentRequest();
+    $key = $request != NULL ? spl_object_id($request) : '';
 
     $timestamp = $timestampRfc3339 = FALSE;
     if ($record['datetime'] instanceof \DateTimeInterface) {

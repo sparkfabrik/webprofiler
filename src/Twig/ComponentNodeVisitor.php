@@ -47,7 +47,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
     }
     $component = $this->getComponent($node);
 
-    if (!$component) {
+    if ($component == NULL) {
       return $node;
     }
 

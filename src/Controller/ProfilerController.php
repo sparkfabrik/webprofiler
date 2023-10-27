@@ -109,7 +109,9 @@ class ProfilerController extends ControllerBase {
 
     $this->profiler->disable();
 
-    if (!$profile = $this->profiler->loadProfile($token)) {
+    $profile = $this->profiler->loadProfile($token);
+
+    if ($profile === NULL) {
       return new Response('', 404, ['Content-Type' => 'text/html']);
     }
 

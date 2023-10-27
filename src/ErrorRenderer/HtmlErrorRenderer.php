@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
-use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer as BaseHtmlErrorRenderer;
+use Symfony\Component\VarDumper\Cloner\Data;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Render HTML for a given Exception.
  */
-class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
+class HtmlErrorRenderer {
 
   private const GHOST_ADDONS = [
     '02-14' => self::GHOST_HEART,
@@ -44,28 +45,20 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
   private static string $template = 'error.html.php';
 
   /**
-   * @param bool|callable $debug
-   *   The debugging mode as a boolean or a callable
-   *   that should return it.
-   * @param string|callable $outputBuffer
-   *   The output buffer as a string or a
-   *   callable that should return it.
+   * @param \Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
+   *   The file link formatter.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   The logger.
    */
-  public function __construct(bool|callable $debug = FALSE, string $charset = NULL, string|FileLinkFormatter $fileLinkFormat = NULL, string $projectDir = NULL, string|callable $outputBuffer = '', LoggerInterface $logger = NULL) {
-    $this->debug = \is_bool($debug) ? $debug : $debug(...);
-    $this->charset = $charset ?: (\ini_get('default_charset') ?: 'UTF-8');
-    $fileLinkFormat ??= $_ENV['SYMFONY_IDE'] ?? $_SERVER['SYMFONY_IDE'] ?? NULL;
-    $this->fileLinkFormat = \is_string($fileLinkFormat)
-      ? (ErrorRendererInterface::IDE_LINK_FORMATS[$fileLinkFormat] ?? $fileLinkFormat ?: FALSE)
-      : ($fileLinkFormat ?: \ini_get('xdebug.file_link_format') ?: get_cfg_var('xdebug.file_link_format') ?: FALSE);
-    $this->projectDir = $projectDir;
-    $this->outputBuffer = \is_string($outputBuffer) ? $outputBuffer : $outputBuffer(...);
+  public function __construct(FileLinkFormatter $fileLinkFormat, LoggerInterface $logger = NULL) {
+    $this->debug = TRUE;
+    $this->charset = 'UTF-8';
+    $this->fileLinkFormat = $fileLinkFormat;
+    $this->projectDir = NULL;
+    $this->outputBuffer = '';
     $this->logger = $logger;
   }
 
-  /**
-   *
-   */
   public function render(\Throwable $exception): FlattenException {
     $headers = ['Content-Type' => 'text/html; charset=' . $this->charset];
     if (\is_bool($this->debug) ? $this->debug : ($this->debug)($exception)) {
@@ -96,12 +89,10 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return $this->include('assets/css/exception.css');
   }
 
-  /**
-   *
-   */
   public static function isDebug(RequestStack $requestStack, bool $debug): \Closure {
     return static function () use ($requestStack, $debug): bool {
-      if (!$request = $requestStack->getCurrentRequest()) {
+      $request = $requestStack->getCurrentRequest();
+      if ($request == NULL) {
         return $debug;
       }
 
@@ -109,34 +100,29 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     };
   }
 
-  /**
-   *
-   */
   public static function getAndCleanOutputBuffer(RequestStack $requestStack): \Closure {
     return static function () use ($requestStack): string {
-      if (!$request = $requestStack->getCurrentRequest()) {
+      $request = $requestStack->getCurrentRequest();
+      if ($request == NULL) {
         return '';
       }
 
-      $startObLevel = $request->headers->get('X-Php-Ob-Level', -1);
+      $startObLevel = $request->headers->get('X-Php-Ob-Level', '-1');
 
       if (ob_get_level() <= $startObLevel) {
         return '';
       }
 
-      Response::closeOutputBuffers($startObLevel + 1, TRUE);
+      Response::closeOutputBuffers(intval($startObLevel) + 1, TRUE);
 
       return ob_get_clean();
     };
   }
 
-  /**
-   *
-   */
   private function renderException(FlattenException $exception, string $debugTemplate = 'exception_full.html.php'): string {
     $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
     $statusText = $this->escape($exception->getStatusText());
-    $statusCode = $this->escape($exception->getStatusCode());
+    $statusCode = $this->escape((string) $exception->getStatusCode());
 
     if (!$debug) {
       return $this->include(self::$template, [
@@ -162,9 +148,6 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     ]);
   }
 
-  /**
-   *
-   */
   private function formatArgs(array $args): string {
     $result = [];
     foreach ($args as $key => $item) {
@@ -193,23 +176,15 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return implode(', ', $result);
   }
 
-  /**
-   *
-   */
-  private function formatArgsAsText(array $args) {
+  // @phpstan-ignore-next-line
+  private function formatArgsAsText(array $args): string {
     return strip_tags($this->formatArgs($args));
   }
 
-  /**
-   *
-   */
   private function escape(string $string): string {
     return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
   }
 
-  /**
-   *
-   */
   private function abbrClass(string $class): string {
     $parts = explode('\\', $class);
     $short = array_pop($parts);
@@ -217,9 +192,6 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
   }
 
-  /**
-   *
-   */
   private function getFileRelative(string $file): ?string {
     $file = str_replace('\\', '/', $file);
 
@@ -230,9 +202,6 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return NULL;
   }
 
-  /**
-   *
-   */
   private function getFileLink(string $file, int $line): string|false {
     if ($fmt = $this->fileLinkFormat) {
       return \is_string($fmt) ? strtr($fmt, [
@@ -251,7 +220,7 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
    *   An absolute file path.
    * @param int $line
    *   The line number.
-   * @param string $text
+   * @param string|null $text
    *   Use this text for the link rather than the file path.
    */
   private function formatFile(string $file, int $line, string $text = NULL): string {
@@ -287,6 +256,7 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
    *   The number of displayed lines around or -1 for the
    *   whole file.
    */
+  // @phpstan-ignore-next-line
   private function fileExcerpt(string $file, int $line, int $srcContext = 3): string {
     if (is_file($file) && is_readable($file)) {
       // highlight_file could throw warnings
@@ -315,10 +285,7 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return '';
   }
 
-  /**
-   *
-   */
-  private function fixCodeMarkup(string $line) {
+  private function fixCodeMarkup(string $line): string {
     // </span> ending tag from previous line
     $opening = strpos($line, '<span');
     $closing = strpos($line, '</span>');
@@ -336,20 +303,16 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return trim($line);
   }
 
-  /**
-   *
-   */
-  private function formatFileFromText(string $text) {
+  // @phpstan-ignore-next-line
+  private function formatFileFromText(string $text): array|string|null {
     return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
-      return 'in ' . $this->formatFile($match[2], $match[3]);
+      return 'in ' . $this->formatFile($match[2], intval($match[3]));
     }, $text);
   }
 
-  /**
-   *
-   */
-  private function formatLogMessage(string $message, array $context) {
-    if ($context && str_contains($message, '{')) {
+  // @phpstan-ignore-next-line
+  private function formatLogMessage(string $message, array $context): string {
+    if (count($context) > 0 && str_contains($message, '{')) {
       $replacements = [];
       foreach ($context as $key => $val) {
         if (\is_scalar($val)) {
@@ -357,7 +320,7 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
         }
       }
 
-      if ($replacements) {
+      if (count($replacements) > 0) {
         $message = strtr($message, $replacements);
       }
     }
@@ -365,9 +328,7 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return $this->escape($message);
   }
 
-  /**
-   *
-   */
+  // @phpstan-ignore-next-line
   private function addElementToGhost(): string {
     if (!isset(self::GHOST_ADDONS[date('m-d')])) {
       return '';
@@ -376,14 +337,13 @@ class HtmlErrorRenderer extends BaseHtmlErrorRenderer {
     return '<path d="' . self::GHOST_ADDONS[date('m-d')] . '" fill="#fff" fill-opacity="0.6"></path>';
   }
 
-  /**
-   *
-   */
   private function include(string $name, array $context = []): string {
     extract($context, \EXTR_SKIP);
     ob_start();
 
-    $root = \Drupal::moduleHandler()->getModule('webprofiler')->getPath() . '/templates/Error/';
+    $root = \Drupal::moduleHandler()
+        ->getModule('webprofiler')
+        ->getPath() . '/templates/Error/';
     include is_file($root . $name) ? $root . $name : $name;
 
     return trim(ob_get_clean());
