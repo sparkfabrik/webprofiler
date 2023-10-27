@@ -3,9 +3,6 @@
  * Database panel app.
  */
 (function (Drupal) {
-
-  "use strict";
-
   const queryTpl = _.template(`
     <table class="webprofiler__table responsive-enabled" data-striping="1">
         <thead>
@@ -35,49 +32,57 @@
   `);
 
   Drupal.behaviors.webprofiler_database = {
-    attach: function (context) {
+    attach(context) {
       hljs.configure({
-        ignoreUnescapedHTML: true
+        ignoreUnescapedHTML: true,
       });
 
-      once('db', '.wp-db-query').forEach(function (element) {
-        let result =
-          queryTpl({
-            'time': element.dataset.wpTime,
-            'caller': element.dataset.wpClass,
-            'db': element.dataset.wpDb,
-            'target': element.dataset.wpTarget,
-            'hasArgs': element.dataset.wpHasArgs,
-            'type': element.dataset.wpType,
-            'qid': element.dataset.wpQid,
-            'explainPath': element.dataset.wpExplainPath
-          });
+      once("db", ".wp-db-query").forEach(function (element) {
+        const result = queryTpl({
+          time: element.dataset.wpTime,
+          caller: element.dataset.wpClass,
+          db: element.dataset.wpDb,
+          target: element.dataset.wpTarget,
+          hasArgs: element.dataset.wpHasArgs,
+          type: element.dataset.wpType,
+          qid: element.dataset.wpQid,
+          explainPath: element.dataset.wpExplainPath,
+        });
 
         element.innerHTML += result;
 
-        element.querySelectorAll('code').forEach(function (code) {
+        element.querySelectorAll("code").forEach(function (code) {
           hljs.highlightElement(code);
         });
 
         // Swap placeholders.
-        if (element.dataset.wpHasArgs === '1') {
-          element.querySelector('.wp-executable-toggle').addEventListener('click', function (e) {
-            element.querySelector('.wp-query-placeholder').classList.toggle('is-hidden');
-            element.querySelector('.wp-query-executable').classList.toggle('is-hidden');
-          });
+        if (element.dataset.wpHasArgs === "1") {
+          element
+            .querySelector(".wp-executable-toggle")
+            .addEventListener("click", function (e) {
+              element
+                .querySelector(".wp-query-placeholder")
+                .classList.toggle("is-hidden");
+              element
+                .querySelector(".wp-query-executable")
+                .classList.toggle("is-hidden");
+            });
         }
 
         // Copy to clipboard.
         if (navigator.clipboard && window.isSecureContext) {
-          element.querySelector('.wp-query-copy').addEventListener('click', function (e) {
-            let query = element.querySelector('.wp-query-executable').innerText;
-            navigator.clipboard.writeText(query);
-          });
-        }
-        else {
-          element.querySelector('.wp-query-copy').classList.toggle('is-hidden');
+          element
+            .querySelector(".wp-query-copy")
+            .addEventListener("click", function (e) {
+              const query = element.querySelector(
+                ".wp-query-executable"
+              ).innerText;
+              navigator.clipboard.writeText(query);
+            });
+        } else {
+          element.querySelector(".wp-query-copy").classList.toggle("is-hidden");
         }
       });
-    }
-  }
+    },
+  };
 })(Drupal);

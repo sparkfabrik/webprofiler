@@ -14,6 +14,6 @@ active_toolbar_items:
   views: views
 query_sort: source
 query_highlight: 5
-ide: 'phpstorm://open?file=%f&line=%l'
-ide_remote_path: ''
-ide_local_path: ''
+ide: "phpstorm://open?file=%f&line=%l"
+ide_remote_path: ""
+ide_local_path: ""

@@ -4,7 +4,7 @@ dashboard:
     component:
       css/dashboard.css: {}
   js:
-    js/dashboard.js: { }
+    js/dashboard.js: {}
   dependencies:
     - core/once
     - core/drupal.ajax
@@ -25,10 +25,12 @@ database.highlight:
     gpl-compatible: true
   version: "11.6.0"
   js:
-    https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js: { type: external }
+    https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js:
+      { type: external }
   css:
     component:
-      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css: { type: external }
+      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css:
+        { type: external }
 
 tab:
   version: VERSION
