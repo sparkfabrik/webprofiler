@@ -4,11 +4,11 @@
 }
 
 .webprofiler__tabs__label {
-  color: #55565b;
-  cursor: pointer;
-  font-size: 16px;
   padding: 0 20px;
+  cursor: pointer;
   text-decoration: none;
+  color: #55565b;
+  font-size: 16px;
 }
 
 .webprofiler__tabs__content {

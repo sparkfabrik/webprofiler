@@ -2,41 +2,41 @@
     padding-bottom: 14px;
 }
 .sf-reset .traces li {
-    font-size: 12px;
-    color: #868686;
+    margin-left: 20px;
     padding: 5px 4px;
     list-style-type: decimal;
-    margin-left: 20px;
+    color: #868686;
+    font-size: 12px;
 }
 .sf-reset #logs .traces li.error {
-    font-style: normal;
-    color: #AA3333;
+    color: #A33;
     background: #f9ecec;
+    font-style: normal;
 }
 .sf-reset #logs .traces li.warning {
+    background: #fc0;
     font-style: normal;
-    background: #ffcc00;
 }
 /* fix for Opera not liking empty <li> */
-.sf-reset .traces li:after {
+.sf-reset .traces li::after {
     content: "\00A0";
 }
 .sf-reset .trace {
-    border: 1px solid #D3D3D3;
-    padding: 10px;
     overflow: auto;
     margin: 10px 0 20px;
+    padding: 10px;
+    border: 1px solid #D3D3D3;
 }
 .sf-reset .block-exception {
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding: 30px 28px;
+    word-wrap: break-word;
+    border: 1px solid #dfdfdf;
     -moz-border-radius: 16px;
     -webkit-border-radius: 16px;
     border-radius: 16px;
-    margin-bottom: 20px;
     background-color: #f6f6f6;
-    border: 1px solid #dfdfdf;
-    padding: 30px 28px;
-    word-wrap: break-word;
-    overflow: hidden;
 }
 .sf-reset .block-exception div {
     color: #313131;
@@ -50,15 +50,15 @@
     width: 152px;
 }
 .sf-reset .block-exception-detected .text-exception {
+    position: relative;
     width: 670px;
     padding: 30px 44px 24px 46px;
-    position: relative;
 }
 .sf-reset .text-exception .open-quote,
 .sf-reset .text-exception .close-quote {
-    font-family: Arial, Helvetica, sans-serif;
     position: absolute;
     color: #C9C9C9;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 8em;
 }
 .sf-reset .open-quote {
@@ -66,8 +66,8 @@
     left: 0;
 }
 .sf-reset .close-quote {
-    bottom: -0.5em;
     right: 50px;
+    bottom: -0.5em;
 }
 .sf-reset .block-exception p {
     font-family: Arial, Helvetica, sans-serif;
@@ -87,25 +87,25 @@
 }
 .sf-reset .error-count span {
     display: inline-block;
-    background-color: #aacd4e;
+    margin-right: 2px;
+    padding: 4px;
+    color: white;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
-    padding: 4px;
-    color: white;
-    margin-right: 2px;
+    background-color: #aacd4e;
     font-size: 11px;
     font-weight: bold;
 }
 
 .sf-reset .support a {
     display: inline-block;
+    margin-right: 2px;
+    padding: 4px;
+    color: #000;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
-    padding: 4px;
-    color: #000000;
-    margin-right: 2px;
     font-size: 11px;
     font-weight: bold;
 }
@@ -123,6 +123,6 @@
 }
 .sf-reset #traces-text pre {
     white-space: pre;
-    font-size: 12px;
     font-family: monospace;
+    font-size: 12px;
 }
