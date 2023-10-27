@@ -1,14 +1,4 @@
 parameters:
     ignoreErrors:
       - "#Unsafe usage of new static#"
-    level: 5
-    paths:
-      - src
-    scanDirectories:
-      - web/modules/contrib/
-      - web/core
-    excludePaths:
-      - src/Render/TraceableBigPipe.php
-      - templates/Error
-      - expand_composer_json.php
-      - symlink_project.php
+    level: 6
