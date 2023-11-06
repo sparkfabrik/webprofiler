@@ -30,8 +30,6 @@ abstract class DataCollector implements DataCollectorInterface {
    */
   protected array|Data $data = [];
 
-  private ClonerInterface $cloner;
-
   /**
    * Converts the variable into a serializable Data instance.
    *
@@ -42,13 +40,12 @@ abstract class DataCollector implements DataCollectorInterface {
     if ($var instanceof Data) {
       return $var;
     }
-    if (!isset($this->cloner)) {
-      $this->cloner = new VarCloner();
-      $this->cloner->setMaxItems(-1);
-      $this->cloner->addCasters($this->getCasters());
-    }
 
-    return $this->cloner->cloneVar($var);
+    $cloner = new VarCloner();
+    $cloner->setMaxItems(-1);
+    $cloner->addCasters($this->getCasters());
+
+    return $cloner->cloneVar($var);
   }
 
   /**
