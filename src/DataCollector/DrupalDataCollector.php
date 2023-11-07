@@ -120,15 +120,15 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
   /**
    * Gets the git commit info, if any.
    */
-  public function getGitCommit(): string {
-    return $this->data['git_commit'];
+  public function getGitCommit(): ?string {
+    return $this->data['git_commit'] ?? 'n/a';
   }
 
   /**
    * Gets the git commit SHA, if any.
    */
-  public function getAbbrGitCommit(): string {
-    return $this->data['abbr_git_commit'];
+  public function getAbbrGitCommit(): ?string {
+    return $this->data['abbr_git_commit'] ?? 'n/a';
   }
 
   /**
