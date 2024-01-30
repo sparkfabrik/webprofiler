@@ -66,7 +66,7 @@ services:
     class: Symfony\Component\HttpKernel\DataCollector\DumpDataCollector
 
   webprofiler.file_link_formatter:
-    class: Symfony\Component\HttpKernel\Debug\FileLinkFormatter
+    class: Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter
     factory: Drupal\webprofiler\FileLinkFormatterFactory::getFileLinkFormatter
     arguments: ['@request_stack', '@config.factory']
 

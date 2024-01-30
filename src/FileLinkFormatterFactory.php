@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\webprofiler;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 
 /**
  * Factory class to create FileLinkFormatter service instances.
@@ -21,7 +21,7 @@ class FileLinkFormatterFactory {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
    *
-   * @return \Symfony\Component\HttpKernel\Debug\FileLinkFormatter
+   * @return \Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter
    *   A FileLinkFormatter configured with webprofiler settings.
    */
   final public static function getFileLinkFormatter(

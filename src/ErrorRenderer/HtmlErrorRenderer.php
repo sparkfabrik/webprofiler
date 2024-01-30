@@ -4,14 +4,11 @@ namespace Drupal\webprofiler\ErrorRenderer;
 
 use Drupal\monolog\Logger\LoggerInterfacesAdapter;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
+use Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
-use Symfony\Component\VarDumper\Cloner\Data;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Render HTML for a given Exception.
@@ -45,7 +42,7 @@ class HtmlErrorRenderer {
   private static string $template = 'error.html.php';
 
   /**
-   * @param \Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
+   * @param \Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter $fileLinkFormat
    *   The file link formatter.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.

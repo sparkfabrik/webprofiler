@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\webprofiler\Twig\Extension;
 
 use Drupal\webprofiler\DumpTrait;
-use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
+use Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -20,14 +20,14 @@ class CodeExtension extends AbstractExtension {
   /**
    * Formats debug file links.
    *
-   * @var \Symfony\Component\HttpKernel\Debug\FileLinkFormatter
+   * @var \Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter
    */
   private FileLinkFormatter $fileLinkFormat;
 
   /**
    * CodeExtension constructor.
    *
-   * @param \Symfony\Component\HttpKernel\Debug\FileLinkFormatter $fileLinkFormat
+   * @param \Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter $fileLinkFormat
    *   Formats debug file links.
    */
   public function __construct(FileLinkFormatter $fileLinkFormat) {

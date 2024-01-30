@@ -1,6 +1,8 @@
 parameters:
     ignoreErrors:
       - "#Unsafe usage of new static#"
+      - "#implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface#"
+      - "#Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait#"
     level: 5
     treatPhpDocTypesAsCertain: false
     excludePaths:
