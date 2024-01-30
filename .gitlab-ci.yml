@@ -6,6 +6,9 @@ include:
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
+variables:
+  _TARGET_CORE: "10.1.2"
+
 phpcs:
   allow_failure: false
 
