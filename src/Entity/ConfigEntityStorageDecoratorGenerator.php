@@ -20,7 +20,6 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
-use PhpParser\PhpVersion;
 
 /**
  * Generate decorators for config entity storage classes.
@@ -143,7 +142,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    */
   private function getAst(string $classPath): ?array {
     $code = file_get_contents($classPath);
-    $parser = (new ParserFactory())->createForVersion(PhpVersion::getHostVersion());
+    $parser = (new ParserFactory())->createForHostVersion();
 
     return $parser->parse($code);
   }
