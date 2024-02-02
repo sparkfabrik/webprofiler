@@ -4,17 +4,15 @@ module.exports = {
     browser
       .drupalInstall()
       .drupalInstallModule('webprofiler', true)
-      .setWindowSize(2000, 2000) //Required otherwise the toolbar may be in front of the permission checkbox.
+      .setWindowSize(2000, 2000) // Required otherwise the toolbar may be in front of the permission checkbox.
       .drupalCreateUser({
         name: 'user',
         password: '123',
-        permissions: [
-          'view webprofiler toolbar',
-        ],
+        permissions: ['view webprofiler toolbar'],
       })
       .drupalLogin({ name: 'user', password: '123' });
   },
-  after: function(browser) {
+  after(browser) {
     browser
       .drupalUninstall();
   },
@@ -30,5 +28,4 @@ module.exports = {
       .waitForElementVisible('.sf-toolbar', 1000)
       .assert.textContains('.sf-toolbar-status', '404');
   },
-
 };
