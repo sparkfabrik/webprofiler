@@ -60,7 +60,7 @@ class ToolbarTest extends WebDriverTestBase {
     $account = $this->drupalCreateUser(['view webprofiler toolbar']);
     $this->drupalLogin($account);
 
-    $this->drupalGet('page-not-found');
+    $this->drupalGet('/page-not-found');
     $this->assertSession()->elementExists('css', '.sf-toolbar');
 
     /** @var \Drupal\FunctionalJavascriptTests\WebDriverWebAssert $assert_session */

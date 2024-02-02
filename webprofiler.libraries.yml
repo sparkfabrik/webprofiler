@@ -6,6 +6,7 @@ dashboard:
   js:
     js/dashboard.js: {}
   dependencies:
+    - core/drupal
     - core/once
     - core/drupal.ajax
 
@@ -14,6 +15,7 @@ database:
   js:
     js/database.js: {}
   dependencies:
+    - core/drupal
     - core/once
     - webprofiler/database.highlight
 
@@ -39,6 +41,8 @@ tab:
       css/tab.css: {}
   js:
     js/tab.js: {}
+  dependencies:
+    - core/drupal
 
 cwv:
   version: VERSION
