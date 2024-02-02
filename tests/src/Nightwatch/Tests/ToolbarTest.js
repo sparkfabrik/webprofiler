@@ -13,8 +13,7 @@ module.exports = {
       .drupalLogin({ name: 'user', password: '123' });
   },
   after(browser) {
-    browser
-      .drupalUninstall();
+    browser.drupalUninstall();
   },
   'The toolbar is visible on the front page with status 200': (browser) => {
     browser
