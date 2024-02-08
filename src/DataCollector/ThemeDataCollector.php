@@ -117,9 +117,13 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
     ];
 
     if ($this->themeNegotiator instanceof ThemeNegotiatorWrapper) {
-      $this->data['negotiator'] = [
-        'class' => $this->getMethodData($this->themeNegotiator->getNegotiator(), 'determineActiveTheme'),
-      ];
+      $theme_negotiator = $this->themeNegotiator->getNegotiator();
+
+      if ($theme_negotiator != NULL) {
+        $this->data['negotiator'] = [
+          'class' => $this->getMethodData($theme_negotiator, 'determineActiveTheme'),
+        ];
+      }
     }
   }
 
