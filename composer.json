@@ -35,7 +35,7 @@
         "phpstan/phpstan-phpunit": "1.4.x-dev",
         "phpstan/phpstan-strict-rules": "^1.5",
         "phpunit/phpunit": ">=9",
-        "previousnext/coding-standard": "^0.1.2"
+        "previousnext/coding-standard": "^1.0"
     },
 
     "extra": {
@@ -43,6 +43,16 @@
             "services": {
                 "drush.services.yml": "^10"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true,
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": true
         }
     }
 }

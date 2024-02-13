@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\webprofiler\Entity;
 
@@ -32,7 +32,9 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Entity type manager service.
    */
-  public function __construct(protected readonly EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(
+      protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

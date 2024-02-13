@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\webprofiler\Controller;
 
@@ -27,7 +27,7 @@ class ReportController extends ControllerBase {
    */
   final public function __construct(
     private readonly Profiler $profiler,
-    private readonly DateFormatter $dateFormatter
+    private readonly DateFormatter $dateFormatter,
   ) {
   }
 

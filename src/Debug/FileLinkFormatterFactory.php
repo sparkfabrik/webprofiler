@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\webprofiler\Debug;
 
@@ -21,7 +21,7 @@ class FileLinkFormatterFactory {
    *   A FileLinkFormatter configured with WebProfiler settings.
    */
   final public static function getFileLinkFormatter(
-    ConfigFactoryInterface $configFactory
+    ConfigFactoryInterface $configFactory,
   ): FileLinkFormatter {
     $settings = $configFactory->get('webprofiler.settings');
     $ide = $settings->get('ide');

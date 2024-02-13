@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\webprofiler\Cache;
 
@@ -27,7 +27,7 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
   public function __construct(
     protected readonly CacheDataCollector $cacheDataCollector,
     protected readonly CacheBackendInterface $cacheBackend,
-    protected readonly string $bin
+    protected readonly string $bin,
   ) {
   }
 

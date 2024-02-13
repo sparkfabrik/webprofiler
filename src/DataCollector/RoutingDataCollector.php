@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
@@ -23,7 +23,9 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
    * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    */
-  public function __construct(private readonly RouteProviderInterface $routeProvider) {
+  public function __construct(
+      private readonly RouteProviderInterface $routeProvider,
+  ) {
   }
 
   /**
