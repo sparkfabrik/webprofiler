@@ -46,7 +46,11 @@ class ToolbarTest extends WebDriverTestBase {
     static::assertNotEmpty($assert_session->waitForElement('css', '.sf-toolbar-status'));
     static::assertNotEmpty($assert_session->waitForElement('css', '.sf-toolbar-status-green'));
 
-    $status = $this->getSession()->getPage()->find('css', '.sf-toolbar-status')->getText();
+    $status = $this
+      ->getSession()
+      ->getPage()
+      ->find('css', '.sf-toolbar-block-request')
+      ->find('css', '.sf-toolbar-status')->getText();
     static::assertEquals('200', $status);
   }
 
@@ -69,7 +73,11 @@ class ToolbarTest extends WebDriverTestBase {
     static::assertNotEmpty($assert_session->waitForElement('css', '.sf-toolbar-status'));
     static::assertNotEmpty($assert_session->waitForElement('css', '.sf-toolbar-status-red'));
 
-    $status = $this->getSession()->getPage()->find('css', '.sf-toolbar-status')->getText();
+    $status = $this
+      ->getSession()
+      ->getPage()
+      ->find('css', '.sf-toolbar-block-request')
+      ->find('css', '.sf-toolbar-status')->getText();
     static::assertEquals('404', $status);
   }
 

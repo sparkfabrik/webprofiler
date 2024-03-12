@@ -28,9 +28,7 @@ class FileLinkFormatterFactory {
     $ide_remote_path = $settings->get('ide_remote_path');
     $ide_local_path = $settings->get('ide_local_path');
 
-    $link_format = sprintf('%s&%s>%s', $ide, $ide_remote_path, $ide_local_path);
-
-    return new FileLinkFormatter($link_format);
+    return new FileLinkFormatter($ide, $ide_remote_path, $ide_local_path);
   }
 
 }
