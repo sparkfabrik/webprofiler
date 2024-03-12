@@ -64,6 +64,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       'user_role' => '\Drupal\webprofiler\Entity\RoleStorageDecorator',
       'shortcut_set' => '\Drupal\webprofiler\Entity\ShortcutSetStorageDecorator',
       'image_style' => '\Drupal\webprofiler\Entity\ImageStyleStorageDecorator',
+      'domain' => '\Drupal\webprofiler\Entity\DomainStorageDecorator',
     ];
   }
 
@@ -200,7 +201,14 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       $params = [];
       /** @var \PhpParser\Node\Param $param */
       foreach ($node->getParams() as $param) {
-        $params[] = $param->var->name;
+        /** @var \PhpParser\Node\Expr\ConstFetch|null $default */
+        $default = $param->default;
+
+        $params[] = [
+          'name' => $param->var->name,
+          'type' => $param->type != NULL ? $param->type->name : NULL,
+          'default' => $default != NULL ? $default->name->name : NULL,
+        ];
       }
 
       $methods[] = [
@@ -238,7 +246,12 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
         ->addMethod($method['name']);
 
       foreach ($method['params'] as $param) {
-        $generated_method->addParameter($param);
+        if ($param['default'] === 'NULL') {
+          $generated_method->addParameter($param['name'], NULL);
+        }
+        else {
+          $generated_method->addParameter($param['name']);
+        }
       }
 
       $generated_method
@@ -247,7 +260,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
           [
             $method['name'],
             array_map(function ($param) {
-              return new Literal('$' . $param);
+              return new Literal('$' . $param['name']);
             }, $method['params']),
           ],
         );
