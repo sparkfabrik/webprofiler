@@ -39,7 +39,7 @@ class CacheBackendWrapper implements CacheBackendInterface, CacheTagsInvalidator
 
     if ($cache) {
       $cache_copy = new \stdClass();
-      $cache_copy->cid = $cache->cid;
+      $cache_copy->cid = $cid;
       $cache_copy->expire = $cache->expire;
       $cache_copy->tags = $cache->tags;
 
