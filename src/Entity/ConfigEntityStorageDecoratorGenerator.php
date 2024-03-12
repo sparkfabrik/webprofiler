@@ -33,7 +33,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    *   The Entity type manager service.
    */
   public function __construct(
-      protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
   ) {
   }
 
@@ -59,13 +59,11 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * {@inheritdoc}
    */
   public function getDecorators(): array {
-    return [
-      'taxonomy_vocabulary' => '\Drupal\webprofiler\Entity\VocabularyStorageDecorator',
-      'user_role' => '\Drupal\webprofiler\Entity\RoleStorageDecorator',
-      'shortcut_set' => '\Drupal\webprofiler\Entity\ShortcutSetStorageDecorator',
-      'image_style' => '\Drupal\webprofiler\Entity\ImageStyleStorageDecorator',
-      'domain' => '\Drupal\webprofiler\Entity\DomainStorageDecorator',
-    ];
+    $classes = $this->getClasses();
+
+    return array_map(function ($class) {
+      return $class['decoratorClass'];
+    }, $classes);
   }
 
   /**
@@ -198,22 +196,9 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
     $methods = [];
     /** @var \PhpParser\Node\Stmt\ClassMethod $node */
     foreach ($nodes as $node) {
-      $params = [];
-      /** @var \PhpParser\Node\Param $param */
-      foreach ($node->getParams() as $param) {
-        /** @var \PhpParser\Node\Expr\ConstFetch|null $default */
-        $default = $param->default;
-
-        $params[] = [
-          'name' => $param->var->name,
-          'type' => $param->type != NULL ? $param->type->name : NULL,
-          'default' => $default != NULL ? $default->name->name : NULL,
-        ];
-      }
-
       $methods[] = [
         'name' => $node->name->name,
-        'params' => $params,
+        'params' => $node->getParams(),
       ];
     }
 
@@ -246,11 +231,31 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
         ->addMethod($method['name']);
 
       foreach ($method['params'] as $param) {
-        if ($param['default'] === 'NULL') {
-          $generated_method->addParameter($param['name'], NULL);
+        /** @var \PhpParser\Node\Param $param */
+        $generated_param = $generated_method->addParameter($param->var->name);
+
+        if ($param->type instanceof Node\Identifier) {
+          $generated_param->setType($param->type->name);
         }
-        else {
-          $generated_method->addParameter($param['name']);
+
+        if ($param->default !== NULL) {
+          if ($param->default instanceof Node\Expr\ConstFetch) {
+            if ($param->default->name->getParts()[0] == 'NULL') {
+              $generated_param->setDefaultValue(NULL);
+            }
+            elseif ($param->default->name->getParts()[0] == 'TRUE') {
+              $generated_param->setDefaultValue(TRUE);
+            }
+            elseif ($param->default->name->getParts()[0] == 'FALSE') {
+              $generated_param->setDefaultValue(FALSE);
+            }
+          }
+          elseif ($param->default instanceof Node\Expr\Array_) {
+            $generated_param->setDefaultValue($param->default->items);
+          }
+          else {
+            $generated_param->setDefaultValue($param->default->value);
+          }
         }
       }
 
@@ -260,7 +265,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
           [
             $method['name'],
             array_map(function ($param) {
-              return new Literal('$' . $param['name']);
+              return new Literal('$' . $param->var->name);
             }, $method['params']),
           ],
         );
