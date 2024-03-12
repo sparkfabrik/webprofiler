@@ -215,6 +215,8 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    *
    * @return string
    *   The decorator class body.
+   *
+   * phpcs:disable Drupal.Classes.FullyQualifiedNamespace.UseStatementMissing
    */
   private function createDecorator(array $class, array $methods): string {
     $decorator = $class['class'] . 'Decorator';
@@ -254,6 +256,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
             $generated_param->setDefaultValue($param->default->items);
           }
           else {
+            // @phpstan-ignore-next-line
             $generated_param->setDefaultValue($param->default->value);
           }
         }
