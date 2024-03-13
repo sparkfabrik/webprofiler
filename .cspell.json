@@ -28,14 +28,6 @@
   ],
   "dictionaryDefinitions": [
     {
-      "name": "drupal",
-      "path": "../../../core/misc/cspell/drupal-dictionary.txt"
-    },
-    {
-      "name": "dictionary",
-      "path": "../../../core/misc/cspell/dictionary.txt"
-    },
-    {
       "description": "The project's own custom dictionary (optional)",
       "name": "project-words",
       "path": "./.cspell-project-words.txt"
