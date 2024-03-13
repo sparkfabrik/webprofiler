@@ -1,15 +1,7 @@
 ~webprofiler
 
 # Names
-Contentful
-Luca
-Lusso
-Yoyodyne
-Gnomovision
-~nette
-previousnext
 ddev
-Paweł
 
 # Ides
 mvim
