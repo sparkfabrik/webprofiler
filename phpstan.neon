@@ -20,6 +20,7 @@ parameters:
     excludePaths:
       - templates/Error/*
       - src/Render/TraceableBigPipe.php
+      - tests
     scanFiles:
       - %currentWorkingDirectory%/web/core/includes/theme.inc
     scanDirectories:

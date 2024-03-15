@@ -7,10 +7,7 @@ namespace Drupal\webprofiler\Entity;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\webprofiler\DecoratorGeneratorInterface;
-use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
+use PhpParser\BuilderFactory;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
@@ -20,6 +17,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
+use PhpParser\PrettyPrinter;
 
 /**
  * Generate decorators for config entity storage classes.
@@ -179,7 +177,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * @param array $class
    *   The class information.
    *
-   * @return array
+   * @return \PhpParser\Node\Stmt\ClassMethod[]
    *   The methods of the class.
    *
    * @throws \Exception
@@ -189,20 +187,13 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
     $ast = $this->getAst($classPath);
 
     $nodeFinder = new NodeFinder();
+
+    /** @var \PhpParser\Node\Stmt\ClassMethod[] $nodes */
     $nodes = $nodeFinder->find($ast, function (Node $node) {
       return $node instanceof ClassMethod;
     });
 
-    $methods = [];
-    /** @var \PhpParser\Node\Stmt\ClassMethod $node */
-    foreach ($nodes as $node) {
-      $methods[] = [
-        'name' => $node->name->name,
-        'params' => $node->getParams(),
-      ];
-    }
-
-    return $methods;
+    return $nodes;
   }
 
   /**
@@ -210,7 +201,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    *
    * @param array $class
    *   The class information.
-   * @param array $methods
+   * @param \PhpParser\Node\Stmt\ClassMethod[] $methods
    *   The methods of the class.
    *
    * @return string
@@ -221,62 +212,66 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
   private function createDecorator(array $class, array $methods): string {
     $decorator = $class['class'] . 'Decorator';
 
-    $file = new PhpFile();
-    $file->addComment('This file is auto-generated.');
-    $namespace = $file->addNamespace(new PhpNamespace('Drupal\webprofiler\Entity'));
+    $factory = new BuilderFactory();
+    $file = $factory
+      ->namespace('Drupal\webprofiler\Entity')
+      ->addStmt($factory->use('Drupal\webprofiler\Entity\ConfigEntityStorageDecorator'));
 
-    $generated_class = $namespace->addClass($decorator);
-    $generated_class->setExtends(ConfigEntityStorageDecorator::class);
-    $generated_class->addImplement($class['interface']);
+    $generated_class = $factory
+      ->class($decorator)
+      ->extend('ConfigEntityStorageDecorator')
+      ->implement($class['interface'])
+      ->setDocComment('/**
+                                    * This file is auto-generated.
+                                    */',
+      );
+
     foreach ($methods as $method) {
-      $generated_method = $generated_class
-        ->addMethod($method['name']);
-
-      foreach ($method['params'] as $param) {
-        /** @var \PhpParser\Node\Param $param */
-        $generated_param = $generated_method->addParameter($param->var->name);
+      $generated_method = $factory->method($method->name->name)->makePublic();
+      foreach ($method->getParams() as $param) {
+        $generated_param = $factory
+          ->param($param->var->name);
 
         if ($param->type instanceof Node\Identifier) {
-          $generated_param->setType($param->type->name);
+          $generated_param->setType($param->type);
         }
 
-        if ($param->default !== NULL) {
-          if ($param->default instanceof Node\Expr\ConstFetch) {
-            if ($param->default->name->getParts()[0] == 'NULL') {
-              $generated_param->setDefaultValue(NULL);
-            }
-            elseif ($param->default->name->getParts()[0] == 'TRUE') {
-              $generated_param->setDefaultValue(TRUE);
-            }
-            elseif ($param->default->name->getParts()[0] == 'FALSE') {
-              $generated_param->setDefaultValue(FALSE);
-            }
-          }
-          elseif ($param->default instanceof Node\Expr\Array_) {
-            $generated_param->setDefaultValue($param->default->items);
-          }
-          else {
-            // @phpstan-ignore-next-line
-            $generated_param->setDefaultValue($param->default->value);
-          }
+        if ($param->default instanceof Node\Expr) {
+          $generated_param->setDefault($param->default);
         }
+
+        $generated_method->addParam($generated_param);
       }
 
-      $generated_method
-        ->addBody(
-          'return $this->getOriginalObject()->?(...?);',
-          [
-            $method['name'],
-            array_map(function ($param) {
-              return new Literal('$' . $param->var->name);
-            }, $method['params']),
-          ],
-        );
+      $generated_body = $factory->methodCall(
+        new Node\Expr\PropertyFetch(new Node\Expr\Variable('this'), 'getOriginalObject()'),
+        $method->name->name,
+        array_map(function ($param) {
+          return new Node\Expr\Variable($param->var->name);
+        }, $method->getParams()),
+      );
+
+      // If return type is different from void, add a return statement.
+      if (!$method->getReturnType() instanceof Node\Identifier || $method->getReturnType()->name != 'void') {
+        $generated_body = new Node\Stmt\Return_($generated_body);
+      }
+
+      $generated_method->addStmt($generated_body);
+
+      if ($method->getReturnType() != NULL) {
+        $generated_method->setReturnType($method->getReturnType());
+      }
+
+      $generated_class->addStmt($generated_method);
     }
 
-    $printer = new PsrPrinter();
+    $file->addStmt($generated_class);
 
-    return $printer->printFile($file);
+    $stmts = [$file->getNode()];
+    $prettyPrinter = new PrettyPrinter\Standard();
+
+    // Add a newline at the end of the file.
+    return $prettyPrinter->prettyPrintFile($stmts) . "\n";
   }
 
   /**

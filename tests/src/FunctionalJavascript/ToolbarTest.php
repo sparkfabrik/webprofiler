@@ -81,4 +81,29 @@ class ToolbarTest extends WebDriverTestBase {
     static::assertEquals('404', $status);
   }
 
+  /**
+   * Test that the controller link formatter works.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testLinkFormatter(): void {
+    $account = $this->drupalCreateUser(['view webprofiler toolbar']);
+    $this->drupalLogin($account);
+
+    $this->drupalGet('<front>');
+
+    /** @var \Drupal\FunctionalJavascriptTests\WebDriverWebAssert $assert_session */
+    $assert_session = $this->assertSession();
+
+    $assert_session->waitForElement('css', '.sf-toolbar-block-request');
+    sleep(1);
+    $text = $this
+      ->getSession()
+      ->getPage()
+      ->find('css', '.sf-toolbar-block-request')
+      ->getHtml();
+    static::assertStringContainsString('EntityViewController :: view', $text);
+    static::assertStringContainsString('phpstorm://open?file=/builds/project/webprofiler/web/core/lib/Drupal/Core/Entity/Controller/EntityViewController.php&amp;line=131', $text);
+  }
+
 }
