@@ -27,23 +27,35 @@ class TestConfigStorage extends ConfigEntityStorage implements TestConfigStorage
     return '';
   }
 
-  public function method5(string $param1, string $param2 = NULL): ?string {
+  public function method5(string $param1 = NULL): ?string {
     return '';
   }
 
-  public function method6(string $param1, bool $param2 = FALSE): mixed {
+  public function method6(bool $param1 = FALSE): mixed {
     return '';
   }
 
-  public function method7(string $param1, bool $param2 = TRUE): void {
+  public function method7(bool $param1 = TRUE): void {
   }
 
-  public function method8(string $param1, array $param2 = []): void {
+  public function method8(array $param1 = []): void {
   }
 
-  public function method9(string $param1, int $param2 = 5): void {
+  public function method9(int $param1 = 5): void {
   }
 
   public function method10(string $param1): void {
+  }
+
+  public function method11(?array $param1 = null): array {
+    return [];
+  }
+
+  public function method12(string ...$param1): float {
+    return 0.0;
+  }
+
+  public function method13(string &$param1): bool {
+    return FALSE;
   }
 }
