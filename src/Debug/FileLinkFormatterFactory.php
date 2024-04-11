@@ -24,9 +24,9 @@ class FileLinkFormatterFactory {
     ConfigFactoryInterface $configFactory,
   ): FileLinkFormatter {
     $settings = $configFactory->get('webprofiler.settings');
-    $ide = $settings->get('ide');
-    $ide_remote_path = $settings->get('ide_remote_path');
-    $ide_local_path = $settings->get('ide_local_path');
+    $ide = $settings->get('ide') ?? '';
+    $ide_remote_path = $settings->get('ide_remote_path') ?? '';
+    $ide_local_path = $settings->get('ide_local_path') ?? '';
 
     return new FileLinkFormatter($ide, $ide_remote_path, $ide_local_path);
   }
