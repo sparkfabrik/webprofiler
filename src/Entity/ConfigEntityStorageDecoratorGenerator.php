@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\webprofiler\DecoratorGeneratorInterface;
@@ -59,11 +60,17 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    * {@inheritdoc}
    */
   public function getDecorators(): array {
-    $classes = $this->getClasses();
+    $decorators = &drupal_static(__FUNCTION__);
 
-    return array_map(function ($class) {
-      return $class['decoratorClass'];
-    }, $classes);
+    if (!isset($decorators)) {
+      $classes = $this->getClasses();
+
+      $decorators = array_map(function ($class) {
+        return $class['decoratorClass'];
+      }, $classes);
+    }
+
+    return $decorators;
   }
 
   /**
@@ -76,7 +83,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
     // @phpstan-ignore-next-line
     $cache_backend = \Drupal::cache('default');
 
-    $cid = 'webprofiler:config_entity_storage_classes2';
+    $cid = 'webprofiler:config_entity_storage_classes';
     $cache = $cache_backend->get($cid);
     if ($cache) {
       return $cache->data;
@@ -121,7 +128,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       }
     }
 
-    $cache_backend->set($cid, $classes);
+    $cache_backend->set($cid, $classes, Cache::PERMANENT, ['webprofiler', 'config:core.extension']);
 
     return $classes;
   }
