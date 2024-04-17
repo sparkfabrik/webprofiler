@@ -3,6 +3,7 @@
 namespace Drupal\webprofiler_config_entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\node\Entity\Node;
 
 /**
  * Defines the testconfig storage.
@@ -56,6 +57,10 @@ class TestConfigStorage extends ConfigEntityStorage implements TestConfigStorage
   }
 
   public function method13(string &$param1): bool {
+    return FALSE;
+  }
+
+  public function method14(Node $param1): bool {
     return FALSE;
   }
 }

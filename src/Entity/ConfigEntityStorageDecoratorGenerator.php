@@ -73,6 +73,15 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    *   Information about every config entity storage classes.
    */
   private function getClasses(): array {
+    // @phpstan-ignore-next-line
+    $cache_backend = \Drupal::cache('default');
+
+    $cid = 'webprofiler:config_entity_storage_classes2';
+    $cache = $cache_backend->get($cid);
+    if ($cache) {
+      return $cache->data;
+    }
+
     $definitions = $this->entityTypeManager->getDefinitions();
     $classes = [];
 
@@ -111,6 +120,8 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
         return [];
       }
     }
+
+    $cache_backend->set($cid, $classes);
 
     return $classes;
   }
@@ -294,7 +305,14 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
     $generated_param = $factory
       ->param($param->var->name);
 
-    if ($param->type != NULL) {
+    // Don't add type hint if it isn't a scalar type, for now.
+    $scalars = ['array', 'string', 'int', 'float', 'bool', 'object', 'iterable', 'self', 'parent', 'mixed'];
+    if ($param->type instanceof Node\NullableType) {
+      if ($param->type->type != NULL && in_array($param->type->type->name, $scalars, TRUE)) {
+        $generated_param->setType($param->type);
+      }
+    }
+    elseif ($param->type != NULL && in_array($param->type->name, $scalars, TRUE)) {
       $generated_param->setType($param->type);
     }
 

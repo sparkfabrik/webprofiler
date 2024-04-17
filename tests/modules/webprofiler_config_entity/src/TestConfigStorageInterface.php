@@ -2,6 +2,8 @@
 
 namespace Drupal\webprofiler_config_entity;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Defines the testconfig storage.
  */
@@ -34,4 +36,6 @@ interface TestConfigStorageInterface {
   public function method12(string ...$param1): float;
 
   public function method13(string &$param1): bool;
+
+  public function method14(Node $param1): bool;
 }
