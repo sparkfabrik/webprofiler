@@ -63,4 +63,8 @@ class TestConfigStorage extends ConfigEntityStorage implements TestConfigStorage
   public function method14(Node $param1): bool {
     return FALSE;
   }
+
+  public function method15(Node $param1): Node {
+    return new Node([], '');
+  }
 }

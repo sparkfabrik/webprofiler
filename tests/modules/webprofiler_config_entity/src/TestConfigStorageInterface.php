@@ -38,4 +38,6 @@ interface TestConfigStorageInterface {
   public function method13(string &$param1): bool;
 
   public function method14(Node $param1): bool;
+
+  public function method15(Node $param1): Node;
 }
