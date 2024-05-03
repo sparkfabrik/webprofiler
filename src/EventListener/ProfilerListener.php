@@ -72,9 +72,9 @@ class ProfilerListener implements EventSubscriberInterface {
    *   The request matcher.
    */
   public function __construct(
-      Profiler $profiler,
-      RequestStack $requestStack,
-      RequestMatcherInterface $matcher = NULL,
+    Profiler $profiler,
+    RequestStack $requestStack,
+    RequestMatcherInterface $matcher = NULL,
   ) {
     $this->profiler = $profiler;
     $this->matcher = $matcher;

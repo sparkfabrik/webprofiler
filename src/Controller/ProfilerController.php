@@ -69,11 +69,11 @@ class ProfilerController extends ControllerBase {
    *   The Content-Security-Policy service.
    */
   final public function __construct(
-      UrlGeneratorInterface $generator,
-      Profiler $profiler,
-      RendererInterface $renderer,
-      TemplateManager $templateManager,
-      ContentSecurityPolicyHandler $cspHandler,
+    UrlGeneratorInterface $generator,
+    Profiler $profiler,
+    RendererInterface $renderer,
+    TemplateManager $templateManager,
+    ContentSecurityPolicyHandler $cspHandler,
   ) {
     $this->generator = $generator;
     $this->profiler = $profiler;

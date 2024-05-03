@@ -50,10 +50,10 @@ class MethodData {
    *   The method line in file.
    */
   public function __construct(
-      string $class,
-      string $method,
-      string $file,
-      int $line,
+    string $class,
+    string $method,
+    string $file,
+    int $line,
   ) {
     $this->class = $class;
     $this->method = $method;

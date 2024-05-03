@@ -42,9 +42,9 @@ class Profiler extends SymfonyProfiler {
    *   The config factory service.
    */
   public function __construct(
-      FileProfilerStorage $storage,
-      LoggerInterface $logger,
-      private readonly ConfigFactoryInterface $config,
+    FileProfilerStorage $storage,
+    LoggerInterface $logger,
+    private readonly ConfigFactoryInterface $config,
   ) {
     parent::__construct($storage, $logger);
 

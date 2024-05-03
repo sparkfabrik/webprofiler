@@ -23,7 +23,7 @@ class HttpDataCollector extends DataCollector implements HasPanelInterface {
    *   The http client middleware.
    */
   public function __construct(
-      private readonly HttpClientMiddleware $middleware,
+    private readonly HttpClientMiddleware $middleware,
   ) {
     $this->data['completed'] = [];
     $this->data['failed'] = [];

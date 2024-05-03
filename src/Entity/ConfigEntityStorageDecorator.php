@@ -25,7 +25,7 @@ class ConfigEntityStorageDecorator extends EntityDecorator implements ConfigEnti
    *   The config entity storage to decorate.
    */
   final public function __construct(
-      ConfigEntityStorageInterface $config_entity_storage,
+    ConfigEntityStorageInterface $config_entity_storage,
   ) {
     parent::__construct($config_entity_storage);
 

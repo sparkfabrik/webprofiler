@@ -64,13 +64,13 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    *   The entity last installed schema repository.
    */
   public function __construct(
-      EntityTypeManagerInterface $entity_manager,
-      \Traversable $namespaces,
-      ModuleHandlerInterface $module_handler,
-      CacheBackendInterface $cache,
-      TranslationInterface $string_translation,
-      ClassResolverInterface $class_resolver,
-      EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
+    EntityTypeManagerInterface $entity_manager,
+    \Traversable $namespaces,
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache,
+    TranslationInterface $string_translation,
+    ClassResolverInterface $class_resolver,
+    EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
   ) {
     $this->entityManager = $entity_manager;
 

@@ -24,7 +24,7 @@ class FormsDataCollector extends DataCollector implements HasPanelInterface {
    *   The form builder.
    */
   public function __construct(
-      private readonly FormBuilderInterface $formBuilder,
+    private readonly FormBuilderInterface $formBuilder,
   ) {
     $this->data['forms'] = [];
   }

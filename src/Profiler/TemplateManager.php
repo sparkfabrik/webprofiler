@@ -46,9 +46,9 @@ class TemplateManager {
    *   Data collector templates retrieved by ProfilerPass class.
    */
   public function __construct(
-      Profiler $profiler,
-      Environment $twig,
-      array $templates,
+    Profiler $profiler,
+    Environment $twig,
+    array $templates,
   ) {
     $this->profiler = $profiler;
     $this->twig = $twig;

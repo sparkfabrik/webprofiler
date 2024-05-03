@@ -17,7 +17,7 @@ class DatabaseListener implements EventSubscriberInterface {
    * DatabaseListener constructor.
    */
   public function __construct(
-      private readonly DatabaseDataCollector $collector,
+    private readonly DatabaseDataCollector $collector,
   ) {
   }
 

@@ -24,7 +24,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
    *   The route provider.
    */
   public function __construct(
-      private readonly RouteProviderInterface $routeProvider,
+    private readonly RouteProviderInterface $routeProvider,
   ) {
   }
 

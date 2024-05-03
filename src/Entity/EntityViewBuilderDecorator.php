@@ -24,7 +24,7 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
    *   The config entity storage to decorate.
    */
   final public function __construct(
-      EntityViewBuilderInterface $config_entity_storage,
+    EntityViewBuilderInterface $config_entity_storage,
   ) {
     parent::__construct($config_entity_storage);
 

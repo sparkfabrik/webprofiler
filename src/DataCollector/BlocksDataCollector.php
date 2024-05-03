@@ -26,7 +26,7 @@ class BlocksDataCollector extends DataCollector implements HasPanelInterface {
    *   The Entity type manager service.
    */
   public function __construct(
-      private readonly EntityTypeManagerInterface $entityManager,
+    private readonly EntityTypeManagerInterface $entityManager,
   ) {
     $this->data['blocks']['loaded'] = [];
     $this->data['blocks']['rendered'] = [];

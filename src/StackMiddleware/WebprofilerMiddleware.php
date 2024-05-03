@@ -23,7 +23,7 @@ class WebprofilerMiddleware implements HttpKernelInterface {
    *   The decorated kernel.
    */
   public function __construct(
-      protected readonly HttpKernelInterface $httpKernel,
+    protected readonly HttpKernelInterface $httpKernel,
   ) {
   }
 
