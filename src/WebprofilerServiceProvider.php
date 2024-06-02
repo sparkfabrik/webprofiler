@@ -82,6 +82,14 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'priority' => 100,
         ]);
     }
+
+    if (version_compare(\Drupal::VERSION, '10.3', '>=')) {
+      $container->register('webprofiler.debug.access_policy_processor', 'Drupal\webprofiler\Access\AccessPolicyProcessorWrapper')
+        ->addArgument(new Reference('webprofiler.debug.access_policy_processor.inner'))
+        ->addArgument(new Reference('webprofiler.user'))
+        ->setDecoratedService('access_policy_processor')
+        ->setPublic(FALSE);
+    }
   }
 
   /**
