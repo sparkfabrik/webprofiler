@@ -1,0 +1,147 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to constant SCOPE_DRUPAL on an unknown class Drupal\\\\Core\\\\Session\\\\AccessPolicyInterface\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method addAccessPolicy\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\AccessPolicyProcessorInterface\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method processAccessPolicies\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\AccessPolicyProcessorInterface\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Method Drupal\\\\webprofiler\\\\Access\\\\AccessPolicyProcessorWrapper\\:\\:processAccessPolicies\\(\\) has invalid return type Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Method Drupal\\\\webprofiler\\\\Access\\\\AccessPolicyProcessorWrapper\\:\\:processAccessPolicies\\(\\) should return Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface but returns Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsWrapper\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Parameter \\$accessPolicyProcessor of method Drupal\\\\webprofiler\\\\Access\\\\AccessPolicyProcessorWrapper\\:\\:__construct\\(\\) has invalid type Drupal\\\\Core\\\\Session\\\\AccessPolicyProcessorInterface\\.$#"
+			count: 2
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Parameter \\$access_policy of method Drupal\\\\webprofiler\\\\Access\\\\AccessPolicyProcessorWrapper\\:\\:addAccessPolicy\\(\\) has invalid type Drupal\\\\Core\\\\Session\\\\AccessPolicyInterface\\.$#"
+			count: 1
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Property Drupal\\\\webprofiler\\\\Access\\\\AccessPolicyProcessorWrapper\\:\\:\\$accessPolicyProcessor has unknown class Drupal\\\\Core\\\\Session\\\\AccessPolicyProcessorInterface as its type\\.$#"
+			count: 2
+			path: src/Access/AccessPolicyProcessorWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getIdentifier\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getPermissions\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getScope\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method hasPermission\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method isAdmin\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Parameter \\$calculatedPermissionsItem of method Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsItemWrapper\\:\\:__construct\\(\\) has invalid type Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 2
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Property Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsItemWrapper\\:\\:\\$calculatedPermissionsItem has unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface as its type\\.$#"
+			count: 2
+			path: src/Access/CalculatedPermissionsItemWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Access to constant SCOPE_DRUPAL on an unknown class Drupal\\\\Core\\\\Session\\\\AccessPolicyInterface\\.$#"
+			count: 3
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getCacheContexts\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getCacheMaxAge\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getCacheTags\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getItem\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getItems\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getItemsByScope\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getScopes\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Method Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsWrapper\\:\\:getItem\\(\\) has invalid return type Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Parameter \\$calculatedPermissions of method Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsWrapper\\:\\:__construct\\(\\) has invalid type Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface\\.$#"
+			count: 2
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Property Drupal\\\\webprofiler\\\\Access\\\\CalculatedPermissionsWrapper\\:\\:\\$calculatedPermissions has unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsInterface as its type\\.$#"
+			count: 2
+			path: src/Access/CalculatedPermissionsWrapper.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getIdentifier\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/DataCollector/UserDataCollector.php
+      reportUnmatched: false
+		-
+			message: "#^Call to method getScope\\(\\) on an unknown class Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 1
+			path: src/DataCollector/UserDataCollector.php
+      reportUnmatched: false
+		-
+			message: "#^Parameter \\$item of method Drupal\\\\webprofiler\\\\DataCollector\\\\UserDataCollector\\:\\:addPermission\\(\\) has invalid type Drupal\\\\Core\\\\Session\\\\CalculatedPermissionsItemInterface\\.$#"
+			count: 2
+			path: src/DataCollector/UserDataCollector.php
+      reportUnmatched: false
