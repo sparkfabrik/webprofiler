@@ -14,4 +14,4 @@ deploystacks:
       - _TARGET_CORE: ["11.0.x-dev"]
         _TARGET_PHP: [ "8.3"]
         _TARGET_DB_TYPE: "mysql"
-        _TARGET_DB_VERSION: "8.0"
+        _TARGET_DB_VERSION: "8.4"

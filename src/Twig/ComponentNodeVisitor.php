@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Twig;
 
-use Drupal\sdc\ComponentPluginManager;
-use Drupal\sdc\Exception\ComponentNotFoundException;
-use Drupal\sdc\Plugin\Component;
+use Drupal\Core\Plugin\Component;
+use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
+use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\webprofiler\DataCollector\ThemeDataCollector;
 use Twig\Environment;
 use Twig\Node\ModuleNode;
@@ -21,7 +21,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
   /**
    * Creates a new ComponentNodeVisitor object.
    *
-   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   * @param \Drupal\Core\Theme\ComponentPluginManager $pluginManager
    *   The plugin manager for components.
    * @param \Drupal\webprofiler\DataCollector\ThemeDataCollector $dataCollector
    *   The data collector for theme data.
@@ -62,7 +62,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
    * @param \Twig\Node\Node $node
    *   The node.
    *
-   * @return \Drupal\sdc\Plugin\Component|null
+   * @return \Drupal\Core\Plugin\Component|null
    *   The component, if any.
    */
   protected function getComponent(Node $node): ?Component {

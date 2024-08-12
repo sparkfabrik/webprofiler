@@ -14,12 +14,12 @@ use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Wrap the entity type manager service to collect loaded and rendered entities.
  */
-class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeManagerInterface, ContainerAwareInterface {
+class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeManagerInterface {
 
   /**
    * Loaded entities.
@@ -62,6 +62,8 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    *   The class resolver.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The entity last installed schema repository.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_manager,
@@ -71,13 +73,14 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
     TranslationInterface $string_translation,
     ClassResolverInterface $class_resolver,
     EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
+    ContainerInterface $container,
   ) {
     $this->entityManager = $entity_manager;
 
     $this->setCacheBackend($cache, 'entity_type', ['entity_types']);
     $this->alterInfo('entity_type');
 
-    parent::__construct($namespaces, $module_handler, $cache, $string_translation, $class_resolver, $entity_last_installed_schema_repository);
+    parent::__construct($namespaces, $module_handler, $cache, $string_translation, $class_resolver, $entity_last_installed_schema_repository, $container);
   }
 
   /**
@@ -155,6 +158,13 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
    */
   public function __sleep(): array {
     return ['loaded', 'rendered'];
+  }
+
+  /**
+   * Restores the service container after serialization.
+   */
+  public function setContainer(ContainerInterface $container = NULL): void {
+    $this->container = $container;
   }
 
   /**

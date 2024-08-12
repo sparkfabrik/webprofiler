@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Twig\Extension;
 
-use Drupal\sdc\ComponentPluginManager;
+use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\webprofiler\Twig\ComponentNodeVisitor;
 use Twig\Extension\AbstractExtension;
 
@@ -16,7 +16,7 @@ class ComponentExtension extends AbstractExtension {
   /**
    * ComponentExtension constructor.
    *
-   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   * @param \Drupal\Core\Theme\ComponentPluginManager $pluginManager
    *   The component plugin manager.
    */
   public function __construct(

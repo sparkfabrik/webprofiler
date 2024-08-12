@@ -111,6 +111,7 @@ services:
         '@string_translation',
         '@class_resolver',
         '@entity.last_installed_schema.repository',
+        '@service_container'
       ]
     parent: container.trait
     tags:
@@ -157,7 +158,7 @@ services:
     public: false
     decorates: state
     arguments:
-      ['@keyvalue', '@webprofiler.debug.state.inner', '@webprofiler.state']
+      ['@keyvalue', '@cache.bootstrap', '@lock', '@webprofiler.debug.state.inner', '@webprofiler.state']
 
   webprofiler.debug.mail_manager:
     class: Drupal\webprofiler\Mail\MailManagerWrapper

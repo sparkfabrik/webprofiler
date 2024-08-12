@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\DataCollector;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\Component;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
-use Drupal\sdc\Plugin\Component;
 use Drupal\webprofiler\Theme\ThemeNegotiatorWrapper;
 use League\CommonMark\CommonMarkConverter;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,7 +137,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   /**
    * Add an SDC component to the data collector.
    *
-   * @param \Drupal\sdc\Plugin\Component $component
+   * @param \Drupal\Core\Plugin\Component $component
    *   The SDC component to add.
    */
   public function addComponent(Component $component): void {

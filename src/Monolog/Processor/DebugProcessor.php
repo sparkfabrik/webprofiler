@@ -144,7 +144,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function clear() {
+  public function clear(): void {
     $this->records = [];
     $this->errorCount = [];
   }

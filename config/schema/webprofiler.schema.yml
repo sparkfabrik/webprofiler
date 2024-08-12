@@ -17,8 +17,8 @@ webprofiler.settings:
       type: sequence
       label: 'Active toolbar items'
       sequence:
-        - type: string
-          label: 'Toolbar item'
+        type: string
+        label: 'Toolbar item'
     query_sort:
       type: string
       label: 'Sort query log'
