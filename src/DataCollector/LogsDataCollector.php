@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\DataCollector;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\monolog\Logger\LoggerInterfacesAdapter;
 use Psr\Log\LoggerInterface;
@@ -95,11 +94,11 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
           $this->t('Channel'),
           $this->t('Message'),
         ],
-        '#rows' => \array_map(static function ($log) {
+        '#rows' => \array_map(function ($log) {
           return [
             $log['priorityName'],
             $log['channel'],
-            new FormattableMarkup($log['message'], $log['context']),
+            $this->processContext($log['message'], $log['context']),
           ];
         }, $this->data['logs']),
         '#attributes' => [
@@ -110,6 +109,29 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
         '#sticky' => TRUE,
       ],
     ];
+  }
+
+  /**
+   * Process the context.
+   *
+   * @param string $message
+   *   The message.
+   * @param array $context
+   *   The context.
+   *
+   * @return string
+   *   The processed context.
+   */
+  private function processContext(string $message, array $context): string {
+    $replacements = [];
+    foreach ($context as $key => $value) {
+      if (\is_array($value) || \is_object($value)) {
+        $value = \json_encode($value);
+      }
+      $replacements['{' . $key . '}'] = $value;
+    }
+
+    return \strtr($message, $replacements);
   }
 
 }
