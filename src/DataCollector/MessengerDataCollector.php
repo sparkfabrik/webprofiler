@@ -53,7 +53,7 @@ class MessengerDataCollector extends DataCollector implements LateDataCollectorI
   public function lateCollect(): void {
     $this->data = [
       'messages' => [],
-      'buses' => array_keys($this->traceableBuses),
+      'buses' => \array_keys($this->traceableBuses),
     ];
 
     $messages = [];
@@ -66,10 +66,10 @@ class MessengerDataCollector extends DataCollector implements LateDataCollectorI
     }
 
     // Order by call time.
-    usort($messages, fn($a, $b) => $a[1] <=> $b[1]);
+    \usort($messages, static fn($a, $b) => $a[1] <=> $b[1]);
 
     // Keep the messages clones only.
-    $this->data['messages'] = array_column($messages, 0);
+    $this->data['messages'] = \array_column($messages, 0);
   }
 
   /**
@@ -173,8 +173,8 @@ class MessengerDataCollector extends DataCollector implements LateDataCollectorI
       return $this->data['messages'];
     }
 
-    return array_filter($this->data['messages'],
-      fn($message) => $bus === $message['bus']);
+    return \array_filter($this->data['messages'],
+      static fn($message) => $bus === $message['bus']);
   }
 
   /**
@@ -191,7 +191,7 @@ class MessengerDataCollector extends DataCollector implements LateDataCollectorI
    * {@inheritdoc}
    */
   public function getPanel(): array {
-    if (count($this->getMessages()) == 0) {
+    if (\count($this->getMessages()) == 0) {
       return [
         '#markup' => $this->t('No messages have been collected'),
       ];
