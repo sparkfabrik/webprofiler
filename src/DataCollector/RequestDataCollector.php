@@ -54,7 +54,7 @@ class RequestDataCollector extends BaseRequestDataCollector implements HasPanelI
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     parent::collect($request, $response);
 
     $this->data['big_pipe'] = $response->headers->get('X-Drupal-BigPipe-Placeholder');

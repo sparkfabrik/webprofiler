@@ -43,7 +43,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack.
    */
-  public function __construct(RequestStack $requestStack = NULL) {
+  public function __construct(?RequestStack $requestStack = NULL) {
     $this->requestStack = $requestStack;
   }
 
@@ -118,7 +118,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLogs(Request $request = NULL): array {
+  public function getLogs(?Request $request = NULL): array {
     if (NULL !== $request) {
       return $this->records[\spl_object_id($request)] ?? [];
     }
@@ -133,7 +133,7 @@ class DebugProcessor implements DebugLoggerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function countErrors(Request $request = NULL): int {
+  public function countErrors(?Request $request = NULL): int {
     if (NULL !== $request) {
       return $this->errorCount[\spl_object_id($request)] ?? 0;
     }

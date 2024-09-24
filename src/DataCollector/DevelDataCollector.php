@@ -40,7 +40,7 @@ class DevelDataCollector extends DataCollector {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $original_route = $this->routeMatch->getRouteName();
     if ($original_route != NULL) {
       $original_route_parameters = $this->routeMatch

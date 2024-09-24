@@ -43,7 +43,7 @@ class AssetsDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $this->data['assets']['installation_path'] = $this->root . '/';
   }
 

@@ -35,14 +35,14 @@ class ConfigEntityStorageDecorator extends EntityDecorator implements ConfigEnti
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
+  public function resetCache(?array $ids = NULL) {
     $this->getOriginalObject()->resetCache($ids);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function loadMultiple(array $ids = NULL) {
+  public function loadMultiple(?array $ids = NULL) {
     $entities = $this->getOriginalObject()->loadMultiple($ids);
 
     $this->entities = \array_merge($this->entities, $entities);
@@ -183,7 +183,7 @@ class ConfigEntityStorageDecorator extends EntityDecorator implements ConfigEnti
   /**
    * {@inheritdoc}
    */
-  public function loadMultipleOverrideFree(array $ids = NULL) {
+  public function loadMultipleOverrideFree(?array $ids = NULL) {
     return $this->getOriginalObject()->loadMultipleOverrideFree($ids);
   }
 

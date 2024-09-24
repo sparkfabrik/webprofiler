@@ -93,6 +93,41 @@ trait DataCollectorTrait {
   }
 
   /**
+   * Retrieve the context of a Twig callable for debugging purposes.
+   *
+   * Before the introduction of runtime loaders, those callable parameters
+   * effectively did have to match the PHP callable type. When the runtime
+   * loaders were introduced to allow lazy loading the backing
+   * implementation of a function/filter/whatever, that's where the
+   * pseudo-callable array syntax became a thing. So the result still has
+   * to be callable once the runtime is resolved, but for the purposes of
+   * declaring the filter, it doesn't have to immediately pass a
+   * is_callable($callable) check.
+   *
+   * @param callable|array{class-string, string}|null $callable
+   *   The callable to retrieve the context for.
+   *
+   * @return string
+   *   The context of the callable.
+   *
+   * @see https://twig.symfony.com/doc/3.x/advanced.html#definition-vs-runtime
+   */
+  private function getTwigCallableContext(array|callable|null $callable): string {
+    if (\is_callable($callable)) {
+      return $this->getCallableContext($callable);
+    }
+
+    if ($callable === NULL) {
+      // Matches default from `getCallableContext()`.
+      return 'unknown';
+    }
+
+    // Mostly matches array case for static method call in
+    // `getCallableContext()`.
+    return \sprintf('class: %s, method: %s', $callable[0], $callable[1]);
+  }
+
+  /**
    * Format variables array in order to avoid huge objects dumping.
    *
    * @param array $data

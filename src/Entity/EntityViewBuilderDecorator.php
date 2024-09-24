@@ -61,7 +61,7 @@ class EntityViewBuilderDecorator extends EntityDecorator implements EntityHandle
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $entities = NULL) {
+  public function resetCache(?array $entities = NULL) {
     $this->getOriginalObject()->resetCache($entities);
   }
 
