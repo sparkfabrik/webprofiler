@@ -54,6 +54,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
         ]);
     }
 
+    // Add LogsDataCollector only if Monolog module is enabled.
     if (isset($modules['monolog'])) {
       $container->register('webprofiler.logs', 'Drupal\webprofiler\DataCollector\LogsDataCollector')
         ->addArgument(new Reference('logger.channel.debug'))
@@ -62,6 +63,20 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
           'id' => 'logs',
           'label' => 'Logs',
           'priority' => 25,
+        ]);
+    }
+
+    // Add MessengerDataCollector only if Symfony Messenger module is enabled.
+    if (isset($modules['sm'])) {
+      // This service is called 'data_collector.messenger' to leverage the
+      // existing Symfony Messenger compiler pass.
+      // @see \Symfony\Component\Messenger\DependencyInjection\MessengerPass::registerBusToCollector()
+      $container->register('data_collector.messenger', 'Drupal\webprofiler\DataCollector\MessengerDataCollector')
+        ->addTag('data_collector', [
+          'template' => '@webprofiler/Collector/messenger.html.twig',
+          'id' => 'messenger',
+          'label' => 'Messenger',
+          'priority' => 600,
         ]);
     }
 

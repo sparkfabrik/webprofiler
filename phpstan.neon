@@ -32,3 +32,5 @@ parameters:
       - %currentWorkingDirectory%/web/modules/contrib/tracer
       - %currentWorkingDirectory%/web/modules/contrib/monolog
       - %currentWorkingDirectory%/web/core
+    stubFiles:
+      - stubs/Stubs.stub
