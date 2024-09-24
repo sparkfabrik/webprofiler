@@ -32,7 +32,7 @@ trait PanelTrait {
   protected function renderTable(
     array $data,
     ?string $label = NULL,
-    callable $element_converter = NULL,
+    ?callable $element_converter = NULL,
   ): array {
     if (\count($data) == 0) {
       return [];

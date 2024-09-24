@@ -163,7 +163,7 @@ class EntityTypeManagerWrapper extends EntityTypeManager implements EntityTypeMa
   /**
    * Restores the service container after serialization.
    */
-  public function setContainer(ContainerInterface $container = NULL): void {
+  public function setContainer(?ContainerInterface $container = NULL): void {
     $this->container = $container;
   }
 

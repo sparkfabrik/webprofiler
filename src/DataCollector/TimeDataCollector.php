@@ -26,7 +26,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $startTime = $request->server->get('REQUEST_TIME_FLOAT');
 
     $this->data = [

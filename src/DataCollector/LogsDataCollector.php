@@ -39,7 +39,7 @@ class LogsDataCollector extends DataCollector implements HasPanelInterface, Late
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
   }
 
   /**

@@ -33,7 +33,7 @@ class DatabaseDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $options = $this->database->getConnectionOptions();
 
     // Remove password for security.

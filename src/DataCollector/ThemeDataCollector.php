@@ -84,7 +84,7 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $activeTheme = $this->themeManager->getActiveTheme();
 
     $this->data['activeTheme'] = [
@@ -104,13 +104,13 @@ class ThemeDataCollector extends DataCollector implements HasPanelInterface, Lat
       'filters' => \array_map(function (TwigFilter $filter) {
         return [
           'name' => $filter->getName(),
-          'callable' => $this->getCallableContext($filter->getCallable()),
+          'callable' => $this->getTwigCallableContext($filter->getCallable()),
         ];
       }, $this->twig->getFilters()),
       'functions' => \array_map(function (TwigFunction $function) {
         return [
           'name' => $function->getName(),
-          'callable' => $this->getCallableContext($function->getCallable()),
+          'callable' => $this->getTwigCallableContext($function->getCallable()),
         ];
       }, $this->twig->getFunctions()),
       'globals' => $this->twig->getGlobals(),

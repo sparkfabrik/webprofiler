@@ -38,7 +38,7 @@ class RoutingDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     // If the data has already been collected, don't collect it again.
     if ($this->data != NULL && \count($this->data['routing']) > 0) {
       return;

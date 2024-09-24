@@ -44,7 +44,7 @@ class ServicesDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     if ($this->getServicesCount() > 0) {
       $tracedData = [];
       if ($this->container instanceof TraceableContainer) {

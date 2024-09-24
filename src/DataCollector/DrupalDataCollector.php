@@ -36,7 +36,7 @@ class DrupalDataCollector extends DataCollector implements LateDataCollectorInte
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $this->data = [
       'token' => $response->headers->get('X-Debug-Token'),
       'drupal_version' => \Drupal::VERSION,

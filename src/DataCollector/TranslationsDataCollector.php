@@ -34,7 +34,7 @@ class TranslationsDataCollector extends DataCollector implements HasPanelInterfa
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     if ($this->translation instanceof TranslationManagerWrapper) {
       $this->data['translations']['translated'] = $this->translation->getTranslated();
       $this->data['translations']['untranslated'] = $this->translation->getUntranslated();

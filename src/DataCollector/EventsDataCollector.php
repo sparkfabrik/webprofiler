@@ -39,7 +39,7 @@ class EventsDataCollector extends DataCollector implements LateDataCollectorInte
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $this->data = [
       'called_listeners' => [],
       'called_listeners_count' => 0,

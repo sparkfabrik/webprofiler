@@ -42,7 +42,7 @@ class ViewsDataCollector extends DataCollector implements HasPanelInterface {
   /**
    * {@inheritdoc}
    */
-  public function collect(Request $request, Response $response, \Throwable $exception = NULL): void {
+  public function collect(Request $request, Response $response, ?\Throwable $exception = NULL): void {
     $views = $this->viewExecutableFactory->getViews();
     $storage = $this->entityManager->getStorage('view');
 
