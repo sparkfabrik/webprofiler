@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\webprofiler\Render;
 
+use Drupal\big_pipe\Render\BigPipe;
+use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\HtmlResponse;
-use Drupal\big_pipe\Render\BigPipe;
-use Drupal\big_pipe\Render\BigPipeMarkup;
 
 /**
  * Extends the Drupal core big_pipe service to trace placeholder expansion.

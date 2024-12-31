@@ -9,12 +9,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Tracer that uses Symfony Stopwatch as a backend.
- *
- * @Tracer(
- *   id = "stopwatch_tracer",
- *   label = @Translation("Stopwatch Tracer"),
- *   description = @Translation("Stopwatch Tracer"),
- *   )
  */
 class StopwatchTracer implements TracerInterface {
 

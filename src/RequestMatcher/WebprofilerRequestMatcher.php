@@ -23,18 +23,38 @@ class WebprofilerRequestMatcher implements RequestMatcherInterface {
   private ImmutableConfig $config;
 
   /**
+   * The patterns to exclude.
+   *
+   * @var string
+   */
+  private string $patterns;
+
+  /**
    * WebprofilerRequestMatcher constructor.
    *
    * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
    *   The path matcher service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
+   * @param string $configuration
+   *   The configuration name that contains the exclude paths.
    */
   public function __construct(
     protected readonly PathMatcherInterface $pathMatcher,
     ConfigFactoryInterface $config,
+    string $configuration,
   ) {
     $this->config = $config->get('webprofiler.settings');
+
+    $patterns = $this->config->get($configuration);
+
+    // Never add Webprofiler to phpinfo page.
+    $patterns .= "\r\n/admin/reports/status/php";
+
+    // Never add Webprofiler to uninstall confirm page.
+    $patterns .= "\r\n/admin/modules/uninstall/*";
+
+    $this->patterns = $patterns;
   }
 
   /**
@@ -43,15 +63,7 @@ class WebprofilerRequestMatcher implements RequestMatcherInterface {
   public function matches(Request $request): bool {
     $path = $request->getPathInfo();
 
-    $patterns = $this->config->get('exclude_paths');
-
-    // Never add Webprofiler to phpinfo page.
-    $patterns .= "\r\n/admin/reports/status/php";
-
-    // Never add Webprofiler to uninstall confirm page.
-    $patterns .= "\r\n/admin/modules/uninstall/*";
-
-    return !$this->pathMatcher->matchPath($path, $patterns);
+    return !$this->pathMatcher->matchPath($path, $this->patterns);
   }
 
 }

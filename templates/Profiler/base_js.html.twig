@@ -600,21 +600,23 @@
               }
 
               renderAjaxRequests();
-              addEventListener(document.querySelector('.sf-toolbar-ajax-clear'), 'click', function() {
-                requestStack = [];
-                renderAjaxRequests();
-                successStreak = 4;
-                document.querySelector('.sf-toolbar-ajax-request-list').innerHTML = '';
-              });
-              addEventListener(document.querySelector('.sf-toolbar-block-ajax'), 'mouseenter', function (event) {
-                var elem = document.querySelector('.sf-toolbar-block-ajax .sf-toolbar-info');
-                elem.scrollTop = elem.scrollHeight;
-              });
-              addEventListener(document.querySelector('.sf-toolbar-block-ajax > .sf-toolbar-icon'), 'click', function (event) {
-                event.preventDefault();
-
-                toggleClass(this.parentNode, 'hover');
-              });
+              var ajaxInfo = document.querySelector('.sf-toolbar-block-ajax .sf-toolbar-info');
+              if(null !== ajaxInfo) {
+                addEventListener(document.querySelector('.sf-toolbar-ajax-clear'), 'click', function() {
+                  requestStack = [];
+                  renderAjaxRequests();
+                  successStreak = 4;
+                  document.querySelector('.sf-toolbar-ajax-request-list').innerHTML = '';
+                });
+                addEventListener(document.querySelector('.sf-toolbar-block-ajax'), 'mouseenter', function (event) {
+                  var elem = document.querySelector('.sf-toolbar-block-ajax .sf-toolbar-info');
+                  elem.scrollTop = elem.scrollHeight;
+                });
+                addEventListener(document.querySelector('.sf-toolbar-block-ajax > .sf-toolbar-icon'), 'click', function (event) {
+                  event.preventDefault();
+                  toggleClass(this.parentNode, 'hover');
+                });
+              }
 
               var dumpInfo = document.querySelector('.sf-toolbar-block-dump .sf-toolbar-info');
               if (null !== dumpInfo) {

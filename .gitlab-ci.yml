@@ -2,16 +2,25 @@ include:
   - project: $_GITLAB_TEMPLATES_REPO
     ref: $_GITLAB_TEMPLATES_REF
     file:
+      - '/includes/include.drupalci.main.yml'
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
-deploystacks:
-  trigger:
-    include: .drupalci/.gitlab-single-pipeline.yml
-    strategy: depend
-  parallel:
-    matrix:
-      - _TARGET_CORE: ["11.0.x-dev"]
-        _TARGET_PHP: [ "8.3"]
-        _TARGET_DB_TYPE: "mysql"
-        _TARGET_DB_VERSION: "8.4"
+variables:
+  OPT_IN_TEST_NEXT_MAJOR: 1
+  _SHOW_ENVIRONMENT_VARIABLES: 1
+
+phpcs:
+  allow_failure: false
+
+phpstan:
+  allow_failure: false
+
+stylelint:
+  allow_failure: false
+
+eslint:
+  allow_failure: false
+
+phpunit:
+  allow_failure: false
