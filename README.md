@@ -44,3 +44,30 @@ $settings['webprofiler_error_page_disabled'] = TRUE;
 ```
 
 Remember to clear the cache.
+
+## Choose a different folder to store profiles
+
+Profiles are stored in the `profiler` folder under the public's files directory. You can change this folder by setting
+the `webprofiler.file_profiler_storage_dns` parameter in a services file, like:
+
+```yml
+parameters:
+  webprofiler.file_profiler_storage_dns: 'file:/tmp/profiler'
+```
+
+## Export database queries
+
+WebProfiler can export database queries to a file using a Drush command:
+
+```bash
+drush webprofiler:export-database-data <token> <output_folder>
+```
+
+The CSV file generated is tab-separated and contains the following columns:
+
+* Query: the SQL query.
+* Database: the database connection name.
+* Target: the target of the query.
+* Time: the time spent executing the query.
+* Caller class: the class that called the query.
+* Caller function: the function that called the query.

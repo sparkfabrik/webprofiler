@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\webprofiler\Twig\Extension;
 
 use Drupal\Core\Database\Database;
+use Highlight\Highlighter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -19,6 +20,7 @@ class DatabaseExtension extends AbstractExtension {
   public function getFunctions(): array {
     return [
       new TwigFunction('query_type', [$this, 'queryType']),
+      new TwigFunction('query', [$this, 'query']),
       new TwigFunction('query_executable', [$this, 'queryExecutable']),
     ];
   }
@@ -35,6 +37,29 @@ class DatabaseExtension extends AbstractExtension {
   public function queryType(string $query): string {
     $parts = \explode(' ', $query);
     return \strtoupper($parts[0]);
+  }
+
+  /**
+   * Return the query without new lines and double quotes.
+   *
+   * @param string $query
+   *   A query.
+   *
+   * @return string
+   *   The query without new lines and double quotes.
+   */
+  public function query(string $query): string {
+    $code = \str_replace(
+      search:  "\n",
+      replace: ' ',
+      subject: \str_replace(
+        search:  '"',
+        replace: '',
+        subject: $query,
+      ),
+    );
+
+    return $this->highlight($code);
   }
 
   /**
@@ -57,7 +82,40 @@ class DatabaseExtension extends AbstractExtension {
       }
     }
 
-    return \strtr($query['query'], $quoted);
+    $code = \strtr(
+      \str_replace(
+        search:  "\n",
+        replace: ' ',
+        subject: \str_replace(
+          search:  '"',
+          replace: '',
+          subject: $query['query'],
+        ),
+      ),
+      $quoted);
+
+    return $this->highlight($code);
+  }
+
+  /**
+   * Highlight the SQL code.
+   *
+   * @param string $code
+   *   The SQL code.
+   *
+   * @return string
+   *   The highlighted SQL code.
+   */
+  private function highlight(string $code): string {
+    $hl = new Highlighter();
+    try {
+      $highlighted = $hl->highlight('sql', $code);
+
+      return $highlighted->value;
+    }
+    catch (\Exception $e) {
+      return $code;
+    }
   }
 
 }

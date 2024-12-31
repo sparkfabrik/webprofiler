@@ -26,14 +26,18 @@ services:
         '@config.factory',
       ]
 
-  webprofiler.matcher:
+  webprofiler.matcher.exclude_path:
     class: Drupal\webprofiler\RequestMatcher\WebprofilerRequestMatcher
-    arguments: ['@path.matcher', '@config.factory']
+    arguments: ['@path.matcher', '@config.factory', 'exclude_paths']
+
+  webprofiler.matcher.exclude_toolbar:
+    class: Drupal\webprofiler\RequestMatcher\WebprofilerRequestMatcher
+    arguments: [ '@path.matcher', '@config.factory', 'exclude_toolbar' ]
 
   webprofiler.profiler_listener:
     class: Drupal\webprofiler\EventListener\ProfilerListener
     arguments:
-      ['@webprofiler.profiler', '@request_stack', '@webprofiler.matcher']
+      ['@webprofiler.profiler', '@request_stack', '@webprofiler.matcher.exclude_path']
     tags:
       - { name: event_subscriber }
 
@@ -58,6 +62,7 @@ services:
         '@webprofiler.csp',
         '@webprofiler.collector.dump',
         '@config.factory',
+        '@webprofiler.matcher.exclude_toolbar',
       ]
     tags:
       - { name: event_subscriber }

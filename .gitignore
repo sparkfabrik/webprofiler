@@ -10,6 +10,7 @@ composer.lock
 yarn.lock
 /.editorconfig
 /.gitattributes
+/recipes
 
 #PHPUnit output
 junit.xml

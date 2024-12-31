@@ -5,6 +5,7 @@ clazz
 componentscount
 Contentful
 ddev
+doctag
 endwith
 estensions
 EXTR
@@ -49,3 +50,4 @@ twigfunctionscount
 txmt
 typeof
 visibilitychange
+wedd

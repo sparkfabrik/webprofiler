@@ -13,8 +13,8 @@ use PhpParser\Builder\Param;
 use PhpParser\BuilderFactory;
 use PhpParser\Error;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
@@ -35,8 +35,7 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-  ) {
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -112,10 +111,12 @@ class ConfigEntityStorageDecoratorGenerator implements DecoratorGeneratorInterfa
       }
       catch (Error $error) {
         echo "Parse error: {$error->getMessage()}\n";
+
         return [];
       }
       catch (\ReflectionException $error) {
         echo "Reflection error: {$error->getMessage()}\n";
+
         return [];
       }
     }

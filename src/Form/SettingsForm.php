@@ -83,6 +83,13 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Paths to exclude for profiling. One path per line.'),
     ];
 
+    $form['exclude_toolbar'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Exclude toolbar'),
+      '#default_value' => $config->get('exclude_toolbar'),
+      '#description' => $this->t('Paths to exclude for toolbar. On those paths profiles are collected but toolbar is not displayed. One path per line.'),
+    ];
+
     $form['active_toolbar_items'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Active toolbar items'),
@@ -151,6 +158,14 @@ class SettingsForm extends ConfigFormBase {
       '#min' => 0,
     ];
 
+    $form['database']['query_detailed_output_threshold'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Number of queries after which detailed output is disabled'),
+      '#description' => $this->t('Huge number of queries can slow down the page rendering. This setting allows you to disable detailed output after a certain number of queries.'),
+      '#default_value' => $config->get('query_detailed_output_threshold'),
+      '#min' => 0,
+    ];
+
     $form['purge'] = [
       '#type' => 'details',
       '#title' => $this->t('Purge profiles'),
@@ -175,12 +190,14 @@ class SettingsForm extends ConfigFormBase {
       ->set('purge_on_cache_clear', $form_state->getValue('purge_on_cache_clear'))
       ->set('intercept_redirects', $form_state->getValue('intercept_redirects'))
       ->set('exclude_paths', $form_state->getValue('exclude_paths'))
+      ->set('exclude_toolbar', $form_state->getValue('exclude_toolbar'))
       ->set('active_toolbar_items', $form_state->getValue('active_toolbar_items'))
       ->set('ide', $form_state->getValue('ide'))
       ->set('ide_remote_path', $form_state->getValue('ide_remote_path'))
       ->set('ide_local_path', $form_state->getValue('ide_local_path'))
       ->set('query_sort', $form_state->getValue('query_sort'))
       ->set('query_highlight', $form_state->getValue('query_highlight'))
+      ->set('query_detailed_output_threshold', $form_state->getValue('query_detailed_output_threshold'))
       ->save();
 
     parent::submitForm($form, $form_state);

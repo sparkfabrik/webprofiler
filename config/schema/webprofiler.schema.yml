@@ -7,6 +7,9 @@ webprofiler.settings:
     exclude_paths:
       type: string
       label: 'Paths to exclude from profiling'
+    exclude_toolbar:
+      type: string
+      label: 'Paths to exclude for toolbar'
     intercept_redirects:
       type: boolean
       label: 'Intercept redirects'
@@ -25,6 +28,9 @@ webprofiler.settings:
     query_highlight:
       type: integer
       label: 'Slow query highlighting'
+    query_detailed_output_threshold:
+      type: integer
+      label: 'Number of queries after which detailed output is disabled'
     ide:
       type: string
       label: 'IDE'
