@@ -24,6 +24,7 @@ final class ExportDatabaseDataCommands extends DrushCommands {
   public function __construct(
     #[Autowire('webprofiler.profiler')]
     private readonly Profiler $profiler,
+    #[Autowire('webprofiler.twig.database_extension')]
     private readonly DatabaseExtension $databaseExtension,
   ) {
     parent::__construct();

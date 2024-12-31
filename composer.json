@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": ">=8.3",
+        "drupal/core": ">=11",
         "drupal/devel": "^5.0",
         "drupal/tracer": "^1.2",
         "league/commonmark": "~2.4",
@@ -37,13 +38,6 @@
         "phpunit/phpunit": ">=9",
         "previousnext/coding-standard": "^1.0"
     },
-    "extra": {
-        "drush": {
-            "services": {
-                "drush.services.yml": "^11"
-            }
-        }
-    },
     "config": {
         "allow-plugins": {
             "composer/installers": true,
@@ -51,7 +45,8 @@
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
             "cweagans/composer-patches": true,
-            "drupal/core-composer-scaffold": true
+            "drupal/core-composer-scaffold": true,
+            "tbachert/spi": true
         }
     }
 }
