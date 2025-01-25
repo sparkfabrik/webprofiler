@@ -680,3 +680,23 @@ div.sf-toolbar  .sf-toolbar-block .sf-toolbar-info-piece.sf-toolbar-info-php-ext
 #admin-toolbar #menu-footer {
   margin-bottom: 36px;
 }
+
+/* Fix chatbot AI position when using WebProfiler */
+.webprofiler-open #admin-toolbar #menu-footer {
+  margin-bottom: 36px;
+}
+
+.webprofiler-open #block-ai-chatbot .chat-container {
+  right: 0;
+  bottom: 36px;
+}
+
+.webprofiler-closed #block-ai-chatbot .chat-container.bottom-right {
+  right: 50px;
+}
+
+@media (max-width: 768px) {
+  .webprofiler-closed #block-ai-chatbot .chat-container {
+    width: 90%;
+  }
+}
