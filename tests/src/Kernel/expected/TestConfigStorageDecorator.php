@@ -31,7 +31,7 @@ class TestConfigStorageDecorator extends ConfigEntityStorageDecorator implements
     {
         return $this->getOriginalObject()->method4($param1, $param2);
     }
-    public function method5(string $param1 = NULL): ?string
+    public function method5(?string $param1 = NULL): ?string
     {
         return $this->getOriginalObject()->method5($param1);
     }

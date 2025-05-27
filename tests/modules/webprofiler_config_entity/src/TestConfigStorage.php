@@ -28,7 +28,7 @@ class TestConfigStorage extends ConfigEntityStorage implements TestConfigStorage
     return '';
   }
 
-  public function method5(string $param1 = NULL): ?string {
+  public function method5(?string $param1 = NULL): ?string {
     return '';
   }
 
