@@ -50,7 +50,7 @@ class HtmlErrorRenderer {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(FileLinkFormatter $fileLinkFormat, LoggerInterface $logger = NULL) {
+  public function __construct(FileLinkFormatter $fileLinkFormat, ?LoggerInterface $logger = NULL) {
     $this->debug = TRUE;
     $this->charset = 'UTF-8';
     $this->fileLinkFormat = $fileLinkFormat;
@@ -223,7 +223,7 @@ class HtmlErrorRenderer {
    * @param string|null $text
    *   Use this text for the link rather than the file path.
    */
-  private function formatFile(string $file, int $line, string $text = NULL): string {
+  private function formatFile(string $file, int $line, ?string $text = NULL): string {
     $file = trim($file);
 
     if (NULL === $text) {

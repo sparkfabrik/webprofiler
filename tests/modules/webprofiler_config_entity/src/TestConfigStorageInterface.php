@@ -19,7 +19,7 @@ interface TestConfigStorageInterface {
 
   public function method4(string $param1, string $param2): string|null;
 
-  public function method5(string $param1 = NULL): ?string;
+  public function method5(?string $param1 = NULL): ?string;
 
   public function method6(bool $param1 = FALSE): mixed;
 
