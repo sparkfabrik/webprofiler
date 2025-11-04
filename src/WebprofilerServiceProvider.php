@@ -57,6 +57,7 @@ class WebprofilerServiceProvider extends ServiceProviderBase {
     if (isset($modules['monolog'])) {
       $container->register('webprofiler.logs', 'Drupal\webprofiler\DataCollector\LogsDataCollector')
         ->addArgument(new Reference('logger.channel.debug'))
+        ->addArgument(new Reference('logger.log_message_parser'))
         ->addTag('data_collector', [
           'template' => '@webprofiler/Collector/logs.html.twig',
           'id' => 'logs',
