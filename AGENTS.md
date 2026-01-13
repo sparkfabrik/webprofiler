@@ -12,6 +12,21 @@ This file provides instructions for AI agents working on the Webprofiler Drupal 
 
 After the environment is set up (via `.github/workflows/copilot-setup-steps.yml`), use DDEV commands to test changes automatically.
 
+### Getting Help
+
+```bash
+# List all available DDEV commands
+ddev
+
+# Get help for any command
+ddev help <command>
+ddev <command> -h
+
+# Examples
+ddev help snapshot
+ddev describe -h
+```
+
 ### Testing Workflow
 
 When making changes, always follow this workflow:
@@ -30,8 +45,10 @@ When making changes, always follow this workflow:
 ddev start              # Start the project
 ddev stop               # Stop the project
 ddev restart            # Restart the project
-ddev describe           # Show project details and URLs
+ddev describe           # Show project details and URLs (aliases: status, st, desc)
+ddev list               # Show all projects and their state
 ddev poweroff           # Stop all DDEV projects
+ddev launch             # Open project in web browser
 ```
 
 #### Testing Commands
@@ -110,14 +127,32 @@ ddev mysql
 # Export database
 ddev export-db --file=/tmp/db.sql.gz
 
+# Export without compression
+ddev export-db --gzip=false --file=/tmp/db.sql
+
 # Import database
 ddev import-db --file=/tmp/db.sql.gz
 
 # Snapshot database (for quick restore)
 ddev snapshot
 
-# Restore from snapshot
+# Snapshot with custom name
+ddev snapshot --name=before-changes
+
+# List all snapshots
+ddev snapshot --list
+
+# Restore latest snapshot
 ddev snapshot restore
+
+# Restore specific snapshot
+ddev snapshot restore --name=before-changes
+
+# Delete all snapshots
+ddev snapshot --cleanup
+
+# Delete specific snapshot
+ddev snapshot --cleanup --name=before-changes
 ```
 
 #### Debugging Commands
@@ -128,6 +163,9 @@ ddev logs
 # View logs for specific service
 ddev logs -s web
 ddev logs -s db
+
+# Follow logs in real-time
+ddev logs -f
 
 # View Drupal watchdog logs
 ddev drush wd-show
@@ -146,6 +184,12 @@ ddev xdebug on
 
 # Disable Xdebug
 ddev xdebug off
+
+# Toggle Xdebug
+ddev xdebug toggle
+
+# Check Xdebug status
+ddev xdebug status
 ```
 
 #### Composer Commands
@@ -171,6 +215,7 @@ ddev composer require --dev vendor/package
 4. **Fix auto-fixable issues**: Use `ddev phpcbf` for code style
 5. **Verify manually** for UI changes: Use `ddev drush uli` to access the site
 6. **Check logs** if tests fail: `ddev logs` and `ddev drush wd-show`
+7. **Use snapshots** for quick rollbacks: `ddev snapshot` before major changes, `ddev snapshot restore` to revert
 
 ### Pre-Completion Checklist
 
