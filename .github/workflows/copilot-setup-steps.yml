@@ -57,6 +57,11 @@ jobs:
           sudo mv mkcert /usr/local/bin/
           mkcert -install
 
+      # Install ddev-drupal-contrib addon
+      - name: Install ddev-drupal-contrib addon
+        run: |
+          ddev add-on get ddev/ddev-drupal-contrib
+
       # Start DDEV project
       - name: Start DDEV
         run: |
