@@ -27,6 +27,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      # Cache composer dependencies for faster subsequent runs
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       # Install DDEV
       - name: Install DDEV
         run: |
@@ -72,17 +83,6 @@ jobs:
       - name: Enable webprofiler module
         run: |
           ddev drush en webprofiler -y
-
-      # Cache composer dependencies for faster subsequent runs
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
 
       # Verify the setup
       - name: Verify DDEV setup
