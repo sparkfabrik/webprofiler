@@ -14,12 +14,6 @@ performance issues. For this reason, WebProfiler must not be used in production.
 
 WebProfiler can be downloaded and installed like any other Drupal module.
 
-## Development and Testing
-
-For local development and testing with DDEV, see [DDEV_TESTING.md](DDEV_TESTING.md).
-
-This project is configured to work with GitHub Copilot coding agent using DDEV. The environment is automatically set up when Copilot works on this repository. See [.copilot-instructions.md](.copilot-instructions.md) for details.
-
 ## Collect time metrics
 
 To enable the collection of time metrics, you need to add this line to the `settings.php` file:
