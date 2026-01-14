@@ -89,6 +89,8 @@ class AccessManagerWrapper extends AccessManager {
       $type = $parameter->getType();
 
       // Only convert if we have a type hint and it's a builtin scalar type.
+      // Note: Union types (e.g., int|null) are intentionally not handled here
+      // as they are rare in access checks and would require more complex logic.
       if ($type instanceof \ReflectionNamedType && $type->isBuiltin() && \is_scalar($argument)) {
         $type_name = $type->getName();
 

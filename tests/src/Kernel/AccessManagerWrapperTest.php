@@ -144,7 +144,7 @@ class MockAccessCheck {
    *   The access result.
    */
   public function access(int $uid, int $timestamp, string $hash, AccountInterface $account): AccessResultInterface {
-    return \Drupal::service('access_result.factory')->neutral();
+    return \Drupal\Core\Access\AccessResult::neutral();
   }
 
 }
