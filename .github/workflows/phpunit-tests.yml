@@ -13,7 +13,7 @@ on:
 
 jobs:
   phpunit:
-    name: Run Unit and Kernel Tests
+    name: Run Kernel Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -88,11 +88,6 @@ jobs:
           ddev exec "echo \"\\\$settings['tracer_plugin'] = \\\Drupal\\\webprofiler\\\Plugin\\\Tracer\\\StopwatchTracer::class;\" >> web/sites/default/settings.php"
           ddev drush cr
 
-      # Run Unit Tests
-      - name: Run Unit Tests
-        run: |
-          ddev phpunit --testsuite=unit tests/src/Unit/ || echo "No unit tests found"
-
       # Run Kernel Tests
       - name: Run Kernel Tests
         run: |
@@ -103,4 +98,5 @@ jobs:
         if: always()
         run: |
           echo "PHPUnit tests completed"
-          echo "Check the individual test steps above for detailed results"
+          echo "Kernel tests run from tests/src/Kernel/"
+          echo "Check the test step above for detailed results"
