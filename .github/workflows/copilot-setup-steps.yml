@@ -89,8 +89,25 @@ jobs:
         run: |
           ddev drush en webprofiler -y
 
+      # Configure webprofiler settings
+      - name: Configure webprofiler settings
+        run: |
+          # Enable time metrics collection by adding settings to settings.php
+          ddev exec "echo \"\\\$settings['tracer_plugin'] = \\\Drupal\\\webprofiler\\\Plugin\\\Tracer\\\StopwatchTracer::class;\" >> web/sites/default/settings.php"
+          
+          # Clear cache to apply settings
+          ddev drush cr
+          
+          # Enable all collectors via drush config-set
+          ddev drush config:set webprofiler.settings purge_on_cache_clear 1 -y
+          ddev drush config:set webprofiler.settings intercept_redirects 1 -y
+
       # Verify the setup
       - name: Verify DDEV setup
         run: |
           ddev describe
           ddev drush status
+          
+          # Verify webprofiler is enabled and configured
+          ddev drush pml | grep webprofiler
+          ddev drush config:get webprofiler.settings
