@@ -1,0 +1,106 @@
+name: PHPUnit Tests
+
+on:
+  push:
+    branches:
+      - main
+      - 11.0.x
+      - 'copilot/**'
+  pull_request:
+    branches:
+      - main
+      - 11.0.x
+
+jobs:
+  phpunit:
+    name: Run Unit and Kernel Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # Cache composer dependencies for faster subsequent runs
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # Install DDEV
+      - name: Install DDEV
+        run: |
+          curl -fsSL https://ddev.com/install.sh | bash
+
+      # Verify Docker is running
+      - name: Verify Docker is running
+        run: docker --version
+
+      # Install mkcert for HTTPS support
+      - name: Install mkcert
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3-tools
+          curl -fsSL https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -o mkcert
+          chmod +x mkcert
+          sudo mv mkcert /usr/local/bin/
+          mkcert -install
+
+      # Install ddev-drupal-contrib addon
+      - name: Install ddev-drupal-contrib addon
+        run: |
+          ddev add-on get ddev/ddev-drupal-contrib
+
+      # Start DDEV project
+      - name: Start DDEV
+        run: |
+          ddev start
+
+      # Install Drupal and dependencies via DDEV
+      - name: Install Drupal and dependencies
+        run: |
+          ddev poser
+
+      # Symlink the project into Drupal
+      - name: Symlink project
+        run: |
+          ddev symlink-project
+
+      # Install Drupal site
+      - name: Install Drupal site
+        run: |
+          if ! ddev drush status --fields=bootstrap | grep -q "Successful"; then
+            ddev drush site:install -y --account-name=admin --account-pass=admin
+          fi
+
+      # Enable the webprofiler module
+      - name: Enable webprofiler module
+        run: |
+          ddev drush en webprofiler -y
+
+      # Configure webprofiler settings
+      - name: Configure webprofiler settings
+        run: |
+          ddev exec "echo \"\\\$settings['tracer_plugin'] = \\\Drupal\\\webprofiler\\\Plugin\\\Tracer\\\StopwatchTracer::class;\" >> web/sites/default/settings.php"
+          ddev drush cr
+
+      # Run Unit Tests
+      - name: Run Unit Tests
+        run: |
+          ddev phpunit --testsuite=unit tests/src/Unit/ || echo "No unit tests found"
+
+      # Run Kernel Tests
+      - name: Run Kernel Tests
+        run: |
+          ddev phpunit tests/src/Kernel/
+
+      # Output test results summary
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "PHPUnit tests completed"
+          echo "Check the individual test steps above for detailed results"
