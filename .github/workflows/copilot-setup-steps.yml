@@ -1,0 +1,113 @@
+name: "Copilot Setup Steps"
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
+    permissions:
+      contents: read
+
+    # You can define any steps you want, and they will run before the agent starts.
+    # If you do not check out your code, Copilot will do this for you.
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # Cache composer dependencies for faster subsequent runs
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # Install DDEV
+      - name: Install DDEV
+        run: |
+          curl -fsSL https://ddev.com/install.sh | bash
+
+      # Start Docker (already available in GitHub Actions runners)
+      - name: Verify Docker is running
+        run: docker --version
+
+      # Set up mkcert for HTTPS support (optional but recommended)
+      - name: Install mkcert
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3-tools
+          curl -fsSL https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -o mkcert
+          chmod +x mkcert
+          sudo mv mkcert /usr/local/bin/
+          mkcert -install
+
+      # Install ddev-drupal-contrib addon
+      - name: Install ddev-drupal-contrib addon
+        run: |
+          ddev add-on get ddev/ddev-drupal-contrib
+
+      # Start DDEV project
+      - name: Start DDEV
+        run: |
+          ddev start
+
+      # Run ddev poser to install dependencies
+      - name: Install Drupal and dependencies via DDEV
+        run: |
+          ddev poser
+
+      # Symlink the project into Drupal
+      - name: Symlink project
+        run: |
+          ddev symlink-project
+
+      # Install Drupal if not already installed
+      - name: Install Drupal site
+        run: |
+          if ! ddev drush status --fields=bootstrap | grep -q "Successful"; then
+            ddev drush site:install -y --account-name=admin --account-pass=admin
+          fi
+
+      # Enable the webprofiler module
+      - name: Enable webprofiler module
+        run: |
+          ddev drush en webprofiler -y
+
+      # Configure webprofiler settings
+      - name: Configure webprofiler settings
+        run: |
+          # Enable time metrics collection by adding settings to settings.php
+          ddev exec "echo \"\\\$settings['tracer_plugin'] = \\\Drupal\\\webprofiler\\\Plugin\\\Tracer\\\StopwatchTracer::class;\" >> web/sites/default/settings.php"
+          
+          # Clear cache to apply settings
+          ddev drush cr
+          
+          # Enable all collectors via drush config-set
+          ddev drush config:set webprofiler.settings purge_on_cache_clear 1 -y
+          ddev drush config:set webprofiler.settings intercept_redirects 1 -y
+
+      # Verify the setup
+      - name: Verify DDEV setup
+        run: |
+          ddev describe
+          ddev drush status
+          
+          # Verify webprofiler is enabled and configured
+          ddev drush pml | grep webprofiler
+          ddev drush config:get webprofiler.settings
