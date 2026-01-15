@@ -12,6 +12,10 @@ This file provides instructions for AI agents working on the Webprofiler Drupal 
 - **[Code Quality Standards](./ai/code-quality.md)** - Coding standards and quality checks
 - **[Webprofiler Configuration](./ai/webprofiler.md)** - Module-specific configuration and frontend verification
 
+### External Resources
+
+- **[Context7 Drupal Documentation](https://context7.com/drupal/drupal)** - Access up-to-date Drupal API documentation and code examples via the Context7 MCP server. Use the `context7-resolve-library-id` and `context7-query-docs` tools to query Drupal core and contributed module documentation.
+
 ## Quick Start
 
 The GitHub Copilot coding agent environment is automatically configured via `.github/workflows/copilot-setup-steps.yml`. The workflow:
